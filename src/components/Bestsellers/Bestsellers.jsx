@@ -1,6 +1,6 @@
 import React from 'react';
 import { productsData } from '../../data.js';
-import './BestSellers.css';
+import './Bestsellers.css';
 
 const BestSellers = () => {
   const handleAddToCart = (product) => {
