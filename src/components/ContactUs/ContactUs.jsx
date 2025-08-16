@@ -1,4 +1,4 @@
-import "./ContactUs.css";
+import "./Contactus.css";
 
 const ContactUs = () => {
   const handleSubmit = (e) => {
