@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom"; // ✅ import Link
 import { Sun, Moon, Search, ShoppingCart, AlignJustify, X } from "lucide-react";
 import "./Navbar.css";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState(null);
   const [prevScrollPos, setPrevScrollPos] = useState(window.pageYOffset);
   const [visible, setVisible] = useState(true);
   const [theme, setTheme] = useState("light");
@@ -20,11 +20,8 @@ const Navbar = () => {
       const currentScrollPos = window.pageYOffset;
       setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 10);
       setPrevScrollPos(currentScrollPos);
-
-      // Close menu when scrolling
       if (isMobileMenuOpen) setIsMobileMenuOpen(false);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [prevScrollPos, isMobileMenuOpen]);
@@ -35,7 +32,7 @@ const Navbar = () => {
       if (
         mobileMenuRef.current &&
         !mobileMenuRef.current.contains(event.target) &&
-        !event.target.closest(".mobile-menu-button") // ignore button click
+        !event.target.closest(".mobile-menu-button")
       ) {
         setIsMobileMenuOpen(false);
       }
@@ -57,13 +54,9 @@ const Navbar = () => {
     setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
   };
 
-  // Apply theme to body when it changes
   useEffect(() => {
-    if (theme === "dark") {
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
-    }
+    if (theme === "dark") document.body.classList.add("dark");
+    else document.body.classList.remove("dark");
   }, [theme]);
 
   return (
@@ -71,49 +64,33 @@ const Navbar = () => {
       <div className="navbar-container">
         {/* Logo */}
         <div className="navbar-logo">
-          <a href="/" className="logo-link">
+          <Link to="/" className="logo-link">
             <span className="logo-text">MaanjuFarms</span>
-          </a>
+          </Link>
         </div>
 
         {/* Desktop Navigation */}
         <div className="navbar-menu">
-          <a href="/" className="mobile-nav-link">
-              Home
-          </a>
-          <a href="/products" className="nav-link">
-            Products
-          </a>
-          <a href="/about" className="nav-link">
-            About Us
-          </a>
-          {/* <a href="/explore" className="nav-link">
-            Explore
-          </a> */}
-          <a href="/contact" className="nav-link">
-            Contact Us
-          </a>
+          <Link to="/" className="nav-link">Home</Link>
+          <Link to="/products" className="nav-link">Products</Link>
+          <Link to="/about" className="nav-link">About Us</Link>
+          <Link to="/contact" className="nav-link">Contact Us</Link>
         </div>
 
         {/* Right Side Actions */}
         <div className="navbar-actions">
-          <a href="/login" className="login-link">
-            Log in
-          </a>
+          <Link to="/login" className="login-link">Log in</Link>
 
-          {/* Search bar */}
           <div className="search-wrapper">
             <Search className="search-icon" size={16} />
             <input type="text" placeholder="Search..." />
           </div>
 
-          {/* Cart */}
-          <a href="/cart" className="cart-button">
+          <Link to="/cart" className="cart-button">
             <ShoppingCart size={18} />
             <span className="cart-count">{cartCount}</span>
-          </a>
+          </Link>
 
-          {/* Theme toggle */}
           <button
             className="theme-toggle"
             onClick={toggleTheme}
@@ -122,7 +99,6 @@ const Navbar = () => {
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
           </button>
 
-          {/* Mobile Menu Button */}
           <button
             className="mobile-menu-button"
             onClick={toggleMobileMenu}
@@ -135,34 +111,19 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div
-          ref={mobileMenuRef}
-          className={`mobile-menu ${isMobileMenuOpen ? "open" : ""}`}
-        >
+        <div ref={mobileMenuRef} className={`mobile-menu ${isMobileMenuOpen ? "open" : ""}`}>
           <div className="mobile-menu-content">
-            <a href="/" className="mobile-nav-link">
-              Home
-            </a>
-            <a href="/products" className="mobile-nav-link">
-              Products
-            </a>
-            <a href="/about" className="mobile-nav-link">
-              About Us
-            </a>
-            {/* <a href="/explore" className="mobile-nav-link">
-              Explore
-            </a> */}
-            <a href="/blog" className="mobile-nav-link">
-              Blog
-            </a>
+            <Link to="/" className="mobile-nav-link">Home</Link>
+            <Link to="/products" className="mobile-nav-link">Products</Link>
+            <Link to="/about" className="mobile-nav-link">About Us</Link>
+            <Link to="/blog" className="mobile-nav-link">Blog</Link>
+
             <div className="mobile-actions">
-              <a href="/login" className="mobile-login-link">
-                Log in
-              </a>
-              <a href="/cart" className="mobile-get-started-button">
+              <Link to="/login" className="mobile-login-link">Log in</Link>
+              <Link to="/cart" className="mobile-get-started-button">
                 Cart Products <ShoppingCart size={16} />
                 <span className="cart-count">{cartCount}</span>
-              </a>
+              </Link>
               <div className="mobile-search-wrapper">
                 <input type="text" placeholder="Search..." />
                 <Search size={14} className="search-icon" />
