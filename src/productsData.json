@@ -1,0 +1,60 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Desi Ghee",
+      "category": "dairy",
+      "price": "",
+      "image": ""
+    },
+    {
+      "id": 2,
+      "name": "Chana Dal",
+      "category": "pulses",
+      "price": "",
+      "image": ""
+    },
+    {
+      "id": 3,
+      "name": "Moong Dal",
+      "category": "pulses",
+      "price": "",
+      "image": ""
+    },
+    {
+      "id": 4,
+      "name": "Moth Dal",
+      "category": "pulses",
+      "price": "",
+      "image": ""
+    },
+    {
+      "id": 5,
+      "name": "Mustard Oil",
+      "category": "oils",
+      "price": "",
+      "image": ""
+    },
+    {
+      "id": 6,
+      "name": "Olive Oil",
+      "category": "oils",
+      "price": "",
+      "image": ""
+    },
+    {
+      "id": 7,
+      "name": "Groundnut Oil",
+      "category": "oils",
+      "price": "",
+      "image": ""
+    },
+    {
+      "id": 8,
+      "name": "Homemade Honey",
+      "category": "honey",
+      "price": "",
+      "image": ""
+    }
+  ]
+}

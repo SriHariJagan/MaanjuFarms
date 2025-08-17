@@ -78,19 +78,18 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="navbar-menu">
-          <div
-            className="nav-item"
-            onMouseEnter={() => setActiveDropdown("products")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <span className="nav-link">Products</span>
-          </div>
-          <a href="/industries" className="nav-link">
-            Industries
+          <a href="/" className="mobile-nav-link">
+              Home
           </a>
-          <a href="/explore" className="nav-link">
+          <a href="/products" className="nav-link">
+            Products
+          </a>
+          <a href="/about" className="nav-link">
+            About Us
+          </a>
+          {/* <a href="/explore" className="nav-link">
             Explore
-          </a>
+          </a> */}
           <a href="/contact" className="nav-link">
             Contact Us
           </a>
@@ -141,15 +140,18 @@ const Navbar = () => {
           className={`mobile-menu ${isMobileMenuOpen ? "open" : ""}`}
         >
           <div className="mobile-menu-content">
+            <a href="/" className="mobile-nav-link">
+              Home
+            </a>
             <a href="/products" className="mobile-nav-link">
               Products
             </a>
-            <a href="/industries" className="mobile-nav-link">
-              Industries
+            <a href="/about" className="mobile-nav-link">
+              About Us
             </a>
-            <a href="/explore" className="mobile-nav-link">
+            {/* <a href="/explore" className="mobile-nav-link">
               Explore
-            </a>
+            </a> */}
             <a href="/blog" className="mobile-nav-link">
               Blog
             </a>

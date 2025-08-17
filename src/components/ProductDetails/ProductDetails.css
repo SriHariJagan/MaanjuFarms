@@ -1,0 +1,262 @@
+.detailsWrapper {
+  padding: 2rem;
+  padding-top: 6rem;
+  background: var(--primary-bg);
+  color: var(--primary-text);
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* ===== Main Card Layout ===== */
+.mainCard {
+  display: flex;
+  background: var(--card-bg);
+  box-shadow: 0 4px 20px var(--card-shadow);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ===== Media Wrapper ===== */
+.mediaWrapper {
+  display: flex;
+  flex: 1 1 50%;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* ===== Main Image/Video ===== */
+.mainMedia {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--media-bg, #fff);
+  max-height: 500px;
+}
+
+.carouselMedia,
+.mainMedia img,
+.mainMedia video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+/* .mainMedia img {
+  cursor: zoom-in;
+} */
+
+.carouselMedia {
+  max-height: 500px;
+  border-radius: 10px;
+  background: #fff;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ===== Thumbnails ===== */
+.thumbnailWrapper {
+  overflow-y: auto;
+  width: 90px;
+  height: 350px;
+  max-height: 400px;
+  padding-right: 4px; /* For scrollbar space */
+}
+
+.thumbnail {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: border-color 0.25s ease, transform 0.25s ease,
+    box-shadow 0.25s ease;
+  margin-bottom: 8px;
+}
+
+.thumbnail img,
+.thumbnail video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbnail:hover {
+  transform: scale(1.06);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.activeThumb {
+  border-color: var(--highlight-color);
+}
+
+/* ===== Info Section ===== */
+.infoSection {
+  flex: 1 1 20%;
+  padding: 2rem;
+  text-align: left;
+  position: relative;
+}
+
+.infoSection h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.infoSectionProductDetailsItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.infoSectionProductDetailsItem strong {
+  font-weight: 600;
+  color: var(--secondary-text);
+  margin-right: 5px;
+}
+
+/* ===== Similar Products ===== */
+.similarWrapper {
+  margin-top: 3rem;
+}
+
+.similarWrapper h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+}
+
+.relatedCard {
+  background: var(--card-bg);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px var(--card-shadow);
+  overflow: hidden;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  height: 220px; /* Fixed consistent height */
+  display: flex;
+  flex-direction: column;
+}
+
+.relatedCard img {
+  width: 100%;
+  height: 160px; /* Fixed image height */
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  margin-bottom: 5px;
+}
+
+.relatedCard p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  padding: 0 0.5rem;
+  color: var(--primary-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.relatedCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 15px var(--card-shadow);
+}
+
+.relatedCard:hover img {
+  transform: scale(1.05);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .mainCard {
+    flex-direction: column;
+  }
+
+  .mediaWrapper {
+    flex-direction: column;
+  }
+
+  .thumbnailWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-height: unset;
+    padding: 0.5rem 0;
+    height: 90px;
+    width: 100%;
+  }
+
+  .thumbnail {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    margin-bottom: 0;
+    margin-right: 10px;
+  }
+
+  .relatedCard {
+    height: 230px;
+  }
+
+  .relatedCard img {
+    height: 140px;
+  }
+
+  .infoSectionProductDetails {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ===== Buttons ===== */
+.sendEnquiryBtn {
+  background-color: var(--quota-btn-bg);
+  color: var(--quota-btn-text);
+  border: 2px solid var(--quota-btn-border);
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 10px var(--card-shadow);
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.sendEnquiryBtn:hover {
+  background-color: var(--quota-btn-hover-bg);
+  color: var(--quota-btn-hover-text);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px var(--card-shadow);
+}
+
+.sendEnquiryBtn:active {
+  transform: scale(0.98);
+}
