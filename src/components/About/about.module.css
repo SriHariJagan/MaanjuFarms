@@ -1,0 +1,297 @@
+/* =========================
+   Global Container
+========================= */
+.aboutPage {
+  background-color: var(--primary-bg);
+  color: var(--primary-text);
+  padding: 6rem 8%;
+  font-family: "Poppins", sans-serif;
+  line-height: 1.7;
+}
+
+/* =========================
+   Hero Section
+========================= */
+.heroSection {
+  background-image: url('/images/aboutUs.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  padding: 100px 20px;
+  text-align: center;
+  border-radius: 16px;
+  margin-bottom: 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Dark overlay only on background */
+.heroSection::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* adjust opacity as needed */
+  z-index: 1;
+  border-radius: 16px;
+}
+
+.heroTitle {
+  position: relative; /* keeps text above overlay */
+  z-index: 2;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.84); /* stays bright */
+}
+
+
+/* =========================
+   Intro Section
+========================= */
+.introSection {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 80px;
+}
+
+.textBlock {
+  flex: 1 1 320px;
+  font-size: 1.05rem;
+  position: relative;
+}
+
+.textBlock h2 {
+  color: var(--highlight-color);
+  margin-bottom: 16px;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.textBlock p {
+  color: var(--secondary-text);
+  margin-bottom: 20px;
+  text-align: justify;
+}
+
+.textBlock span {
+  display: block;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--highlight-color);
+  margin-top: 10px;
+}
+
+/* =========================
+   Carousel
+========================= */
+.carouselContainer {
+  flex: 1 1 320px;
+  max-width: 520px;
+}
+
+.carousel {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.carousel img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: transform 0.4s ease-in-out;
+}
+
+.carousel img:hover {
+  transform: scale(1.03);
+}
+
+/* Swiper arrows */
+.swiper-button-next,
+.swiper-button-prev {
+  color: var(--highlight-color) !important; /* custom arrow color */
+  color: red !important;
+  font-weight: bold;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  color: var(--secondary-text) !important;
+}
+
+/* Swiper dots (pagination bullets) */
+.swiper-pagination-bullet {
+  background: var(--secondary-text) !important;
+  opacity: 0.6;
+}
+
+.swiper-pagination-bullet-active {
+  background: var(--highlight-color) !important;
+  opacity: 1;
+}
+
+/* =========================
+   Highlight Cards
+========================= */
+.highlightSection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin: 80px 0;
+  justify-content: center;
+}
+
+.card {
+  flex: 1 1 280px;
+  max-width: 380px;
+  padding: 24px;
+  background: var(--card-bg);
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.18);
+}
+
+.card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 18px;
+}
+
+.card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  color: var(--highlight-color);
+}
+
+/* =========================
+   Facility Section
+========================= */
+.facilitySection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  align-items: center;
+  margin: 80px 0;
+}
+
+.facilitySection img {
+  flex: 1 1 320px;
+  max-width: 480px;
+  border-radius: 14px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+.facilitySection .textBlock {
+  flex: 1 1 320px;
+}
+
+/* =========================
+   Team / Vision & Mission
+========================= */
+.teamSection {
+  margin: 80px 0;
+  text-align: center;
+}
+
+.teamSection h2 {
+  font-size: 2rem;
+  margin-bottom: 18px;
+  color: var(--highlight-color);
+}
+
+/* =========================
+   Quick Facts Table
+========================= */
+.factsSection {
+  background-color: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  padding: 50px 30px;
+  border-radius: 14px;
+  margin-top: 60px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+}
+
+.tableTitle {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--highlight-color);
+  margin-bottom: 25px;
+}
+
+.tableContainer {
+  overflow-x: auto;
+}
+
+.factsTable {
+  width: 100%;
+  max-width: 850px;
+  margin: auto;
+  border-collapse: collapse;
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.factsTable th,
+.factsTable td {
+  padding: 14px 18px;
+  text-align: center;
+  border-bottom: 1px solid var(--card-shadow);
+  word-break: break-word; /* ✅ fix long text wrapping */
+}
+
+.factsTable th {
+  color: var(--highlight-color);
+  font-weight: 600;
+  background-color: var(--primary-bg-alt, #f5f5f5);
+}
+
+/* =========================
+   Responsive Tweaks
+========================= */
+@media (max-width: 992px) {
+  .introSection,
+  .highlightSection,
+  .facilitySection {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .carouselContainer,
+  .facilitySection img {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .aboutPage {
+    padding: 3rem 1.2rem;
+  }
+
+  .heroTitle {
+    font-size: 2rem;
+  }
+
+  .textBlock h2 {
+    font-size: 1.4rem;
+  }
+
+  .factsTable th,
+  .factsTable td {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+}

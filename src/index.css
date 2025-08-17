@@ -3,13 +3,13 @@
   margin: 0;
   box-sizing: border-box;
 }
-
 :root {
   /* Backgrounds */
   --primary-bg: #f0fdf4;
   --secondary-bg: #ffffff;
   --card-bg: #ffffff;
   --image-bg: #f5f5f5;
+  --hover-bg: #f9f9f9; /* ✅ light hover for rows */
 
   /* Text */
   --primary-text: #1e4620;
@@ -19,6 +19,7 @@
   /* Accent / Highlight */
   --accent-color: #43a047;
   --accent-hover: #2e7d32;
+  --accent-color-light: rgba(67, 160, 71, 0.3); /* ✅ for focus glow */
   --highlight-color: #b8860b; /* gold price color */
   --highlight-hover: #9a7209;
 
@@ -39,26 +40,28 @@
 
 .dark {
   /* Backgrounds */
-  --primary-bg: #0e1a12;  /* Deep charcoal green */
-  --secondary-bg: #152419; /* Slightly lighter for sections */
-  --card-bg: #1e2d22;      /* Card surface, clear separation */
-  --image-bg: #122017;     /* Subtle contrast for image areas */
+  --primary-bg: #0e1a12;  
+  --secondary-bg: #152419; 
+  --card-bg: #1e2d22;      
+  --image-bg: #122017;     
+  --hover-bg: #1a2a1f; /* ✅ darker hover */
 
   /* Text */
-  --primary-text: #e2f2e7;    /* Soft off-white green */
-  --secondary-text: #b7d3bf;  /* Muted sage */
-  --muted-text: #8fa18f;      /* Subtle muted gray-green */
+  --primary-text: #e2f2e7;    
+  --secondary-text: #b7d3bf;  
+  --muted-text: #8fa18f;      
 
   /* Accent / Highlight */
-  --accent-color: #6ecf8d;     /* Fresh green */
-  --accent-hover: #56b678;     /* Darker hover */
-  --highlight-color: #e1c870;  /* Elegant gold */
+  --accent-color: #6ecf8d;     
+  --accent-hover: #56b678;     
+  --accent-color-light: rgba(110, 207, 141, 0.3); /* ✅ glow in dark mode */
+  --highlight-color: #e1c870;  
   --highlight-hover: #cfae4e;
 
   /* Buttons */
   --button-bg: #6ecf8d;
   --button-hover-bg: #56b678;
-  --button-color: #0e1a12; /* dark text inside button for contrast */
+  --button-color: #0e1a12; 
 
   /* Borders / Shadows */
   --border-color: #2e4534;
