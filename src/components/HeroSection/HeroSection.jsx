@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./HeroSection.css";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+   const navigate = useNavigate();
+
   const videoRef = useRef(null);
   const videos = ["/videos/video1.mp4"];
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
@@ -35,7 +38,7 @@ const Hero = () => {
           <p>From Our Farm To Your Table – 100% Pure and Organic</p>
           <button
             className="add-to-cart"
-            onClick={() => console.log("Buy Now clicked!")}
+            onClick={() => navigate("/products")}
           >
             Buy Now
           </button>
