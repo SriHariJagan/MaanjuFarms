@@ -62,7 +62,7 @@
   color: var(--secondary-text);
   margin-bottom: 25px;
   font-style: italic;
-  text-align: left;
+  text-align: justify;
 }
 
 .testimonial-author {

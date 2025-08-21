@@ -95,8 +95,8 @@ const Navbar = () => {
             Offerings <ChevronDown size={14} />
             {isDropdownOpen && (
               <div className="dropdown-menu">
-                <Link to="/organic-farming" className="dropdown-item">
-                  Organic Farming
+                <Link to="/organic-products" className="dropdown-item">
+                  Organic Products
                 </Link>
                 <Link to="/horse-riding" className="dropdown-item">
                   Horse Riding
@@ -172,11 +172,11 @@ const Navbar = () => {
             {isDropdownOpen && (
               <div className="mobile-dropdown-menu">
                 <Link
-                  to="/organic-farming"
+                  to="/organic-products"
                   className="mobile-dropdown-item"
                   onClick={handleLinkClick}
                 >
-                  Organic Farming
+                  Organic Products
                 </Link>
                 <Link
                   to="/horse-riding"

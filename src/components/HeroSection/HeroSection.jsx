@@ -38,7 +38,7 @@ const Hero = () => {
           <p>From Our Farm To Your Table – 100% Pure and Organic</p>
           <button
             className="add-to-cart"
-            onClick={() => navigate("/products")}
+            onClick={() => navigate("/organic-products")}
           >
             Buy Now
           </button>
