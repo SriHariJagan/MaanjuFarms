@@ -41,7 +41,7 @@ function App() {
         />
 
         {/* Contact route */}
-        <Route path="/organic-farming" element={<ProductsPage />} />
+        <Route path="/organic-products" element={<ProductsPage />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<ContactUs />} />

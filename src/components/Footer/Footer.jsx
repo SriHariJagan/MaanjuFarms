@@ -8,7 +8,7 @@ const Footer = () => {
       <div className={styles.container}>
 
         {/* About */}
-        <div className={styles.column}>
+        <div className={`${styles.column} ${styles.aboutFooter}`}>
           <h3>Maanjoo Farms</h3>
           <p>
             A destination where <strong>nature</strong>, <strong>culture</strong>, and 
@@ -19,35 +19,38 @@ const Footer = () => {
         </div>
 
         {/* Quick Links */}
-        <div className={styles.column}>
+        <div className={`${styles.column} ${styles.quickLinksFooter}`}>
           <h4>Quick Links</h4>
           <ul>
             <li><a href="/">Home</a></li>
             <li><a href="/about">About Us</a></li>
-            <li><a href="/farming">Farming</a></li>
-            <li><a href="/horseriding">Horse Riding</a></li>
+            <li><a href="/organic-products">Organic Products</a></li>
+            <li><a href="/horse-riding">Horse Riding</a></li>
+            <li><a href="/camel-riding">Camel Safari</a></li>
             <li><a href="/contact">Contact</a></li>
           </ul>
         </div>
 
         {/* Experiences */}
-        <div className={styles.column}>
+        <div className={`${styles.column} ${styles.ourExperiencesFooter}`}>
           <h4>Our Experiences</h4>
           <ul>
-            <li>🐎 Horse Riding Trails</li>
-            <li>🐪 Camel Safari</li>
-            <li>🌾 Organic Farming</li>
-            <li>🏕 Agro-Tourism</li>
-            <li>🔥 Cultural Evenings</li>
+            <li>🐎Horse Riding Trails</li>
+            <li>🐪Camel Safari</li>
+            <li>🌾Organic Farming</li>
+            <li>🏕 &nbsp;Agro-Tourism</li>
+            <li>🔥Cultural Evenings</li>
           </ul>
         </div>
 
         {/* Contact */}
-        <div className={styles.column}>
+        <div className={`${styles.column} ${styles.contactFooter}`}>
           <h4>Contact Us</h4>
-          <p><MapPin size={16}/> Pilani, Rajasthan, India</p>
-          <p><Phone size={16}/> +91 98765 43210</p>
-          <p><Mail size={16}/> info@maanjooFarms.com</p>
+          <div className="styles.contactDetails">
+            <p><MapPin size={16}/> &nbsp; Pilani, Rajasthan, India</p>
+            <p><Phone size={16}/> &nbsp; +91 98765 43210</p>
+            <p><Mail size={16}/>  &nbsp; info@maanjooFarms.com</p>
+          </div>
 
           <div className={styles.social}>
             <a href="#"><Facebook /></a>
