@@ -1,0 +1,331 @@
+.villasSection {
+  background: var(--primary-bg);
+  color: var(--primary-text);
+  padding: 6rem 2rem;
+  font-family: var(--body-font);
+}
+
+.container {
+  max-width: 1300px;
+  margin: auto;
+  text-align: center;
+}
+
+
+/* Hero Section with Background Image */
+.hero {
+  position: relative;
+  background: url('/images/villas-hero.webp') center/cover no-repeat;
+  padding: 6rem 2rem 4rem;
+  border-radius: 16px;
+  margin-bottom: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.35); /* Dark overlay for readability */
+  border-radius: 16px;
+}
+
+.hero h2,
+.hero p {
+  position: relative; /* Make text above overlay */
+  z-index: 1;
+}
+
+.hero h2 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.hero p {
+  font-size: 1.15rem;
+  max-width: 800px;
+  text-align: center;
+  line-height: 1.7;
+  color: #f0f0f0;
+}
+
+/* Responsive Hero */
+@media (max-width: 768px) {
+  .hero h2 {
+    font-size: 2.2rem;
+  }
+  .hero p {
+    font-size: 1rem;
+  }
+}
+
+
+.heading {
+  font-family: var(--heading-font);
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--accent-color);
+  letter-spacing: 1px;
+}
+
+.subtext {
+  font-size: 1.15rem;
+  color: var(--secondary-text);
+  margin-bottom: 4rem;
+  line-height: 1.7;
+  max-width: 850px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.villasGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+}
+
+.card {
+  background: var(--secondary-bg);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.18);
+}
+
+.imageWrapper {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  border-bottom: 2px solid var(--accent-color-light);
+}
+
+.imageWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.card:hover .imageWrapper img {
+  transform: scale(1.12);
+}
+
+.content {
+  padding: 1.8rem;
+  text-align: left;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.content h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.8rem;
+  color: var(--accent-color);
+}
+
+.content p {
+  font-size: 1rem;
+  line-height: 1.65;
+  margin-bottom: 1.5rem;
+  color: var(--secondary-text);
+}
+
+.btn {
+  padding: 0.8rem 1.6rem;
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  align-self: flex-start;
+}
+
+.btn:hover {
+  background: var(--secondary-b);
+  transform: translateY(-2px);
+}
+
+/* Modal Styling */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  background: var(--secondary-bg);
+  padding: 2.5rem;
+  border-radius: 16px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+  position: relative;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  padding: 2px 8px;
+  padding-bottom: 4px;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--accent-color);
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+.modalContent label {
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  font-weight: 500;
+}
+
+.modalContent input {
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  width: 100%;
+  font-size: 1rem;
+  color: var(--primary-text);
+  background: var(--secondary-bg);
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Hover effect */
+.modalContent input:hover {
+  border-color: var(--accent-color);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Focus effect */
+.modalContent input:focus {
+  border-color: var(--accent-color);
+  outline: none;
+  box-shadow: 0 0 8px var(--accent-color-light), inset 0 2px 6px rgba(0,0,0,0.08);
+  background: var(--primary-bg);
+}
+
+/* Placeholder styling */
+.modalContent input::placeholder {
+  color: var(--muted-text);
+  font-style: italic;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.modalContent input:focus::placeholder {
+  opacity: 0.5;
+}
+
+/* Disabled / read-only */
+.modalContent input:disabled,
+.modalContent input[readonly] {
+  background: var(--hover-bg);
+  border-color: var(--border-color);
+  cursor: not-allowed;
+  color: var(--muted-text);
+}
+
+
+.available {
+  color: var(--accent-color);
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.unavailable {
+  color: red;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.bookBtn {
+  padding: 0.8rem 1.6rem;
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  margin-top: 0.8rem;
+}
+
+.bookBtn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+/* ✅ Responsive */
+@media (max-width: 1024px) {
+  .villasGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .heading {
+    font-size: 2.4rem;
+  }
+  .subtext {
+    font-size: 1.05rem;
+    margin-bottom: 2.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .villasGrid {
+    grid-template-columns: 1fr;
+  }
+  .content h3 {
+    font-size: 1.3rem;
+  }
+  .content p {
+    font-size: 0.95rem;
+  }
+  .btn, .bookBtn {
+    width: 100%;
+    text-align: center;
+  }
+}

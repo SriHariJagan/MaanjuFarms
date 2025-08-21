@@ -1,16 +1,19 @@
-import React from 'react';
-import { productsData } from '../../data.js';
-import './Bestsellers.css';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { productsData } from "../../data.js";
+import "./Bestsellers.css";
+import { useCart } from "../../Store/useContext.jsx";
 
 const BestSellers = () => {
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
+
   const handleAddToCart = (product) => {
-    console.log('Added to cart:', product);
-    // Add your cart logic here
+    addToCart(product);
   };
 
   const handleViewDetails = (product) => {
-    console.log('View details:', product);
-    // Add your view details logic here
+    navigate(`/product/${product.id}`, { state: { product } });
   };
 
   return (
@@ -27,13 +30,13 @@ const BestSellers = () => {
                 <h3 className="product-name">{product.name}</h3>
                 <p className="product-price">₹ {product.price}</p>
                 <div className="product-actions">
-                  <button 
+                  <button
                     className="btn btn-primary"
                     onClick={() => handleAddToCart(product)}
                   >
                     Add to Cart
                   </button>
-                  <button 
+                  <button
                     className="btn btn-secondary"
                     onClick={() => handleViewDetails(product)}
                   >

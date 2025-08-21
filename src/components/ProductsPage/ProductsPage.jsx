@@ -2,10 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import productsData from "../../productsData.json";
 import "./ProductsPage.css";
+import { useCart } from "../../Store/useContext";
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
+
+  // ✅ Get cart functions from context
+  const { addToCart } = useCart();
 
   useEffect(() => {
     setProducts(productsData.products);
@@ -14,23 +18,25 @@ const ProductsPage = () => {
   // Group by category
   const categories = [...new Set(products.map((p) => p.category))];
 
+  // ✅ Add product to cart
   const handleAddToCart = (product) => {
-    console.log("Added to cart:", product);
+    // For demo, if price is empty, assign a default value
+    const productWithPrice = { ...product, price: product.price || 100 };
+    addToCart(productWithPrice);
   };
 
   const handleViewDetails = (id) => {
-    console.log("Viewing details for product ID:", id);
     navigate(`/product/${id}`);
   };
 
   return (
     <div className="productsPage">
-      {/* ✅ Hero Section */}
+      {/* Hero Section */}
       <div className="heroSection">
         <h1 className="heroTitle">Our Products</h1>
       </div>
 
-      {/* ✅ Category Sections */}
+      {/* Category Sections */}
       {categories.map((category) => (
         <div key={category} className="categorySection">
           <h2 className="categoryTitle">{category.toUpperCase()}</h2>
@@ -49,7 +55,7 @@ const ProductsPage = () => {
                     {product.price ? `₹${product.price}` : "Coming Soon"}
                   </p>
 
-                  {/* ✅ Buttons */}
+                  {/* Buttons */}
                   <div className="buttonGroup">
                     <button
                       className="btnCart"

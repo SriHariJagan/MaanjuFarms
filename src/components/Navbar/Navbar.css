@@ -230,9 +230,6 @@
 /* =========================
    Mobile Menu
 ========================= */
-/* =========================
-   Mobile Menu
-========================= */
 .mobile-menu {
   position: absolute;
   top: 62px;
@@ -281,6 +278,115 @@
   margin-top: 8px;
   gap: 15px;
 }
+
+
+
+/* =========================
+   Dropdown Menu (Desktop)
+========================= */
+.dropdown {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 22px; /* below the nav link */
+  left: -50px;
+  background: var(--primary-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  padding: 10px 0;
+  min-width: 180px;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 999;
+}
+
+.dropdown:hover .dropdown-menu,
+.dropdown-menu.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 10px 16px;
+  color: var(--primary-text);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background: var(--accent-color);
+  color: #fff;
+}
+
+
+/* =========================
+   Mobile Dropdown Menu
+========================= */
+.mobile-dropdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--primary-text);
+  font-size: 16px;
+  font-weight: 500;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.mobile-dropdown-menu {
+  padding-left: 10px;
+  margin-top: 5px;
+  border-left: 2px solid var(--accent-color);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: slideDown 0.3s ease forwards;
+}
+
+.mobile-dropdown-item {
+  color: var(--primary-text);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 15px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.mobile-dropdown-item:hover {
+  background: var(--accent-color);
+  color: #fff;
+}
+
+/* Slide-down animation */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+
 
 /* =========================
    Responsive
