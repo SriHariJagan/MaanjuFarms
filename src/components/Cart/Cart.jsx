@@ -52,7 +52,7 @@ const Cart = () => {
                   <img src={item.image || item.img} alt={item.name} />
                 </td>
                 <td className={styles.productName}>{item.name}</td>
-                <td>${(item.price || 0).toFixed(2)}</td>
+                <td>₹{(item.price || 0).toFixed(2)}</td>
                 <td>
                   <div>
                     <button
@@ -70,7 +70,7 @@ const Cart = () => {
                     </button>
                   </div>
                 </td>
-                <td>${((item.price || 0) * item.qty).toFixed(2)}</td>
+                <td>₹{((item.price || 0) * item.qty).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
@@ -78,7 +78,7 @@ const Cart = () => {
       </section>
 
       <section className={`${styles.addCart} ${styles.sectionP1}`}>
-        <div className={styles.coupon}>
+        {/* <div className={styles.coupon}>
           <h3>Apply Coupon</h3>
           <div className={styles.couponInput}>
             <input
@@ -101,7 +101,7 @@ const Cart = () => {
               APPLY
             </button>
           </div>
-        </div>
+        </div> */}
 
         <div className={styles.subtotal}>
           <h3>Cart Totals</h3>
@@ -109,11 +109,11 @@ const Cart = () => {
             <tbody>
               <tr>
                 <td>Cart Subtotal</td>
-                <td>${subtotal().toFixed(2)}</td>
+                <td>₹{subtotal().toFixed(2)}</td>
               </tr>
               <tr>
                 <td>Discount</td>
-                <td>${discount.toFixed(2)}</td>
+                <td>₹{discount.toFixed(2)}</td>
               </tr>
               <tr>
                 <td>Shipping</td>
@@ -124,7 +124,7 @@ const Cart = () => {
                   <strong>Total</strong>
                 </td>
                 <td>
-                  <strong>${total()}</strong>
+                  <strong>₹{total()}</strong>
                 </td>
               </tr>
             </tbody>
