@@ -238,7 +238,6 @@
   border-radius: 0 0 20px 20px;
   padding: 20px;
   text-align: right;
-  max-height: 0;
   opacity: 0;
   overflow: hidden;
   transform: translateY(-15px); /* start slightly above */
@@ -247,7 +246,7 @@
 }
 
 .mobile-menu.open {
-  max-height: 400px;
+  /* max-height: 400px; */
   opacity: 1;
   transform: translateY(0); /* slide down into place */
 }

@@ -166,7 +166,29 @@ const Navbar = () => {
               Home
             </Link>
 
-            <button className="mobile-dropdown" onClick={toggleDropdown}>
+            <Link
+              to="/gallery"
+              className="mobile-nav-link"
+              onClick={handleLinkClick}
+            >
+              Gallery
+            </Link>
+            <Link
+              to="/about"
+              className="mobile-nav-link"
+              onClick={handleLinkClick}
+            >
+              About Us
+            </Link>
+            <Link
+              to="/contact"
+              className="mobile-nav-link"
+              onClick={handleLinkClick}
+            >
+              Contact Us
+            </Link>
+
+             <button className="mobile-dropdown" onClick={toggleDropdown}>
               Offerings <ChevronDown size={14} />
             </button>
             {isDropdownOpen && (
@@ -202,27 +224,6 @@ const Navbar = () => {
               </div>
             )}
 
-            <Link
-              to="/gallery"
-              className="mobile-nav-link"
-              onClick={handleLinkClick}
-            >
-              Gallery
-            </Link>
-            <Link
-              to="/about"
-              className="mobile-nav-link"
-              onClick={handleLinkClick}
-            >
-              About Us
-            </Link>
-            <Link
-              to="/contact"
-              className="mobile-nav-link"
-              onClick={handleLinkClick}
-            >
-              Contact Us
-            </Link>
 
             {/* Mobile Search */}
             <div className="mobile-search-wrapper">

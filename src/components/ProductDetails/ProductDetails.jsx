@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import productsData from "../../productsData.json";
 import "./ProductDetails.css";
+import { useCart } from "../../Store/useContext";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -10,6 +11,8 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [mainImage, setMainImage] = useState("");
   const [similarProducts, setSimilarProducts] = useState([]);
+
+  const { addToCart } = useCart()
 
   useEffect(() => {
     const found = productsData.products.find((p) => String(p.id) === id);
@@ -62,7 +65,7 @@ const ProductDetails = () => {
           <p className="category">Category: {product.category}</p>
           {product.price && <p className="price">Price: ₹{product.price}</p>}
 
-          <button className="addToCart">Add to Cart</button>
+          <button className="addToCart" onClick={() => addToCart(product)}>Add to Cart</button>
         </div>
       </div>
 
