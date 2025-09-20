@@ -165,6 +165,34 @@ const Navbar = () => {
             <Link to="/" className="mobile-nav-link" onClick={handleLinkClick}>
               Home
             </Link>
+            <Link
+              to="/organic-products"
+              className="mobile-nav-link"
+              onClick={handleLinkClick}
+            >
+              Organic Products
+            </Link>
+            <Link
+              to="/horse-riding"
+              className="mobile-nav-link"
+              onClick={handleLinkClick}
+            >
+              Horse Riding
+            </Link>
+            <Link
+              to="/camel-riding"
+              className="mobile-nav-link"
+              onClick={handleLinkClick}
+            >
+              Camel Riding
+            </Link>
+            <Link
+              to="/villas"
+              className="mobile-nav-link"
+              onClick={handleLinkClick}
+            >
+              Villas & Stays
+            </Link>
 
             <Link
               to="/gallery"
@@ -188,7 +216,7 @@ const Navbar = () => {
               Contact Us
             </Link>
 
-             <button className="mobile-dropdown" onClick={toggleDropdown}>
+            {/* <button className="mobile-dropdown" onClick={toggleDropdown}>
               Offerings <ChevronDown size={14} />
             </button>
             {isDropdownOpen && (
@@ -222,8 +250,7 @@ const Navbar = () => {
                   Villas & Stays
                 </Link>
               </div>
-            )}
-
+            )} */}
 
             {/* Mobile Search */}
             <div className="mobile-search-wrapper">
