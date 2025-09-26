@@ -11,8 +11,7 @@
   text-align: center;
 }
 
-
-/* Hero Section with Background Image */
+/* Hero Section */
 .hero {
   position: relative;
   background: url('/images/villas-hero.webp') center/cover no-repeat;
@@ -34,13 +33,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.35); /* Dark overlay for readability */
+  background: rgba(0, 0, 0, 0.35);
   border-radius: 16px;
 }
 
 .hero h2,
 .hero p {
-  position: relative; /* Make text above overlay */
+  position: relative;
   z-index: 1;
 }
 
@@ -59,17 +58,7 @@
   color: #f0f0f0;
 }
 
-/* Responsive Hero */
-@media (max-width: 768px) {
-  .hero h2 {
-    font-size: 2.2rem;
-  }
-  .hero p {
-    font-size: 1rem;
-  }
-}
-
-
+/* Heading & Subtext */
 .heading {
   font-family: var(--heading-font);
   font-size: 3rem;
@@ -88,6 +77,7 @@
   margin-right: auto;
 }
 
+/* Villas Grid */
 .villasGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -149,6 +139,7 @@
   color: var(--secondary-text);
 }
 
+/* Buttons */
 .btn {
   padding: 0.8rem 1.6rem;
   background: var(--accent-color);
@@ -162,8 +153,38 @@
 }
 
 .btn:hover {
-  background: var(--secondary-b);
+  background: var(--accent-color-light);
   transform: translateY(-2px);
+}
+
+.bookBtn {
+  padding: 0.8rem 1.6rem;
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  margin-top: 0.8rem;
+}
+
+.bookBtn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+/* Status Styles */
+.available {
+  color: var(--accent-color);
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.unavailable {
+  color: red;
+  font-weight: 600;
+  margin-top: 0.5rem;
 }
 
 /* Modal Styling */
@@ -196,7 +217,6 @@
   top: 12px;
   right: 16px;
   padding: 2px 8px;
-  padding-bottom: 4px;
   background: transparent;
   border: none;
   font-size: 1.5rem;
@@ -232,13 +252,11 @@
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* Hover effect */
 .modalContent input:hover {
   border-color: var(--accent-color);
   box-shadow: inset 0 2px 6px rgba(0,0,0,0.08);
 }
 
-/* Focus effect */
 .modalContent input:focus {
   border-color: var(--accent-color);
   outline: none;
@@ -246,7 +264,6 @@
   background: var(--primary-bg);
 }
 
-/* Placeholder styling */
 .modalContent input::placeholder {
   color: var(--muted-text);
   font-style: italic;
@@ -258,7 +275,6 @@
   opacity: 0.5;
 }
 
-/* Disabled / read-only */
 .modalContent input:disabled,
 .modalContent input[readonly] {
   background: var(--hover-bg);
@@ -267,35 +283,87 @@
   color: var(--muted-text);
 }
 
+/* Admin Status Select */
+.statusSelect {
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  margin-bottom: 0.8rem;
+  border: 1px solid var(--border-color);
+  background: var(--secondary-bg);
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--primary-text);
+}
 
-.available {
+/* Admin Bookings Table */
+.bookingsTableWrapper {
+  margin-top: 4rem;
+  overflow-x: auto;
+}
+
+.tableHeading {
+  font-size: 2rem;
   color: var(--accent-color);
-  font-weight: 600;
-  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
 }
 
-.unavailable {
-  color: red;
-  font-weight: 600;
-  margin-top: 0.5rem;
+.bookingsTable {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.bookBtn {
-  padding: 0.8rem 1.6rem;
+.bookingsTable th,
+.bookingsTable td {
+  padding: 1rem 1.2rem;
+  text-align: left;
+  background: var(--secondary-bg);
+}
+
+.bookingsTable th {
   background: var(--accent-color);
   color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
   font-weight: 600;
-  margin-top: 0.8rem;
 }
 
-.bookBtn:hover {
-  background: var(--accent-hover);
-  transform: translateY(-2px);
+.bookingsTable tr:nth-child(even) td {
+  background: var(--primary-bg);
 }
+
+.bookingsTable tr:hover td {
+  background: var(--accent-color-light);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+
+.upcomingBookings {
+  margin-top: 20px;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+}
+
+.upcomingBookings h4 {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.bookingItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px dashed #ccc;
+  font-size: 0.9rem;
+}
+
+.bookingItem span:first-child {
+  font-weight: 500;
+}
+
 
 /* ✅ Responsive */
 @media (max-width: 1024px) {
@@ -326,6 +394,17 @@
   }
   .btn, .bookBtn {
     width: 100%;
+    text-align: center;
+  }
+
+  .bookingsTable {
+    width: 800px;
+  }
+
+  .bookingsTable th,
+  .bookingsTable td {
+    padding: 0.8rem;
+    font-size: 0.9rem;
     text-align: center;
   }
 }

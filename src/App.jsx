@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -19,6 +24,9 @@ import HorseRiding from "./components/HorseRiding/HorseRiding.jsx";
 import CamelRiding from "./components/CamelRiding/CamelRiding.jsx";
 import Footer from "./components/Footer/Footer.jsx";
 import VillasStays from "./components/VillasStays/VillasStays.jsx";
+import Login from "./components/Login/Login.jsx";
+import Signup from "./components/Signup/Signup.jsx";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute.jsx";
 
 function App() {
   return (
@@ -40,16 +48,33 @@ function App() {
           }
         />
 
-        {/* Contact route */}
+        {/* Public Routes */}
         <Route path="/organic-products" element={<ProductsPage />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<ContactUs />} />
-        <Route path="/cart" element={<Cart />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/horse-riding" element={<HorseRiding />} />
         <Route path="/camel-riding" element={<CamelRiding />} />
         <Route path="/villas" element={<VillasStays />} />
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+
+        {/* Protected Routes */}
+        <Route
+          path="/cart"
+          element={
+            <PrivateRoute>
+              <Cart />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/product/:id"
+          element={
+              <ProductDetails />
+          }
+        />
 
         {/* Catch-all route → redirect to home */}
         <Route path="*" element={<Navigate to="/" replace />} />

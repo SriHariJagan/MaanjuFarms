@@ -19,7 +19,7 @@
   /* Accent / Highlight */
   --accent-color: #43a047;
   --accent-hover: #2e7d32;
-  --accent-color-light: rgba(67, 160, 71, 0.3); /* ✅ for focus glow */
+  --accent-color-light: rgba(67, 160, 72, 0.774); /* ✅ for focus glow */
   --highlight-color: #b8860b; /* gold price color */
   --highlight-hover: #9a7209;
 
@@ -59,7 +59,7 @@
   --highlight-hover: #cfae4e;
 
   /* Buttons */
-  --button-bg: #6ecf8d;
+  --button-bg: #6bb281;
   --button-hover-bg: #56b678;
   --button-color: #0e1a12; 
 
@@ -112,7 +112,6 @@ button,
 button:hover,
 .add-to-cart:hover {
   background-color: #ffffff;               /* White background on hover */
-  color: #43a047;                          /* Green text on hover */
   border: 2px solid #43a047;              /* Keep border green */
   transform: translateY(-3px) scale(1.05);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);

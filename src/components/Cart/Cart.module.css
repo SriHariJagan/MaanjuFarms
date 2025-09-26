@@ -222,10 +222,22 @@
   margin: 0;
 }
 
+
+.removeProductBtn:hover {
+  color: red;
+  border: 1px solid red;
+}
+
 .countProductBtn {
   padding: 6px;
   padding-bottom: 2px;
   margin: 0;
+}
+
+
+.countProductBtn:hover {
+  color: var(--button-bg);
+  border: 1px solid var(--button-bg);
 }
 
 

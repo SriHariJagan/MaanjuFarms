@@ -34,7 +34,7 @@ const Hero = () => {
       />
       <div className="hero-overlay">
         <div className="hero-content">
-          <h1>Maanju Farms Pilani</h1>
+          <h1>Maanjoo Farms Pilani</h1>
           <p>From Our Farm To Your Table – 100% Pure and Organic</p>
           <button
             className="add-to-cart"

@@ -2,27 +2,15 @@ import React from "react";
 import { XCircle, Minus, Plus } from "lucide-react";
 import styles from "./Cart.module.css";
 import { useCart } from "../../Store/useContext";
-import { toast } from "react-toastify";
 
 const Cart = () => {
-  const {
-    cart,
-    removeFromCart,
-    increaseQty,
-    decreaseQty,
-    coupon,
-    setCoupon,
-    discount,
-    applyCoupon,
-    subtotal,
-    total,
-  } = useCart();
+  const { cart, removeFromCart, increaseQty, decreaseQty, subtotal, total } = useCart();
 
   return (
     <>
       <section className={`${styles.pageHeader} ${styles.aboutHeader}`}>
         <h2>Cart</h2>
-        <p>Add Your Coupon Code & SAVE up to 75%!</p>
+        <p>Your selected items are waiting — proceed to complete your order!</p>
       </section>
 
       <section className={`${styles.cart} ${styles.sectionP1}`}>
@@ -39,38 +27,38 @@ const Cart = () => {
           </thead>
           <tbody>
             {cart.map((item) => (
-              <tr key={item.id}>
+              <tr key={item.product._id}>
                 <td>
                   <button
-                    onClick={() => removeFromCart(item.id)}
+                    onClick={() => removeFromCart(item.product._id)}
                     className={styles.removeProductBtn}
                   >
                     <XCircle size={20} strokeWidth={2} />
                   </button>
                 </td>
                 <td>
-                  <img src={item.image || item.img} alt={item.name} />
+                  <img src={item.product.image || "/images/default.png"} alt={item.product.name} />
                 </td>
-                <td className={styles.productName}>{item.name}</td>
-                <td>₹{(item.price || 0).toFixed(2)}</td>
+                <td className={styles.productName}>{item.product.name}</td>
+                <td>₹{(item.product.price || 0).toFixed(2)}</td>
                 <td>
                   <div>
                     <button
-                      onClick={() => decreaseQty(item.id)}
+                      onClick={() => decreaseQty(item.product._id)}
                       className={styles.countProductBtn}
                     >
                       <Minus size={16} />
                     </button>
-                    <span style={{ margin: "0 10px" }}>{item.qty}</span>
+                    <span style={{ margin: "0 15px", fontSize: "1.2rem" }}>{item.quantity}</span>
                     <button
-                      onClick={() => increaseQty(item.id)}
+                      onClick={() => increaseQty(item.product._id)}
                       className={styles.countProductBtn}
                     >
                       <Plus size={16} />
                     </button>
                   </div>
                 </td>
-                <td>₹{((item.price || 0) * item.qty).toFixed(2)}</td>
+                <td>₹{((item.product.price || 0) * item.quantity).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
@@ -78,31 +66,6 @@ const Cart = () => {
       </section>
 
       <section className={`${styles.addCart} ${styles.sectionP1}`}>
-        {/* <div className={styles.coupon}>
-          <h3>Apply Coupon</h3>
-          <div className={styles.couponInput}>
-            <input
-              type="text"
-              placeholder="Enter Coupon Code"
-              value={coupon}
-              onChange={(e) => setCoupon(e.target.value)}
-            />
-            <button
-              className={styles.normal}
-              onClick={() => {
-                if (!coupon.trim()) {
-                  // ✅ Show error if input is empty
-                  toast.error("Please enter a coupon code");
-                  return;
-                }
-                applyCoupon(coupon);
-              }}
-            >
-              APPLY
-            </button>
-          </div>
-        </div> */}
-
         <div className={styles.subtotal}>
           <h3>Cart Totals</h3>
           <table>
@@ -112,20 +75,12 @@ const Cart = () => {
                 <td>₹{subtotal().toFixed(2)}</td>
               </tr>
               <tr>
-                <td>Discount</td>
-                <td>₹{discount.toFixed(2)}</td>
-              </tr>
-              <tr>
                 <td>Shipping</td>
                 <td>Free</td>
               </tr>
               <tr>
-                <td>
-                  <strong>Total</strong>
-                </td>
-                <td>
-                  <strong>₹{total()}</strong>
-                </td>
+                <td><strong>Total</strong></td>
+                <td><strong>₹{total()}</strong></td>
               </tr>
             </tbody>
           </table>

@@ -8,13 +8,17 @@ import {
   AlignJustify,
   X,
   ChevronDown,
+  LogIn,
+  LogOut,
 } from "lucide-react";
 import "./Navbar.css";
-import { useCart } from "../../Store/useContext";
+import { useCart, useAuth } from "../../Store/useContext";
 
 const Navbar = () => {
   const { cart } = useCart();
-  const cartCount = cart.reduce((total, item) => total + item.qty, 0);
+  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+  const { user, logout } = useAuth();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -123,11 +127,11 @@ const Navbar = () => {
 
         {/* Right Actions */}
         <div className="navbar-actions">
-          {/* Search (hidden on mobile) */}
-          <div className="search-wrapper desktop-only">
+          {/* Search (desktop only) */}
+          {/* <div className="search-wrapper desktop-only">
             <Search className="search-icon" size={16} />
             <input type="text" placeholder="Search..." />
-          </div>
+          </div> */}
 
           {/* Cart */}
           <Link to="/cart" className="cart-button">
@@ -143,6 +147,18 @@ const Navbar = () => {
           >
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
           </button>
+
+
+           {/* Login / Logout */}
+          {user ? (
+            <button className="auth-button" onClick={logout}>
+               <LogOut size={16} />
+            </button>
+          ) : (
+            <Link to="/login" className="auth-button">
+               <LogIn size={16} />
+            </Link>
+          )}
 
           {/* Mobile Menu Button */}
           <button
@@ -193,7 +209,6 @@ const Navbar = () => {
             >
               Villas & Stays
             </Link>
-
             <Link
               to="/gallery"
               className="mobile-nav-link"
@@ -216,47 +231,11 @@ const Navbar = () => {
               Contact Us
             </Link>
 
-            {/* <button className="mobile-dropdown" onClick={toggleDropdown}>
-              Offerings <ChevronDown size={14} />
-            </button>
-            {isDropdownOpen && (
-              <div className="mobile-dropdown-menu">
-                <Link
-                  to="/organic-products"
-                  className="mobile-dropdown-item"
-                  onClick={handleLinkClick}
-                >
-                  Organic Products
-                </Link>
-                <Link
-                  to="/horse-riding"
-                  className="mobile-dropdown-item"
-                  onClick={handleLinkClick}
-                >
-                  Horse Riding
-                </Link>
-                <Link
-                  to="/camel-riding"
-                  className="mobile-dropdown-item"
-                  onClick={handleLinkClick}
-                >
-                  Camel Riding
-                </Link>
-                <Link
-                  to="/villas"
-                  className="mobile-dropdown-item"
-                  onClick={handleLinkClick}
-                >
-                  Villas & Stays
-                </Link>
-              </div>
-            )} */}
-
             {/* Mobile Search */}
-            <div className="mobile-search-wrapper">
+            {/* <div className="mobile-search-wrapper">
               <input type="text" placeholder="Search..." />
               <Search size={14} className="search-icon" />
-            </div>
+            </div> */}
 
             {/* Cart */}
             <Link
@@ -267,6 +246,29 @@ const Navbar = () => {
               Cart <ShoppingCart size={16} />
               {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
             </Link>
+
+            <br />
+
+            {/* Mobile Login / Logout */}
+            {user ? (
+              <button
+                className="mobile-auth-button"
+                onClick={() => {
+                  logout();
+                  handleLinkClick();
+                }}
+              >
+                Logout <LogOut size={16} />
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                className="mobile-auth-button"
+                onClick={handleLinkClick}
+              >
+                <button className="mobile-auth-button">Login <LogIn size={16} /></button>
+              </Link>
+            )}
           </div>
         </div>
       )}

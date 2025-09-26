@@ -1,0 +1,317 @@
+.productDetailsWrapper {
+  max-width: 1200px;
+  margin: auto;
+  padding: 2rem 1rem;
+  color: var(--primary-text);
+  font-family: var(--body-font);
+}
+
+/* ===== Main Card ===== */
+.productMainCard {
+  margin-top: 80px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-light);
+  border-radius: 20px;
+  padding: 2rem;
+  transition: 0.3s;
+  position: relative;
+}
+
+/* ===== Media Section ===== */
+.productMedia {
+  flex: 1 1 45%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.mainProductImage img,
+.mainProductImage input {
+  width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: 15px;
+  background: var(--image-bg);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-light);
+}
+
+.mainProductImage img:hover {
+  transform: scale(1.03);
+  box-shadow: var(--shadow-hover);
+}
+
+.previewImage {
+  width: 100%;
+  max-height: 450px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin-top: 0.5rem;
+  box-shadow: var(--shadow-light);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.previewImage:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-hover);
+}
+
+.productThumbnails {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+}
+
+.productThumbnails img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 12px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.25s ease, border 0.25s ease, box-shadow 0.25s ease;
+}
+
+.productThumbnails img:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-hover);
+}
+
+.thumbActive {
+  border-color: var(--highlight-color);
+  box-shadow: 0 0 10px var(--highlight-color);
+}
+
+/* ===== Info Section ===== */
+.productInfo {
+  flex: 1 1 45%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.productTitle {
+  font-size: 2.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.category {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--secondary-text);
+  margin-bottom: 0.5rem;
+}
+
+.price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--highlight-color);
+}
+
+.stock {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--accent-color);
+}
+
+.productDesc {
+  line-height: 1.7;
+  color: var(--primary-text);
+  margin-top: 0.5rem;
+}
+
+.editInput,
+.editTextarea {
+  width: 100%;
+  padding: 0.7rem;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: var(--secondary-bg);
+  color: var(--primary-text);
+  box-shadow: var(--shadow-light);
+  transition: 0.3s ;
+}
+
+.editInput:focus,
+.editTextarea:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 10px var(--accent-color-light);
+}
+
+.editTextarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+/* ===== Buttons ===== */
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+button,
+.btnAddCart,
+.btnEdit,
+.btnDelete,
+.btnProductSave,
+.btnProductCancel {
+  padding: 0.8rem 1.8rem;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: .5s ;
+  box-shadow: var(--shadow-light);
+}
+
+.btnBack {
+  position: absolute;
+  top: -10px;
+  right: 15px;
+  padding: 0.5rem;
+  background: var(--button-bg);
+  color: var(--button-color);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-light);
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btnBack:hover {
+  background: var(--button-hover-bg);
+  transform: scale(1.05);
+}
+
+
+
+/* Professional Gradient Buttons */
+.btnAddCart {
+  background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+  color: #fff;
+}
+
+.btnAddCart:hover {
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent-color));
+  transform: translateY(-2px) scale(1.05);
+}
+
+.btnEdit {
+  background: linear-gradient(135deg, #ffc107, #e0a800);
+  color: #212529;
+}
+
+.btnEdit:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.btnDelete {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: #fff;
+}
+
+.btnDelete:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.btnProductSave {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: #fff;
+}
+
+.btnProductSave:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.btnProductCancel {
+  background: linear-gradient(135deg, #6c757d, #495057);
+  color: #fff;
+}
+
+.btnProductCancel:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* ===== Similar Products ===== */
+.similarProducts h2 {
+  font-size: 1.7rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.similarGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.similarCard {
+  background: var(--card-bg);
+  border-radius: 15px;
+  box-shadow: var(--shadow-light);
+  cursor: pointer;
+  transition: 0.3s;
+  overflow: hidden;
+}
+
+.similarCard:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+.similarImg {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.similarInfo {
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.similarName {
+  font-weight: 600;
+}
+
+.similarPrice {
+  color: var(--highlight-color);
+}
+
+/* ===== Loading ===== */
+.loading {
+  text-align: center;
+  font-size: 1.3rem;
+  padding: 2rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .productMainCard {
+    flex-direction: column;
+    margin-top: 50px;
+  }
+
+  .productMedia,
+  .productInfo {
+    flex: 1 1 100%;
+  }
+
+  .productThumbnails {
+    justify-content: center;
+  }
+}

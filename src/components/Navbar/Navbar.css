@@ -184,7 +184,7 @@
 /* =========================
    Theme Toggle (Improved)
 ========================= */
-.theme-toggle {
+.theme-toggle, .auth-button{
   display: flex;
   align-items: center;
   justify-content: center;
@@ -200,7 +200,7 @@
   padding: 0;
   margin: 0;
 }
-.theme-toggle:hover {
+.theme-toggle:hover, .auth-button:hover {
   background: var(--accent-color);
   color: #fff;
   transform: translateY(-1px);
@@ -383,6 +383,10 @@
   }
 }
 
+.mobile-auth-button{
+  padding: .6rem 1rem;
+}
+
 
 
 
@@ -405,6 +409,11 @@
 
   .mobile-search-wrapper{
     margin-block: 15px;
+  }
+
+  .auth-button, .mobile-get-started-button{
+    display: none;
+    visibility: hidden;
   }
 }
 
