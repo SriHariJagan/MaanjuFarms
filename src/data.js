@@ -30,27 +30,27 @@ export const categories = [
     image: "/images/millets.jpeg",
     buttonText: "Shop Millets",
   },
-  {
-    id: 5,
-    title: "Aromatic Spices",
-    description: "Authentic spices to elevate your culinary creations.",
-    image: "/images/spices.jpeg",
-    buttonText: "Shop Spices",
-  },
-  {
-    id: 6,
-    title: "Homemade Honey ",
-    description: "Wholesome grains packed with fiber and protein.",
-    image: "/images/Honey.jpeg",
-    buttonText: "Shop Honey",
-  },
-  {
-    id: 7,
-    title: "Olive ",
-    description: "Authentic spices to elevate your culinary creations.",
-    image: "/images/olive.jpeg",
-    buttonText: "Shop Olives",
-  },
+  // {
+  //   id: 5,
+  //   title: "Aromatic Spices",
+  //   description: "Authentic spices to elevate your culinary creations.",
+  //   image: "/images/spices.jpeg",
+  //   buttonText: "Shop Spices",
+  // },
+  // {
+  //   id: 6,
+  //   title: "Homemade Honey ",
+  //   description: "Wholesome grains packed with fiber and protein.",
+  //   image: "/images/Honey.jpeg",
+  //   buttonText: "Shop Honey",
+  // },
+  // {
+  //   id: 7,
+  //   title: "Olive ",
+  //   description: "Authentic spices to elevate your culinary creations.",
+  //   image: "/images/olive.jpeg",
+  //   buttonText: "Shop Olives",
+  // },
 ];
 
 export const productsData = [
