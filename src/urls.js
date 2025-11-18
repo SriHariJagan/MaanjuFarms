@@ -1,10 +1,7 @@
 // Base API URL
-export const API_BASE = "http://localhost:5000/api";
-// const API_BASE = "https://maanjufarmsbackend.onrender.com/api";
+// export const API_BASE = "http://localhost:5000/api";
+export const API_BASE = "https://maanjufarmsbackend.onrender.com/api";
 
-// ImageUrl
-// export const IMAGE_URL = "https://maanjufarmsbackend.onrender.com/api/";
-export const IMAGE_URL = "http://localhost:5000/api/";
 
 // Auth
 export const AUTH_API = `${API_BASE}/auth`;
