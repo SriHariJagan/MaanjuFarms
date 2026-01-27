@@ -15,19 +15,31 @@ const VillasProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-
+  // ------------------ INITIAL LOAD ------------------
   useEffect(() => {
     if (!token) {
       setLoading(false);
       return;
     }
-    fetchVillas();
-    fetchBookings();
+    loadAllData();
   }, [token, isAdmin]);
 
-  const fetchVillas = async () => {
+  // ------------------ MASTER FETCH ------------------
+  const loadAllData = async () => {
     setLoading(true);
     setError("");
+
+    try {
+      await Promise.all([fetchVillas(), fetchBookings()]);
+    } catch (err) {
+      // handled inside functions
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ------------------ FETCH VILLAS ------------------
+  const fetchVillas = async () => {
     try {
       const res = await axios.get(`${ROOMS_API}?category=villa`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -37,29 +49,36 @@ const VillasProvider = ({ children }) => {
       const msg = err.response?.data?.msg || "Failed to fetch villas";
       setError(msg);
       toast.error(msg, { toastId: "fetch-villas-error" });
-    } finally {
-      setLoading(false);
+      throw err;
     }
   };
 
+  // ------------------ FETCH BOOKINGS ------------------
   const fetchBookings = async () => {
     if (!token) return;
 
     try {
-      const url = isAdmin ? `${BOOKINGS_API}/` : `${BOOKINGS_API}/my-bookings`;
+      const url = isAdmin
+        ? `${BOOKINGS_API}/`
+        : `${BOOKINGS_API}/my-bookings`;
+
       const res = await axios.get(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       setBookings(res.data);
     } catch (err) {
       const msg = isAdmin
-        ? err.response?.data?.msg || "Failed to fetch all bookings (Admin)"
+        ? err.response?.data?.msg || "Failed to fetch all bookings"
         : err.response?.data?.msg || "Failed to fetch your bookings";
+
       setBookings([]);
       toast.error(msg, { toastId: "fetch-bookings-error" });
+      throw err;
     }
   };
 
+  // ------------------ ADD VILLA ------------------
   const addVilla = async (villaData) => {
     if (!isAdmin) return { success: false, msg: "Unauthorized" };
 
@@ -69,33 +88,39 @@ const VillasProvider = ({ children }) => {
         { ...villaData, category: "villa" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setVillas((prev) => [...prev, res.data.room]);
-      toast.success("Villa added ✅", { toastId: "add-villa" });
+
+      toast.success("Villa added ✅");
+      await loadAllData();
+
       return { success: true, villa: res.data.room };
     } catch (err) {
       const msg = err.response?.data?.msg || "Failed to add villa";
-      toast.error(msg, { toastId: "add-villa-error" });
+      toast.error(msg);
       return { success: false, msg };
     }
   };
 
+  // ------------------ UPDATE VILLA ------------------
   const updateVilla = async (id, updatedData) => {
     if (!isAdmin) return { success: false, msg: "Unauthorized" };
 
     try {
-      const res = await axios.put(`${ROOMS_API}/${id}`, updatedData, {
+      await axios.put(`${ROOMS_API}/${id}`, updatedData, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setVillas((prev) => prev.map((v) => (v._id === id ? res.data.room : v)));
-      toast.success("Villa updated ✨", { toastId: `update-villa-${id}` });
-      return { success: true, villa: res.data.room };
+
+      toast.success("Villa updated ✨");
+      await loadAllData();
+
+      return { success: true };
     } catch (err) {
       const msg = err.response?.data?.msg || "Failed to update villa";
-      toast.error(msg, { toastId: `update-villa-error-${id}` });
+      toast.error(msg);
       return { success: false, msg };
     }
   };
 
+  // ------------------ DELETE VILLA ------------------
   const deleteVilla = async (id) => {
     if (!isAdmin) return { success: false, msg: "Unauthorized" };
 
@@ -103,16 +128,19 @@ const VillasProvider = ({ children }) => {
       await axios.delete(`${ROOMS_API}/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setVillas((prev) => prev.filter((v) => v._id !== id));
-      toast.success("Villa deleted 🗑️", { toastId: `delete-villa-${id}` });
+
+      toast.success("Villa deleted 🗑️");
+      await loadAllData();
+
       return { success: true };
     } catch (err) {
       const msg = err.response?.data?.msg || "Failed to delete villa";
-      toast.error(msg, { toastId: `delete-villa-error-${id}` });
+      toast.error(msg);
       return { success: false, msg };
     }
   };
 
+  // ------------------ BOOK VILLA ------------------
   const bookVilla = async (roomId, checkIn, checkOut) => {
     if (!token) return { success: false, msg: "Unauthorized" };
 
@@ -123,19 +151,15 @@ const VillasProvider = ({ children }) => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      const newBooking = res.data.booking;
+      toast.success("Villa booked 🎉");
 
-      // Update bookings and villa status
-      setBookings((prev) => [...prev, newBooking]);
-      setVillas((prev) =>
-        prev.map((v) => (v._id === roomId ? { ...v, status: "booked" } : v))
-      );
+      // 🔥 Re-sync from backend (no fake local mutation)
+      await loadAllData();
 
-      toast.success("Villa booked 🎉", { toastId: `book-villa-${roomId}` });
-      return { success: true, booking: newBooking };
+      return { success: true, booking: res.data.booking };
     } catch (err) {
       const msg = err.response?.data?.msg || "Booking failed";
-      toast.error(msg, { toastId: `book-villa-error-${roomId}` });
+      toast.error(msg);
       return { success: false, msg };
     }
   };
