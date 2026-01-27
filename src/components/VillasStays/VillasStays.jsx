@@ -9,6 +9,8 @@ import DatePicker from "react-datepicker";
 import "react-toastify/dist/ReactToastify.css";
 import "react-datepicker/dist/react-datepicker.css";
 
+const formatDate = (date) => date.toLocaleDateString("en-CA"); 
+
 const VillasStays = () => {
   const {
     villas,
@@ -42,7 +44,7 @@ const VillasStays = () => {
       (b) =>
         b.room?._id === villa._id &&
         new Date(b.checkIn) <= today &&
-        today <= new Date(b.checkOut)
+        today <= new Date(b.checkOut),
     );
 
     return bookedToday ? "Booked" : "Available";
@@ -106,7 +108,7 @@ const VillasStays = () => {
 
     // ✅ Get all bookings for this villa
     const villaBookings = bookings.filter(
-      (b) => b.room?._id === selectedVilla._id
+      (b) => b.room?._id === selectedVilla._id,
     );
 
     // ✅ Check for overlapping bookings (exact same logic as backend)
@@ -144,8 +146,10 @@ const VillasStays = () => {
       return;
     }
 
-    const res = await bookVilla(selectedVilla._id, checkIn, checkOut);
+    const res = await bookVilla(selectedVilla._id, formatDate(checkIn), formatDate(checkOut));
     if (res.success) {
+      await fetchVillas();
+
       setBookingStatus("Villa booked successfully!");
       setAvailability(null);
       setSelectedVilla(null);
@@ -183,6 +187,8 @@ const VillasStays = () => {
   const handleStatusChange = async (villaId, newStatus) => {
     if (!isAdmin) return;
     await updateVilla(villaId, { status: newStatus });
+
+    await fetchVillas();
   };
 
   // Helper to disable booked dates in the date picker
@@ -191,7 +197,6 @@ const VillasStays = () => {
     return bookedDates.includes(date);
   };
 
-  if (loading) return <p>Loading villas...</p>;
   if (error) return <p className={styles.error}>{error}</p>;
 
   return (
@@ -278,8 +283,8 @@ const VillasStays = () => {
                       {new Date() < new Date(b.checkIn)
                         ? "Upcoming"
                         : new Date() > new Date(b.checkOut)
-                        ? "Completed"
-                        : "Ongoing"}
+                          ? "Completed"
+                          : "Ongoing"}
                     </td>
                   </tr>
                 ))}
@@ -302,25 +307,20 @@ const VillasStays = () => {
                   <label>
                     Check-In:
                     <DatePicker
-                      selected={checkIn ? new Date(checkIn) : null}
-                      onChange={(date) =>
-                        setCheckIn(date.toISOString().split("T")[0])
-                      }
+                      selected={checkIn}
+                      onChange={(date) => setCheckIn(date)}
                       minDate={new Date()}
                       excludeDates={getBookedDates().map((d) => new Date(d))}
                       placeholderText="Select check-in date"
                       dateFormat="yyyy-MM-dd"
                       className={styles.datePicker}
-                      onFocus={(e) => e.target.blur()}
                     />
                   </label>
                   <label>
                     Check-Out:
                     <DatePicker
                       selected={checkOut ? new Date(checkOut) : null}
-                      onChange={(date) =>
-                        setCheckOut(date.toISOString().split("T")[0])
-                      }
+                      onChange={(date) => setCheckOut(date)}
                       minDate={checkIn ? new Date(checkIn) : new Date()}
                       excludeDates={getBookedDates().map((d) => new Date(d))}
                       placeholderText="Select check-out date"
@@ -388,7 +388,7 @@ const VillasStays = () => {
                     .filter(
                       (b) =>
                         b.room?._id === selectedVilla._id &&
-                        new Date(b.checkOut) >= new Date()
+                        new Date(b.checkOut) >= new Date(),
                     )
                     .sort((a, b) => new Date(a.checkIn) - new Date(b.checkIn))
                     .map((b) => (
@@ -403,7 +403,7 @@ const VillasStays = () => {
                   {bookings.filter(
                     (b) =>
                       b.room?._id === selectedVilla._id &&
-                      new Date(b.checkOut) >= new Date()
+                      new Date(b.checkOut) >= new Date(),
                   ).length === 0 && <p>No upcoming bookings for this villa.</p>}
                 </div>
               </div>
