@@ -3,6 +3,7 @@ import axios from "axios";
 import { ProductsContext, useAuth } from "../useContext"; // make sure useAuth is exported from useContext
 
 import { PRODUCTS_API } from "../../urls";
+import { productsData } from "../../data";
 
 
 const ProductsProvider = ({ children }) => {
@@ -15,7 +16,7 @@ const ProductsProvider = ({ children }) => {
     setLoading(true);
     try {
       const res = await axios.get(PRODUCTS_API);
-      setProducts(res.data);
+      setProducts(res.data || productsData);
     } catch (err) {
       console.error("Error fetching products:", err.message);
     } finally {

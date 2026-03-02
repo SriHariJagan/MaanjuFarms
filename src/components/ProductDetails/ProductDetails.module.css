@@ -294,9 +294,12 @@ button,
 
 /* ===== Loading ===== */
 .loading {
-  text-align: center;
   font-size: 1.3rem;
   padding: 2rem;
+  min-height: 48vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ===== Responsive ===== */
