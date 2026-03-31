@@ -1,0 +1,458 @@
+/* ===================== VILLAS STAYS ===================== */
+
+.villasSection {
+  background: var(--primary-bg);
+  color: var(--primary-text);
+  padding: 6rem 2rem;
+  font-family: var(--body-font);
+}
+
+.container {
+  max-width: 1300px;
+  margin: auto;
+  text-align: center;
+}
+
+/* HERO */
+.hero {
+  position: relative;
+  background: url("/images/villas-hero.webp") center/cover no-repeat;
+  padding: 6rem 2rem 4rem;
+  border-radius: 16px;
+  margin-bottom: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 16px;
+}
+
+.hero h2,
+.hero p {
+  position: relative;
+  z-index: 1;
+}
+
+/* TEXT */
+.heading {
+  font-family: var(--heading-font);
+  font-size: 3rem;
+}
+
+.subtext {
+  font-size: 1.1rem;
+  margin-bottom: 3rem;
+}
+
+/* GRID */
+.villasGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.addVillaBtn:hover{
+  color: var(--accent-color);
+}
+
+/* ===================== VILLA CARD ===================== */
+
+.card {
+  background: var(--secondary-bg);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--shadow-light);
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
+}
+
+.imageWrapper {
+  height: 230px;
+  overflow: hidden;
+}
+
+.imageWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.4s;
+}
+
+.card:hover img {
+  transform: scale(1.08);
+}
+
+.content {
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.content h3 {
+  color: var(--accent-color);
+}
+
+.content p {
+  color: var(--secondary-text);
+  font-size: 0.95rem;
+}
+
+/* STATUS */
+.available {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.unavailable {
+  color: red;
+  font-weight: 600;
+}
+
+/* BUTTONS */
+/* Wrapper */
+.adminActions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* Edit Button */
+.editBtn {
+  padding: 6px 14px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  border: 1px solid var(--accent-color);
+  background: transparent;
+  color: var(--accent-color);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+.editBtn:hover {
+  background: var(--accent-color);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* Dropdown */
+.statusSelect {
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--secondary-bg);
+  color: var(--primary-text);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  min-width: 120px;
+}
+
+/* Focus glow */
+.statusSelect:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px var(--accent-color-light);
+}
+
+/* Hover */
+.statusSelect:hover {
+  border-color: var(--accent-color);
+}
+/* ===================== BOOKING MODAL ===================== */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* PREMIUM MODAL */
+.premiumModal {
+  background: var(--secondary-bg);
+  border-radius: 18px;
+  width: 95%;
+  max-width: 1100px;
+  overflow: hidden;
+  box-shadow: var(--shadow-hover);
+}
+
+/* HEADER */
+.modalHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+}
+
+.modalHeader img {
+  width: 90px;
+  height: 70px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+/* CLOSE */
+.closeBtn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--accent-color);
+  padding: .3rem .6rem;
+  padding-top: .2rem;
+}
+
+/* BODY */
+.modalBody {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+  gap: 2rem;
+  padding: 1.5rem;
+  align-items: center;
+}
+
+/* CALENDAR */
+.calendarWrapper {
+  background: var(--primary-bg);
+  padding: 1rem;
+  border-radius: 12px;
+  height: max-content;
+}
+
+.calendarWrapper h3{
+  padding-bottom: .4rem;
+}
+
+/* BOOKING CARD */
+.bookingCard {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow-light);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: max-content;
+}
+
+/* PRICE */
+.priceRow {
+  display: flex;
+  gap: 6px;
+}
+
+/* DATE BOX */
+.dateBox {
+  display: flex;
+  justify-content: space-between;
+  background: var(--hover-bg);
+  padding: 0.8rem;
+  border-radius: 10px;
+}
+
+.dateBox div:first-child p {
+  padding-top: 0.5rem;
+  color: rgb(22, 135, 143); /* Check-in color */
+}
+
+.dateBox div:last-child p {
+  padding: 0.5rem;
+  color: rgb(200, 80, 80); /* Check-out color */
+}
+
+/* INPUT */
+
+.guestField {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.guestField input {
+  width: 50px;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+/* PRICE */
+.priceBreakdown {
+  background: var(--hover-bg);
+  padding: 0.8rem;
+  border-radius: 10px;
+}
+
+.priceBreakdown h4{
+  padding-top: .5rem;
+}
+
+/* CTA */
+.bookBtn {
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 10px;
+  background: var(--accent-color);
+  color: white;
+  border: none;
+}
+
+.bookBtn:hover {
+  background: var(--accent-hover);
+}
+
+/* DATEPICKER */
+.react-datepicker__day--in-range {
+  background: var(--accent-color-light);
+}
+
+.react-datepicker__day--range-start,
+.react-datepicker__day--range-end {
+  background: var(--accent-color);
+  color: white;
+}
+
+/* ===================== FORM MODAL ===================== */
+
+.modal {
+  background: var(--secondary-bg);
+  border-radius: 16px;
+  max-width: 500px;
+  width: 100%;
+  padding: 2rem;
+  position: relative;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modalContent input,
+.modalContent textarea,
+.modalContent select {
+  padding: 0.7rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.modalContent input:focus {
+  border-color: var(--accent-color);
+  outline: none;
+}
+
+/* ===================== BOOKINGS TABLE ===================== */
+
+.bookingsTableWrapper {
+  margin-top: 4rem;
+  overflow-x: auto;
+}
+
+.tableHeading{
+  margin-bottom: 1rem;
+}
+
+.bookingsTable {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: var(--shadow-light);
+}
+
+.bookingsTable th {
+  background: var(--accent-color);
+  color: white;
+}
+
+.bookingsTable td,
+.bookingsTable th {
+  padding: 1rem;
+  border: 1px solid var(--accent-color);
+  text-transform: capitalize;
+
+}
+
+.bookingsTable tr:nth-child(even) td {
+  background: var(--primary-bg);
+}
+
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 1024px) {
+  .villasGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .modalBody {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+  .villasSection {
+    padding: 4rem 0.8rem;
+  }
+
+  .modalOverlay {
+    align-items: center;
+    padding: 0.5rem 0rem;
+  }
+
+  .premiumModal {
+    max-height: 95dvh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modalBody {
+    overflow-y: auto;
+    padding: 1rem 0.4rem;
+  }
+
+  .villasGrid {
+    grid-template-columns: 1fr;
+  }
+  .guestField input {
+    width: 35px;
+  }
+
+  .tableHeading{
+    position: sticky;
+    top: 2px;
+    left: 1px;
+  }
+
+  .bookingsTable{
+    width: max-content;
+  }
+}
