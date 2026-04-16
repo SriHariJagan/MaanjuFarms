@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./Footer.module.css";
 import { Facebook, Instagram, Youtube, Phone, Mail, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -23,12 +24,12 @@ const Footer = () => {
         <div className={`${styles.column} ${styles.quickLinksFooter}`}>
           <h4>Quick Links</h4>
           <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About Us</a></li>
-            <li><a href="/organic-products">Organic Products</a></li>
-            <li><a href="/horse-riding">Horse Riding</a></li>
-            <li><a href="/camel-riding">Camel Safari</a></li>
-            <li><a href="/contact">Contact</a></li>
+            <li><Link  to="/">Home</Link></li>
+            <li><Link to="/about">About Us</Link></li>
+            <li><Link to="/organic-products">Organic Products</Link></li>
+            <li><Link to="/horse-riding">Horse Riding</Link></li>
+            <li><Link to="/camel-riding">Camel Safari</Link></li>
+            <li><Link to="/contact">Contact</Link></li>
           </ul>
         </div>
 

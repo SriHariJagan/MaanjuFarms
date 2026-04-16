@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./VillasStays.module.css";
 import { useAuth, useVillas } from "../../../Store/useContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation  } from "react-router-dom";
 
 import VillaCard from "./VillaCard";
 import BookingModal from "./BookingModal";
@@ -24,15 +24,31 @@ const VillasStays = () => {
 
   const { user, token, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [selectedVilla, setSelectedVilla] = useState(null);
   const [showVillaForm, setShowVillaForm] = useState(false);
   const [editingVilla, setEditingVilla] = useState(null);
+  const [prefillData, setPrefillData] = useState(null);
 
   useEffect(() => {
     fetchVillas();
     fetchBookings();
   }, []);
+
+  useEffect(() => {
+  if (location.state?.restoreBooking) {
+    const data = location.state.bookingData;
+
+    if (data) {
+      setSelectedVilla(data.villa);
+      setPrefillData(data);
+
+      // fallback save (in case refresh happens)
+      localStorage.setItem("booking_prefill", JSON.stringify(data));
+    }
+  }
+}, [location.state]);
 
   if (loading) return <Loader />;
   if (error) return <p className={styles.error}>{error}</p>;
@@ -97,6 +113,7 @@ const VillasStays = () => {
             user={user}
             token={token}
             navigate={navigate}
+            prefillData={prefillData}
           />
         )}
 

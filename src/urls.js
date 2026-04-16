@@ -23,7 +23,7 @@ export const GALLERY_API = `${API_BASE}/gallery`;
 const PAYMENTS_BASE = `${API_BASE}/payment`;
 
 export const PAYMENT_ENDPOINTS = {
-  PRODUCT_CHECKOUT: `${PAYMENTS_BASE}/product-checkout`,
-  BOOKING_CHECKOUT: `${PAYMENTS_BASE}/booking-checkout`,
-  VERIFY: `${PAYMENTS_BASE}/verify-session`,
+  PRODUCT_CHECKOUT: `${PAYMENTS_BASE}/product-order`,
+  BOOKING_CHECKOUT: `${PAYMENTS_BASE}/booking-order`,
+  VERIFY: `${PAYMENTS_BASE}/verify-payment`,
 };

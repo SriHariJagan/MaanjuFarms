@@ -107,3 +107,128 @@ p {
     font-size: 20px;
   }
 }
+
+/* *Payment Failure* */
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: linear-gradient(135deg, #f9fafb, #eef2f7);
+}
+
+.card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--card-bg, #ffffff);
+  padding: 32px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.errorIcon {
+  color: #ef4444;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 16px;
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text-primary, #111827);
+}
+
+p {
+  font-size: 15px;
+  color: var(--text-secondary, #6b7280);
+  margin-bottom: 8px;
+}
+
+.errorMsg {
+  color: #ef4444;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.helperText {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 20px;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.primaryBtn {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 11px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.primaryBtn:hover {
+  background: #15803d;
+  transform: translateY(-1px);
+}
+
+.secondaryBtn {
+  background: transparent;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  padding: 11px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.secondaryBtn:hover {
+  background: #ef4444;
+  color: white;
+  transform: translateY(-1px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 📱 Mobile */
+@media (max-width: 480px) {
+  .card {
+    padding: 24px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .primaryBtn,
+  .secondaryBtn {
+    width: 100%;
+  }
+}

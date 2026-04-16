@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import styles from "./VillasStays.module.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -11,20 +11,18 @@ const formatDate = (date) => {
   return d.toISOString().split("T")[0];
 };
 
-
 const BookingModal = ({
   villa,
   bookings,
   onClose,
-  bookVilla,
   user,
   token,
   navigate,
+  prefillData,
 }) => {
   const [dateRange, setDateRange] = useState([null, null]);
   const [checkIn, checkOut] = dateRange;
   const [guests, setGuests] = useState(1);
-  const [loading, setLoading] = useState(false);
 
   /* ================= BOOKED DATES ================= */
   const bookedDates = useMemo(() => {
@@ -83,8 +81,8 @@ const BookingModal = ({
 
   const totalPrice = nights * villa.price;
 
-  /* ================= BOOK ================= */
-  const handleBookNow = async () => {
+  /* ================= NAVIGATE TO GUEST DETAILS ================= */
+  const handleBookNow = () => {
     if (!user || !token) return navigate("/login");
 
     if (!checkIn || !checkOut)
@@ -96,22 +94,40 @@ const BookingModal = ({
     if (!isAvailable)
       return toast.error("Dates not available");
 
-    try {
-      setLoading(true);
-
-      await bookVilla(
-        villa._id,
-        formatDate(checkIn),
-        formatDate(checkOut),
-        Number(guests)
-      );
-
-    } catch (err) {
-      toast.error("Booking failed");
-    } finally {
-      setLoading(false);
-    }
+    // 🔥 Navigate instead of booking
+    navigate("/guest-details", {
+      state: {
+        villa,
+        checkIn: formatDate(checkIn),
+        checkOut: formatDate(checkOut),
+        guests: Number(guests),
+        totalPrice,
+      },
+    });
   };
+
+
+  useEffect(() => {
+  let data = prefillData;
+
+  // fallback if direct reload
+  if (!data) {
+    const saved = localStorage.getItem("booking_prefill");
+    if (saved) data = JSON.parse(saved);
+  }
+
+  if (data && data.villa._id === villa._id) {
+    setDateRange([
+      new Date(data.checkIn),
+      new Date(data.checkOut),
+    ]);
+
+    setGuests(data.guests);
+
+    // cleanup after use
+    localStorage.removeItem("booking_prefill");
+  }
+}, [villa, prefillData]);
 
   return (
     <div className={styles.modalOverlay}>
@@ -186,10 +202,10 @@ const BookingModal = ({
 
             <button
               className={styles.bookBtn}
-              disabled={!checkIn || !checkOut || !isAvailable || loading}
+              disabled={!checkIn || !checkOut || !isAvailable}
               onClick={handleBookNow}
             >
-              {loading ? "Redirecting..." : "Reserve"}
+              Reserve
             </button>
 
           </div>

@@ -15,6 +15,7 @@ import HomeLayout from "./Components/layout/HomeLayout.jsx";
 import Home from "./Pages/Home/Home.jsx";
 import ScrollToTop from "./Components/ScrollToTop.jsx";
 import Checkout from "./Pages/Checkout/Checkout.jsx";
+import GuestDetails from "./Pages/GuestDetails/GuestDetails.jsx";
 /* Lazy-loaded components */
 const ProductsPage = lazy(() => import("./Pages/Offerings/ProductsPage/ProductsPage.jsx"));
 const HorseRiding = lazy(() => import("./Pages/Offerings/HorseRiding/HorseRiding.jsx"));
@@ -75,6 +76,7 @@ function App() {
                 </PrivateRoute>
               }
             />
+            <Route path="/guest-details" element={<GuestDetails />} />
           </Route>
 
           {/* Routes WITHOUT layout (no navbar/footer) */}

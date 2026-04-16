@@ -1,13 +1,15 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useAuth } from "../useContext"; // AuthContext provides token
-import { VillasContext } from "../useContext"; // React context
+import { useAuth } from "../useContext";
+import { VillasContext } from "../useContext";
 import { ROOMS_API, BOOKINGS_API, PAYMENT_ENDPOINTS } from "../../urls";
+import { useRazorpayPayment } from "../../hooks/useRazorpayPayment";
 import "react-toastify/dist/ReactToastify.css";
 
 const VillasProvider = ({ children }) => {
   const { token, isAdmin } = useAuth();
+  const { startPayment } = useRazorpayPayment(token);
 
   const [villas, setVillas] = useState([]);
   const [bookings, setBookings] = useState([]);
@@ -54,15 +56,17 @@ const VillasProvider = ({ children }) => {
     }
   }, [api, token, isAdmin]);
 
-  // ================== ADD / UPDATE / DELETE VILLA ==================
+  // ================== ADMIN ACTIONS ==================
   const addVilla = async (villaData) => {
     if (!isAdmin) return toast.error("Unauthorized");
 
     try {
-      const res = await api.post(ROOMS_API, { ...villaData, category: "villa" });
+      const res = await api.post(ROOMS_API, {
+        ...villaData,
+        category: "villa",
+      });
       setVillas((prev) => [...prev, res.data.room]);
       toast.success("Villa added ✅");
-      return res.data.room;
     } catch (err) {
       toast.error(err.response?.data?.msg || "Failed to add villa");
     }
@@ -77,7 +81,6 @@ const VillasProvider = ({ children }) => {
         prev.map((v) => (v._id === id ? res.data.room : v))
       );
       toast.success("Villa updated ✨");
-      return res.data.room;
     } catch (err) {
       toast.error(err.response?.data?.msg || "Failed to update villa");
     }
@@ -95,35 +98,62 @@ const VillasProvider = ({ children }) => {
     }
   };
 
-  // ================== BOOK VILLA ==================
-const bookVilla = async (villaId, checkIn, checkOut, guests = 1) => {
+  // ================== BOOK VILLA (PRODUCTION) ==================
+const bookVilla = async (
+  villaId,
+  checkIn,
+  checkOut,
+  guests = 1,
+  guestDetails = []
+) => {
   if (!token) return toast.error("Login required");
-
+  if (loading) return;
 
   try {
-    const res = await api.post(
+    setLoading(true);
+
+    if (!villaId || !checkIn || !checkOut) {
+      toast.error("Missing booking details");
+      return;
+    }
+
+    const { data } = await api.post(
       PAYMENT_ENDPOINTS.BOOKING_CHECKOUT,
-      {
-        villaId,
-        checkIn,
-        checkOut,
-        guests,
-      }
+      { villaId, checkIn, checkOut, guests, guestDetails }
     );
 
-    if (!res.data?.url) throw new Error("Payment failed");
-    console.log("villaid:", villaId, "checkin:", checkIn, "checkout: ", checkOut)
+    await startPayment({
+      orderData: data,
+      verifyUrl: PAYMENT_ENDPOINTS.VERIFY,
 
+      meta: {
+        description: "Villa Booking Payment",
+      },
 
-    window.location.href = res.data.url;
+      onSuccess: async () => {
+        await fetchBookings();
 
+        toast.success("Booking confirmed 🎉");
+
+        window.location.replace("/payment-success?type=booking");
+      },
+
+      onFailure: (error) => {
+        window.location.replace(
+          `/payment-failed?error=${encodeURIComponent(error)}`
+        );
+      },
+    });
 
   } catch (err) {
-    toast.error(err.response?.data?.msg || err.message);
+    console.error("Booking Error:", err);
+    toast.error(err.response?.data?.msg || "Booking failed");
+  } finally {
+    setLoading(false);
   }
 };
 
-  // ================== CONTEXT VALUE ==================
+  // ================== CONTEXT ==================
   const value = {
     villas,
     bookings,
@@ -144,7 +174,11 @@ const bookVilla = async (villaId, checkIn, checkOut, guests = 1) => {
     fetchBookings();
   }, [token, isAdmin]);
 
-  return <VillasContext.Provider value={value}>{children}</VillasContext.Provider>;
+  return (
+    <VillasContext.Provider value={value}>
+      {children}
+    </VillasContext.Provider>
+  );
 };
 
 export default VillasProvider;

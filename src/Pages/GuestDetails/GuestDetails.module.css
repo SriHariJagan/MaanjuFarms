@@ -1,0 +1,325 @@
+/* ================= BASE ================= */
+
+.container {
+  background: linear-gradient(
+    135deg,
+    var(--primary-bg),
+    var(--secondary-bg)
+  );
+  min-height: 100vh;
+  padding: 6rem 16px;
+  font-family: var(--body-font);
+}
+
+.wrapper {
+  max-width: 1000px;
+  margin: auto;
+}
+
+/* ================= TOP BAR ================= */
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  position: absolute;
+}
+
+/* ===== BACK BUTTON (PREMIUM STYLE) ===== */
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+
+  padding: 10px 16px;
+  border-radius: 12px;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--primary-text);
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  box-shadow: var(--shadow-light);
+}
+
+/* ICON */
+.backIcon {
+  font-size: 16px;
+  transition: transform 0.25s ease;
+}
+
+/* HOVER EFFECT */
+.backBtn:hover {
+  background: var(--hover-bg);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--accent-color);
+}
+
+/* ARROW ANIMATION */
+.backBtn:hover .backIcon {
+  transform: translateX(-4px);
+}
+
+/* ACTIVE CLICK */
+.backBtn:active {
+  transform: scale(0.96);
+}
+
+/* DARK MODE FIX */
+.dark .backBtn {
+  background: var(--secondary-bg);
+}
+
+/* ================= HEADER ================= */
+
+.header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.header h1 {
+  font-size: 34px;
+  font-family: var(--heading-font);
+  color: var(--primary-text);
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.header p {
+  color: var(--secondary-text);
+  font-size: 15px;
+}
+
+/* ================= GUEST LIST ================= */
+
+.guestList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ================= CARD ================= */
+
+.guestCard {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 22px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-light);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.guestCard:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* gradient accent bar */
+.guestCard::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 5px;
+  background: linear-gradient(
+    180deg,
+    var(--accent-color),
+    var(--highlight-color)
+  );
+}
+
+/* ================= HEADER ================= */
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.cardHeader h3 {
+  font-size: 18px;
+  color: var(--primary-text);
+}
+
+/* REMOVE BUTTON */
+
+.removeBtn {
+  background: transparent;
+  border: 1px solid #ff4d4f;
+  color: #ff4d4f;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.removeBtn:hover {
+  background: #ff4d4f;
+  color: white;
+  transform: scale(1.05);
+}
+
+/* ================= FORM ================= */
+
+.formRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 14px;
+}
+
+/* INPUTS */
+
+input,
+select {
+  padding: 13px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: var(--secondary-bg);
+  color: var(--primary-text);
+  font-size: 14px;
+  transition: all 0.25s ease;
+}
+
+input::placeholder {
+  color: var(--muted-text);
+}
+
+/* FOCUS EFFECT */
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 8px var(--accent-color-light);
+  transform: scale(1.02);
+}
+
+/* ================= ERROR ================= */
+
+.errorBox {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(255, 77, 79, 0.1);
+  color: #ff4d4f;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* ================= ACTIONS ================= */
+
+.actions {
+  margin-top: 30px;
+  display: flex;
+  gap: 12px;
+}
+
+/* ADD BUTTON */
+
+.addBtn {
+  flex: 1;
+  background: var(--secondary-bg);
+  border: 2px dashed var(--accent-color);
+  color: var(--accent-color);
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.addBtn:hover {
+  background: var(--hover-bg);
+  transform: scale(1.03);
+}
+
+/* CONTINUE BUTTON */
+
+.continueBtn {
+  flex: 1;
+  background: linear-gradient(
+    135deg,
+    var(--button-bg),
+    var(--accent-hover)
+  );
+  color: var(--button-color);
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.continueBtn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: var(--shadow-hover);
+}
+
+/* DISABLED */
+
+.continueBtn:disabled,
+.addBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ================= INVALID ================= */
+
+.invalidContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-bg);
+}
+
+.invalidCard {
+  background: var(--card-bg);
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-light);
+}
+
+.primaryBtn {
+  margin-top: 15px;
+  background: var(--button-bg);
+  color: var(--button-color);
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .header h1 {
+    font-size: 26px;
+  }
+}

@@ -5,7 +5,7 @@ import axios from "axios";
 
 /* ================= CONFIG ================= */
 
-const BLOCKED_STATES = ["Jammu and Kashmir", "Nagaland"];
+const BLOCKED_STATES = ["Jammu and Kashmir", "Jammu & Kashmir", "Nagaland"];
 const BLOCKED_PINCODES = [];
 
 /* ================= COMPONENT ================= */

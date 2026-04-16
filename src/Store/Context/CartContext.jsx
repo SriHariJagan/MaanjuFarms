@@ -1,27 +1,29 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useAuth } from "../useContext"; // AuthContext provides token
-import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../useContext";
 import { CartContext } from "../useContext";
-
 import { CART_API, PAYMENT_ENDPOINTS } from "../../urls";
+import { useRazorpayPayment } from "../../hooks/useRazorpayPayment";
 
 const CartProvider = ({ children }) => {
   const { token } = useAuth();
+  const { startPayment } = useRazorpayPayment(token);
+
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Fetch cart from backend
+  // ================= FETCH CART =================
   const fetchCart = async () => {
     if (!token) return;
+
     try {
       const res = await axios.get(CART_API, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setCart(res.data.cart);
+      setCart(res.data.cart || []);
     } catch (err) {
-      console.error("Error fetching cart:", err.message);
+      console.error("Cart fetch error:", err.message);
     }
   };
 
@@ -29,7 +31,7 @@ const CartProvider = ({ children }) => {
     fetchCart();
   }, [token]);
 
-  // Add product to cart respecting stock
+  // ================= ADD TO CART =================
   const addToCart = async (product, quantity = 1) => {
     if (!token) return toast.error("Please login to add items!");
 
@@ -37,9 +39,10 @@ const CartProvider = ({ children }) => {
     const currentQty = existingItem ? existingItem.quantity : 0;
 
     if (currentQty + quantity > product.stock) {
-      return toast.warn(`Only ${product.stock} units of ${product.name} available`);
+      return toast.warn(`Only ${product.stock} units available`);
     }
 
+    // optimistic UI
     setCart((prev) =>
       existingItem
         ? prev.map((i) =>
@@ -49,7 +52,6 @@ const CartProvider = ({ children }) => {
           )
         : [...prev, { product, quantity }]
     );
-    toast.success(`${product.name} added to cart!`);
 
     try {
       await axios.post(
@@ -57,44 +59,44 @@ const CartProvider = ({ children }) => {
         { productId: product._id, quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      toast.success(`${product.name} added`);
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to sync with server");
+      toast.error("Sync failed");
       fetchCart(); // rollback
     }
   };
 
-  // Remove product
+  // ================= REMOVE =================
   const removeFromCart = async (productId) => {
     setCart((prev) => prev.filter((i) => i.product._id !== productId));
-    toast.info("Item removed from cart");
 
-    if (!token) return;
     try {
       await axios.post(
         `${CART_API}/remove`,
         { productId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      toast.info("Item removed");
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to sync with server");
+      toast.error("Sync failed");
       fetchCart();
     }
   };
 
-  // Increase quantity respecting stock
+  // ================= INCREASE =================
   const increaseQty = async (productId) => {
     const item = cart.find((i) => i.product._id === productId);
     if (!item) return;
 
     if (item.quantity + 1 > item.product.stock) {
-      return toast.warn(`Only ${item.product.stock} units of ${item.product.name} available`);
+      return toast.warn(`Only ${item.product.stock} available`);
     }
 
     setCart((prev) =>
       prev.map((i) =>
-        i.product._id === productId ? { ...i, quantity: i.quantity + 1 } : i
+        i.product._id === productId
+          ? { ...i, quantity: i.quantity + 1 }
+          : i
       )
     );
 
@@ -104,69 +106,97 @@ const CartProvider = ({ children }) => {
         { productId, quantity: 1 },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to sync with server");
+    } catch {
       fetchCart();
     }
   };
 
-  // Decrease quantity
+  // ================= DECREASE =================
   const decreaseQty = async (productId) => {
     const item = cart.find((i) => i.product._id === productId);
     if (!item) return;
 
-    if (item.quantity <= 1) {
-      removeFromCart(productId);
-    } else {
-      setCart((prev) =>
-        prev.map((i) =>
-          i.product._id === productId ? { ...i, quantity: i.quantity - 1 } : i
-        )
-      );
+    if (item.quantity <= 1) return removeFromCart(productId);
 
-      try {
-        await axios.post(
-          `${CART_API}/add`,
-          { productId, quantity: -1 },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-      } catch (err) {
-        console.error(err);
-        toast.error("Failed to sync with server");
-        fetchCart();
-      }
-    }
-  };
-
-  const subtotal = () =>
-    cart.reduce((sum, i) => sum + (i.product.price || 0) * i.quantity, 0);
-  const total = () => subtotal().toFixed(2);
-
-  const handleCheckout = async (address) => {
-    if (loading) return;
+    setCart((prev) =>
+      prev.map((i) =>
+        i.product._id === productId
+          ? { ...i, quantity: i.quantity - 1 }
+          : i
+      )
+    );
 
     try {
-      setLoading(true);
-
-      const res = await axios.post(
-        PAYMENT_ENDPOINTS.PRODUCT_CHECKOUT,
-        { address },
+      await axios.post(
+        `${CART_API}/add`,
+        { productId, quantity: -1 },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      if (res.data?.url) {
-        window.location.href = res.data.url;
-      } else {
-        toast.error("Failed to start payment");
-        setLoading(false);
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Payment failed. Try again.");
-      setLoading(false);
+    } catch {
+      fetchCart();
     }
   };
+
+  // ================= TOTAL =================
+  const subtotal = () =>
+    cart.reduce((sum, i) => sum + (i.product.price || 0) * i.quantity, 0);
+
+  const total = () => subtotal().toFixed(2);
+
+  // ================= CHECKOUT =================
+const handleCheckout = async (address) => {
+  if (loading) return;
+
+  try {
+    setLoading(true);
+
+    if (!address) {
+      toast.error("Address required");
+      return;
+    }
+
+    const { data } = await axios.post(
+      PAYMENT_ENDPOINTS.PRODUCT_CHECKOUT,
+      { address },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    await startPayment({
+      orderData: data,
+      verifyUrl: PAYMENT_ENDPOINTS.VERIFY,
+
+      meta: {
+        description: "Product Checkout",
+        prefill: {
+          name: address?.name || "",
+          email: address?.email || "",
+          contact: address?.phone || "",
+        },
+      },
+
+      onSuccess: async () => {
+        setCart([]);
+        await fetchCart();
+
+        toast.success("Order placed successfully 🎉");
+
+        window.location.replace("/payment-success?type=product");
+      },
+
+      onFailure: (error) => {
+        window.location.replace(
+          `/payment-failed?error=${encodeURIComponent(error)}`
+        );
+      },
+    });
+
+  } catch (err) {
+    console.error("Checkout Error:", err);
+    toast.error(err.response?.data?.msg || "Checkout failed");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <CartContext.Provider

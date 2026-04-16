@@ -1,80 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./PaymentStatus.module.css";
-import { CheckCircle, Loader2 } from "lucide-react";
-import axios from "axios";
-import { PAYMENT_ENDPOINTS } from "../../urls";
-import { useVillas } from "../../Store/useContext"; // 👈 IMPORTANT
+import { CheckCircle } from "lucide-react";
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { fetchBookings } = useVillas(); // 👈 get context function
+  const type = new URLSearchParams(location.search).get("type") || "product";
 
-  const [loading, setLoading] = useState(true);
-  const [type, setType] = useState(null);
+  const redirectPath = type === "booking" ? "/my-bookings" : "/orders";
 
   useEffect(() => {
-    const verifyPayment = async () => {
-      try {
-        const sessionId = new URLSearchParams(location.search).get("session_id");
+    if (!type) return;
 
-        if (!sessionId) {
-          return navigate("/payment-failed?error=Invalid session");
-        }
+    const timer = setTimeout(() => {
+      navigate(redirectPath, { replace: true });
+    }, 4000);
 
-        const res = await axios.get(
-          `${PAYMENT_ENDPOINTS.VERIFY}?session_id=${sessionId}`
-        );
+    return () => clearTimeout(timer);
+  }, [navigate, redirectPath]);
 
-        if (!res.data.success) {
-          return navigate("/payment-failed?error=Payment not verified");
-        }
-
-        setType(res.data.type);
-
-        // 🔥 WAIT for webhook to complete
-        setTimeout(async () => {
-          try {
-            await fetchBookings(); // ✅ REFRESH DATA
-          } catch (e) {
-            console.log("Fetch booking error:", e);
-          }
-
-          // ✅ Redirect to correct page
-          if (res.data.type === "booking") {
-            navigate("/my-bookings");
-          } else {
-            navigate("/orders");
-          }
-
-        }, 3000); // ⏳ wait for webhook
-
-      } catch (err) {
-        console.error("Verification error:", err);
-        navigate("/payment-failed?error=Verification failed");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    verifyPayment();
-  }, [location, navigate, fetchBookings]);
-
-  // ================= LOADING =================
-  if (loading) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.card}>
-          <Loader2 className={styles.loader} />
-          <h2>Verifying your payment...</h2>
-        </div>
-      </div>
-    );
-  }
-
-  // ================= SUCCESS =================
   return (
     <div className={styles.container}>
       <div className={styles.card}>
@@ -84,18 +30,14 @@ const PaymentSuccess = () => {
 
         <p>
           {type === "booking"
-            ? "Your villa booking is confirmed!"
-            : "Your order has been placed successfully!"}
+            ? "Your villa booking has been confirmed successfully."
+            : "Your order has been placed successfully."}
         </p>
 
-        <p className={styles.redirectText}>
-          Redirecting...
-        </p>
+        <p className={styles.redirectText}>Redirecting automatically...</p>
 
         <button
-          onClick={() =>
-            navigate(type === "booking" ? "/my-bookings" : "/orders")
-          }
+          onClick={() => navigate(redirectPath)}
           className={styles.primaryBtn}
         >
           Go Now
