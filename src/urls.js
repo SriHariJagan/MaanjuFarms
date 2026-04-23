@@ -1,6 +1,6 @@
 // ================= BASE =================
-export const API_BASE = import.meta.env.VITE_API_BASE_URL";
-export const IMAGE_BASE = import.meta.env.VITE_IMAGE_BASE_URL";
+export const API_BASE = import.meta.env.VITE_API_BASE_URL;
+export const IMAGE_BASE = import.meta.env.VITE_IMAGE_BASE_URL;
 
 // ================= AUTH =================
 export const AUTH_API = `${API_BASE}/auth`;
