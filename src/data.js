@@ -4,52 +4,43 @@
 export const categories = [
   {
     id: 1,
-    title: "Organic Ghee",
-    description: "Traditional clarified butter, rich in flavor and nutrients.",
-    image: "/images/ghee.jpeg",
-    buttonText: "Shop Ghee",
+    title: "Dairy & Natural Products",
+    description:
+      "Pure farm-sourced essentials like A2 cow ghee and raw honey, crafted with traditional methods.",
+    image: "/Images/home/categories/dairy.jpg",
+    buttonText: "Explore Dairy",
   },
   {
     id: 2,
-    title: "Cold-Pressed Oils",
-    description: "Pure, unrefined oils extracted with traditional methods.",
-    image: "/images/ghee.jpeg",
-    buttonText: "Shop Oils",
+    title: "Organic Spices & Grains",
+    description:
+      "Freshly processed spices and staples including turmeric, chilli, coriander, wheat, and pulses.",
+    image: "/Images/home/categories/spices.jpg",
+    buttonText: "Explore Spices",
   },
   {
     id: 3,
-    title: "Healthy Pulses",
-    description: "Nutrient-dense lentils and beans for wholesome meals.",
-    image: "/images/pulse.jpeg",
-    buttonText: "Shop Pulses",
+    title: "Cold-Pressed Oils",
+    description:
+      "Naturally extracted oils like mustard, sesame, olive, and groundnut for healthy living.",
+    image: "/Images/home/categories/oils.jpg",
+    buttonText: "Explore Oils",
   },
   {
     id: 4,
-    title: "Ancient Millets",
-    description: "Wholesome grains packed with fiber and protein.",
-    image: "/images/millets.jpeg",
-    buttonText: "Shop Millets",
+    title: "Dry Fruits & Fresh Produce",
+    description:
+      "Naturally grown fruits and dry fruits including dates, citrus fruits, and seasonal produce.",
+    image: "/Images/home/categories/dryfruits.jpg",
+    buttonText: "Explore Products",
   },
   // {
   //   id: 5,
-  //   title: "Aromatic Spices",
-  //   description: "Authentic spices to elevate your culinary creations.",
-  //   image: "/images/spices.jpeg",
-  //   buttonText: "Shop Spices",
-  // },
-  // {
-  //   id: 6,
-  //   title: "Homemade Honey ",
-  //   description: "Wholesome grains packed with fiber and protein.",
-  //   image: "/images/Honey.jpeg",
-  //   buttonText: "Shop Honey",
-  // },
-  // {
-  //   id: 7,
-  //   title: "Olive ",
-  //   description: "Authentic spices to elevate your culinary creations.",
-  //   image: "/images/olive.jpeg",
-  //   buttonText: "Shop Olives",
+  //   title: "Farm Stay Experience",
+  //   description:
+  //     "Relax in nature with our farm stay experience including complimentary breakfast and activities.",
+  //   image: "/Images/home/categories/farmstay.jpg",
+  //   buttonText: "Book Stay",
   // },
 ];
 

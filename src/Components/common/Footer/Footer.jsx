@@ -10,7 +10,7 @@ const Footer = () => {
 
         {/* About */}
         <div className={`${styles.column} ${styles.aboutFooter}`}>
-          <img src="/Images_/logo.png" alt="logo" width={105}/>
+          <img src="/Images/logo.png" alt="logo" width={105}/>
           <h3>Maanjoo Farms</h3>
           <p>
             A destination where <strong>nature</strong>, <strong>culture</strong>, and 

@@ -1,6 +1,6 @@
 // ================= BASE =================
-export const API_BASE = import.meta.env.VITE_API_BASE;
-export const IMAGE_BASE = import.meta.env.VITE_IMAGE_BASE;
+export const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+export const IMAGE_BASE = import.meta.env.VITE_IMAGE_BASE_URL || "http://localhost:5000/";
 
 // ================= AUTH =================
 export const AUTH_API = `${API_BASE}/auth`;
@@ -18,6 +18,9 @@ export const GALLERY_API = `${API_BASE}/gallery`;
 
 // ================= PAYMENTS =================
 const PAYMENTS_BASE = `${API_BASE}/payment`;
+
+// ================= CONTACT MAILS=================
+export const CONTACT_API = `${API_BASE}/contact`;
 
 export const PAYMENT_ENDPOINTS = {
   PRODUCT_CHECKOUT: `${PAYMENTS_BASE}/product-order`,

@@ -10,10 +10,10 @@
 
 /* Hero Section */
 .heroSection {
-  background-image: url("/images/products-banner.jpg");
+  background-image: url("/Images/productsBanner.jpg");
   background-size: cover;
-  background-position: center;
-  height: 380px;
+  background-position: bottom;
+  height: 400px;
   display: flex;
   flex-direction: column;
   justify-content: center;

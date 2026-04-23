@@ -14,7 +14,7 @@ const PuritySection = () => {
             </p>
           </div>
           <div className="purity-image">
-            <img src="/images/farmer.jpeg" alt="Farmers working in organic fields" />
+            <img src="/Images/home/farmer.jpg" alt="Farmers working in organic fields" />
           </div>
         </div>
       </div>

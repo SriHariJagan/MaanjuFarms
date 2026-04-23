@@ -1,87 +1,208 @@
+import { useState, useEffect } from "react";
 import "./Contactus.css";
+import { CONTACT_API } from "../../../urls";
 
 const ContactUs = () => {
-  const handleSubmit = (e) => {
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(null); // success | error
+  const [errors, setErrors] = useState({});
+
+  // ✅ Auto hide message after 5 sec
+  useEffect(() => {
+    if (status) {
+      const timer = setTimeout(() => setStatus(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [status]);
+
+  // ✅ Validation
+  const validate = (data) => {
+    const newErrors = {};
+
+    // Name
+    if (!data.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    // Email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(data.email)) {
+      newErrors.email = "Enter a valid email";
+    }
+
+    // Indian Phone (10 digit, starts with 6-9)
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(data.phone)) {
+      newErrors.phone = "Enter valid 10-digit Indian number";
+    }
+
+    // Subject
+    if (!data.subject.trim()) {
+      newErrors.subject = "Subject is required";
+    }
+
+    // Message
+    if (data.message.trim().length < 10) {
+      newErrors.message = "Message must be at least 10 characters";
+    }
+
+    return newErrors;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted");
+
+    const form = e.target;
+
+    const formData = {
+      name: form.name.value,
+      email: form.email.value,
+      phone: form.phone.value,
+      subject: form.subject.value,
+      message: form.message.value,
+    };
+
+    // ✅ Validate before API
+    const validationErrors = validate(formData);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setErrors({});
+
+    try {
+      setLoading(true);
+      setStatus(null);
+
+      const res = await fetch(CONTACT_API, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setStatus("success");
+        form.reset();
+      } else {
+        setStatus("error");
+      }
+    } catch (err) {
+      console.error(err);
+      setStatus("error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="contact-container">
-      {/* Hero Section */}
+      {/* Hero */}
       <div className="contact-hero-section">
-        <img
-          src="/images/contactus.jpg"
-          alt="Contact Us"
-          className="hero-image"
-        />
+        <img src="/Images/contactUsBanner.jpg" alt="Contact" />
         <div className="contact-hero-overlay">
-          <h1>Get in Touch with PureHarvest Organics</h1>
-          <p>We’re here to answer any questions or inquiries you may have.</p>
+          <h1>Get in Touch</h1>
+          <p>We’d love to hear from you 🌿</p>
         </div>
       </div>
 
-      {/* Contact Form */}
+      {/* Form */}
       <div className="message-section">
         <h2>Send Us a Message</h2>
-        <p>
-          Fill out the form below and we'll get back to you as soon as possible.
-        </p>
+        <p>We usually respond within 24 hours</p>
 
         <form onSubmit={handleSubmit} className="contact-form">
-          <input type="text" placeholder="Your Name" required />
-          <input type="email" placeholder="Your Email" required />
-          <input type="text" placeholder="Subject" required />
-          <textarea placeholder="Your Message" rows="6" required></textarea>
-          <button type="submit">Send Message</button>
+          
+          {/* Row 1 */}
+          <div className="form-row">
+            <div className="form-group">
+              <input name="name" type="text" placeholder="Your Name" />
+              {errors.name && <span className="error-text">{errors.name}</span>}
+            </div>
+
+            <div className="form-group">
+              <input name="email" type="email" placeholder="Your Email" />
+              {errors.email && <span className="error-text">{errors.email}</span>}
+            </div>
+          </div>
+
+          {/* Row 2 */}
+          <div className="form-row">
+            <div className="form-group">
+              <input name="phone" type="text" placeholder="Contact Number" />
+              {errors.phone && <span className="error-text">{errors.phone}</span>}
+            </div>
+
+            <div className="form-group">
+              <input name="subject" type="text" placeholder="Subject" />
+              {errors.subject && <span className="error-text">{errors.subject}</span>}
+            </div>
+          </div>
+
+          {/* Message */}
+          <div className="form-row full">
+            <div className="form-group">
+              <textarea
+                name="message"
+                placeholder="Your Message"
+                rows="6"
+              ></textarea>
+              {errors.message && <span className="error-text">{errors.message}</span>}
+            </div>
+          </div>
+
+          {/* Button */}
+          <button
+            type="submit"
+            className={`submit-btn ${loading ? "loading" : ""}`}
+            disabled={loading}
+          >
+            {loading ? "Sending..." : "Send Message"}
+          </button>
+
+          {/* Status Messages */}
+          {status === "success" && (
+            <p className="success-msg">✅ Message sent successfully!</p>
+          )}
+
+          {status === "error" && (
+            <p className="error-msg">
+              ❌ Failed to send message. Try again.
+            </p>
+          )}
         </form>
       </div>
 
-      {/* Connect Section */}
+      {/* Contact Info */}
       <div className="connect-section">
-        <h2>Visit Us or Connect Directly</h2>
+        <h2>Visit or Contact Us</h2>
+
         <div className="connect-cards">
           <div className="info-card">
-            <h4>Our Address</h4>
-            <p>123 Organic Lane, Green Valley, Harvestland, HV 54321</p>
-            <h4>Phone Number</h4>
-            <p>+1 (555) 123-PURE (7873)</p>
-            <h4>Email Address</h4>
-            <p>info@pureharvestorganics.com</p>
+            <h4>Address</h4>
+            <p>Pilani, Rajasthan</p>
+
+            <h4>Phone</h4>
+            <p>+91 XXXXX XXXXX</p>
+
+            <h4>Email</h4>
+            <p>info@maanjufarms.com</p>
           </div>
+
           <div className="map-card">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d243647.34203530906!2d78.24323239564612!3d17.412281015627997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb99daeaebd2c7%3A0xae93b78392bafbc2!2sHyderabad%2C%20Telangana!5e0!3m2!1sen!2sin!4v1755345520643!5m2!1sen!2sin"
+              src="https://www.google.com/maps?q=Pilani,Rajasthan&output=embed"
               width="100%"
-              height="350"
-              allowFullScreen=""
+              height="100%"
               loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Google Map Location"
+              title="Map"
             ></iframe>
           </div>
         </div>
-      </div>
-
-      {/* FAQ Section */}
-      <div className="faq-section">
-        <h2>Frequently Asked Questions</h2>
-        <details>
-          <summary>What makes PureHarvest Organics products unique?</summary>
-          <p>Our products are 100% organic and sustainably sourced.</p>
-        </details>
-        <details>
-          <summary>Where can I purchase your products?</summary>
-          <p>Visit our online store or select retail partners.</p>
-        </details>
-        <details>
-          <summary>Do you offer international shipping?</summary>
-          <p>Yes, we ship worldwide with tracking available.</p>
-        </details>
-        <details>
-          <summary>Are your products gluten-free and vegan?</summary>
-          <p>Yes, all our products are gluten-free and vegan-friendly.</p>
-        </details>
       </div>
     </div>
   );

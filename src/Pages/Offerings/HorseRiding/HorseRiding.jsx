@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import styles from "./horseRiding.module.css";
+import { Link } from "react-router-dom";
 
 const images = [
-  "/images/horse/horse1.jpeg",
-  "/images/horse/horse2.jpeg",
-  "/images/horse/horse3.jpeg",
-  "/images/horse/horse4.jpeg",
+  "/Images/horse/horse1.jpeg",
+  "/Images/horse/horse2.jpeg",
+  "/Images/horse/horse3.jpeg",
+  "/Images/horse/horse4.jpeg",
 ];
 
 const HorseRiding = () => {
@@ -115,7 +116,7 @@ const HorseRiding = () => {
       <section className={styles.cta}>
         <h2>Plan Your Ride</h2>
         <p>Book your horse riding experience at Maanjoo Farms today.</p>
-        <button>Contact Us</button>
+        <Link to="/contact"><button>Contact Us</button></Link>
       </section>
     </div>
   );

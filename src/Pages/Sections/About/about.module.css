@@ -1,22 +1,24 @@
+/* =========================
+   BASE
+========================= */
 .aboutPage {
-  background-color: var(--primary-bg);
+  background: var(--primary-bg);
   color: var(--primary-text);
-  padding: 6rem 8%;
+  padding: 5rem 8%;
   font-family: "Poppins", sans-serif;
   line-height: 1.7;
 }
 
 /* =========================
-   Hero Section
+   HERO
 ========================= */
 .heroSection {
-  background-image: url('/images/aboutUs.jpg');
+  background: url("/Images/aboutUSBanner.jpg");
   background-size: cover;
-  background-position: center;
-  padding: 140px 20px;
-  text-align: center;
+  background-position: bottom;
   border-radius: 20px;
-  margin-bottom: 70px;
+  padding: 140px 20px;
+  margin-bottom: 80px;
   position: relative;
   overflow: hidden;
 }
@@ -25,65 +27,106 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55));
-  z-index: 1;
-  border-radius: 20px;
+  background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.6));
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  text-align: center;
 }
 
 .heroTitle {
-  position: relative;
-  z-index: 2;
   font-size: 3.5rem;
   font-weight: 700;
-  margin-bottom: 16px;
-  letter-spacing: 1px;
   color: #fff;
-  text-shadow: 0px 3px 6px rgba(0,0,0,0.4);
+  margin-bottom: 10px;
+  letter-spacing: 1px;
 }
 
-.heroSection p {
-  position: relative;
-  z-index: 2;
-  color: #f8f8f8;
-  font-size: 1.3rem;
-  margin-top: 10px;
+.heroTagline {
+  color: #f0f0f0;
+  font-size: 1.2rem;
 }
 
 /* =========================
-   Intro Section
+   COMMON
+========================= */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.sectionHeader h2 {
+  font-size: 2.2rem;
+  color: var(--highlight-color);
+  margin-bottom: 5px;
+}
+
+.sectionHeader p {
+  color: var(--muted-text);
+}
+
+.sectionLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 6px 12px;
+  padding-top: 8px;
+  border-radius: 999px;
+
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+
+  color: var(--accent-color);
+  background: rgba(76, 175, 80, 0.12); /* soft green tint */
+  border: 1px solid rgba(76, 175, 80, 0.25);
+
+  backdrop-filter: blur(6px);
+
+  transition: all 0.3s ease;
+}
+
+.sectionLabel:hover {
+  background: var(--accent-color);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   INTRO
 ========================= */
 .introSection {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
   gap: 50px;
+  align-items: center;
   margin-bottom: 100px;
 }
 
 .textBlock {
-  flex: 1 1 320px;
-  font-size: 1.1rem;
+  flex: 1;
 }
 
 .textBlock h2 {
-  color: var(--highlight-color);
-  margin-bottom: 16px;
-  font-size: 2.2rem;
-  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 15px;
 }
 
 .textBlock p {
   color: var(--secondary-text);
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   text-align: justify;
-  line-height: 1.8;
 }
 
 /* =========================
-   Carousel
+   CAROUSEL
 ========================= */
 .carouselContainer {
-  flex: 1 1 320px;
+  flex: 1;
   max-width: 520px;
 }
 
@@ -95,254 +138,199 @@
 
 .carousel img {
   width: 100%;
-  height: auto;
-  object-fit: cover;
-  transition: transform 0.4s ease-in-out;
+  height: 100%;
+  object-fit: contain;
+  transition: 0.4s;
+  position: relative;
 }
 
 .carousel img:hover {
   transform: scale(1.05);
 }
 
-.swiper-button-next,
-.swiper-button-prev {
-  color: var(--accent-color) !important;
-}
-
-.swiper-pagination-bullet-active {
-  background: var(--highlight-color) !important;
+/* =========================
+   GRID SYSTEM
+========================= */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 30px;
 }
 
 /* =========================
-   Farming Highlights
+   CARD
 ========================= */
-.highlightSection {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  margin: 90px 0;
-  justify-content: center;
-}
-
 .card {
-  flex: 1 1 280px;
-  max-width: 360px;
-  padding: 24px;
   background: var(--card-bg);
-  border-radius: 18px;
+  border-radius: 16px;
+  padding: 20px;
   text-align: center;
-  box-shadow: 0 12px 28px var(--card-shadow);
-  transition: all 0.3s ease;
+  box-shadow: var(--shadow-light);
+  transition: 0.3s;
 }
 
 .card:hover {
-  transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-hover);
 }
 
 .card img {
   width: 100%;
-  height: 220px;
+  height: 200px;
+  border-radius: 12px;
   object-fit: cover;
-  border-radius: 14px;
-  margin-bottom: 16px;
+  margin-bottom: 15px;
 }
 
 .card h3 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
   color: var(--highlight-color);
+  margin-bottom: 8px;
 }
 
 /* =========================
-   Agro Tourism
+   FACILITY
 ========================= */
 .facilitySection {
   display: flex;
   flex-wrap: wrap;
-  gap: 40px;
+  gap: 50px;
   align-items: center;
   margin: 100px 0;
 }
 
-.facilitySection img {
-  flex: 1 1 320px;
-  max-width: 500px;
-  border-radius: 16px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+.imageBlock {
+  flex: 1;
 }
 
-.facilitySection .textBlock {
-  flex: 1 1 320px;
+.imageBlock img {
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
 }
 
 /* =========================
-   Livestock Section
+   LIVESTOCK
 ========================= */
 .livestockSection {
   margin: 100px 0;
   text-align: center;
 }
 
-.livestockSection h2 {
-  font-size: 2.2rem;
-  margin-bottom: 40px;
-  color: var(--highlight-color);
-}
-
-.cardsRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  justify-content: center;
-}
-
 /* =========================
-   Sustainability Section
+   SUSTAINABILITY
 ========================= */
 .sustainabilitySection {
   background: var(--primary-bg-alt);
-  padding: 60px 40px;
+  padding: 6px 40px;
   border-radius: 18px;
-  margin: 80px 0;
+  margin: 8px 0;
 }
 
-.sustainabilitySection h2 {
-  font-size: 2.2rem;
-  color: var(--highlight-color);
-  margin-bottom: 20px;
-}
-
-.sustainabilitySection ul {
+.list {
   list-style: none;
   padding: 0;
+  display: flex;
+  justify-content: space-between;
 }
 
-.sustainabilitySection li {
+.list li {
   margin-bottom: 12px;
-  font-size: 1.1rem;
+  padding-left: 25px;
   position: relative;
-  padding-left: 28px;
 }
 
-.sustainabilitySection li::before {
+.list li::before {
   content: "✔";
   position: absolute;
   left: 0;
   color: var(--accent-color);
-  font-weight: bold;
 }
 
 /* =========================
-   Team / Vision
+   TEAM / PARTNERS
 ========================= */
-.teamSection {
-  text-align: center;
-  margin: 80px 0;
-}
-
-.teamSection h2 {
-  font-size: 2.2rem;
-  color: var(--highlight-color);
-  margin-bottom: 20px;
-}
-
-/* =========================
-   Partners
-========================= */
+.teamSection,
 .partnersSection {
   text-align: center;
   margin: 80px 0;
 }
 
-.partnersSection h2 {
-  font-size: 2.2rem;
-  color: var(--highlight-color);
-  margin-bottom: 20px;
-}
-
 /* =========================
-   Quick Facts
+   FACTS TABLE
 ========================= */
 .factsSection {
-  background-color: var(--glass-bg);
+  background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
-  padding: 60px 30px;
+  padding: 50px;
   border-radius: 18px;
-  margin-top: 70px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
 }
 
 .tableTitle {
   text-align: center;
-  font-size: 2.2rem;
-  color: var(--highlight-color);
   margin-bottom: 30px;
+  font-size: 2rem;
+  color: var(--highlight-color);
 }
 
 .factsTable {
   width: 100%;
   border-collapse: collapse;
-  background-color: var(--card-bg);
-  border-radius: 14px;
+  background: var(--card-bg);
+  border-radius: 12px;
   overflow: hidden;
 }
 
 .factsTable th,
 .factsTable td {
-  padding: 14px 18px;
+  padding: 14px;
+  border-bottom: 1px solid #eee;
   text-align: center;
-  border-bottom: 1px solid #e6e6e6;
 }
 
 .factsTable th {
+  background: var(--primary-bg-alt);
   color: var(--highlight-color);
-  font-weight: 700;
-  background-color: var(--primary-bg-alt);
 }
 
 /* =========================
-   Responsive
+   RESPONSIVE
 ========================= */
 @media (max-width: 992px) {
   .introSection,
-  .highlightSection,
-  .facilitySection,
-  .cardsRow {
-    /* flex-direction: column; */
+  .facilitySection {
+    flex-direction: column;
     text-align: center;
   }
 
-  .carouselContainer,
-  .facilitySection img {
-    max-width: 100%;
+  .list {
+    flex-direction: column;
+    align-items: center;
   }
 }
 
 @media (max-width: 600px) {
   .aboutPage {
-    padding: 3rem 1.2rem;
+    padding: 1rem 0.5rem;
   }
 
   .heroTitle {
     font-size: 2.2rem;
   }
 
-  .textBlock h2 {
+  .sectionHeader h2 {
     font-size: 1.6rem;
   }
 
-  .facilitySection{
-    padding: 20px
+  .carouselContainer {
+    max-width: 100%;
   }
 
-  .factsSection{
+  .factsSection {
     padding: 20px;
   }
 
   .factsTable th,
   .factsTable td {
     font-size: 0.9rem;
-    padding: 10px;
   }
 }

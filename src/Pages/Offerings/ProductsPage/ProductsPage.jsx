@@ -53,7 +53,6 @@ const ProductsPage = () => {
 
   const categories = [...new Set(products.map((p) => p.category))];
 
-  if (loading) return <p>Loading products...</p>;
 
   return (
     <div className="productsPage">

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import styles from "./camelRiding.module.css";
+import { Link } from "react-router-dom";
 
 const images = [
-  "/images/camels/camel1.webp",
-  "/images/camels/camel2.jpeg",
-  "/images/camels/camel3.jpeg",
-  "/images/camels/camel4.jpeg",
+  "/Images/camels/camel1.webp",
+  "/Images/camels/camel2.jpeg",
+  "/Images/camels/camel3.jpeg",
+  "/Images/camels/camel4.jpeg",
 ];
 
 const CamelRiding = () => {
@@ -113,7 +114,8 @@ const CamelRiding = () => {
       <section className={styles.cta}>
         <h2>Plan Your Camel Safari</h2>
         <p>Book your camel riding adventure at Maanjoo Farms today.</p>
-        <button>Contact Us</button>
+        <Link to="/contact"><button>Contact Us</button></Link>
+
       </section>
     </div>
   );
