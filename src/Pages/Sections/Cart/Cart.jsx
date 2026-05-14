@@ -14,7 +14,6 @@ const Cart = () => {
     decreaseQty,
     subtotal,
     total,
-    handleCheckout,
     loading,
   } = useCart();
 
@@ -50,7 +49,7 @@ const Cart = () => {
                 </td>
                 <td>
                   <img
-                    src={getImageUrl(item.product.image) || "/images/default.png"}
+                    src={getImageUrl(item.product.image) || "/Images/image.png"}
                     alt={item.product.name}
                   />
                 </td>

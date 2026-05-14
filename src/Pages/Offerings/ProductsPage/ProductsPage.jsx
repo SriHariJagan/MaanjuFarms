@@ -83,11 +83,10 @@ const ProductsPage = () => {
               .filter((p) => p.category === category)
               .map((product) => (
                 <div key={product._id} className="productCard">
-                  
                   {/* IMAGE */}
                   <div className="productImageWrapper">
                     <img
-                      src={getImageUrl(product.image) || "/images/ghee.jpeg"}
+                      src={getImageUrl(product.image) || "/Images/image.png"}
                       alt={product.name}
                       className="productImage"
                     />

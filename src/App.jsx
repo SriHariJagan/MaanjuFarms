@@ -17,21 +17,38 @@ import ScrollToTop from "./Components/ScrollToTop.jsx";
 import Checkout from "./Pages/Checkout/Checkout.jsx";
 import GuestDetails from "./Pages/GuestDetails/GuestDetails.jsx";
 /* Lazy-loaded components */
-const ProductsPage = lazy(() => import("./Pages/Offerings/ProductsPage/ProductsPage.jsx"));
-const HorseRiding = lazy(() => import("./Pages/Offerings/HorseRiding/HorseRiding.jsx"));
-const CamelRiding = lazy(() => import("./Pages/Offerings/CamelRiding/CamelRiding.jsx"));
-const VillasStays = lazy(() => import("./Pages/Offerings/VillasStays/VillasStays.jsx"));
+const ProductsPage = lazy(
+  () => import("./Pages/Offerings/ProductsPage/ProductsPage.jsx"),
+);
+const HorseRiding = lazy(
+  () => import("./Pages/Offerings/HorseRiding/HorseRiding.jsx"),
+);
+const CamelRiding = lazy(
+  () => import("./Pages/Offerings/CamelRiding/CamelRiding.jsx"),
+);
+const VillasStays = lazy(
+  () => import("./Pages/Offerings/VillasStays/VillasStays.jsx"),
+);
 /*Sections*/
 const AboutUs = lazy(() => import("./Pages/Sections/About/About.jsx"));
-const ContactUs = lazy(() => import("./Pages/Sections/ContactUs/ContactUs.jsx"));
+const ContactUs = lazy(
+  () => import("./Pages/Sections/ContactUs/ContactUs.jsx"),
+);
 const Gallery = lazy(() => import("./Pages/Sections/Gallery/Gallery.jsx"));
 /*Products and cart pages*/
-const ProductDetails = lazy(() => import("./Components/ProductDetails/ProductDetails.jsx"));
+const ProductDetails = lazy(
+  () => import("./Components/ProductDetails/ProductDetails.jsx"),
+);
+
 const Cart = lazy(() => import("./Pages/Sections/Cart/Cart.jsx"));
+const AdminOrder = lazy(() => import("./Pages/Orders/AdminOrders/AdminOrders .jsx"));
+const UserOrders = lazy(() => import("./Pages/Orders/UserOrders/UserOrders.jsx"));
+
+
 /*Auth pages*/
 const Login = lazy(() => import("./Pages/Auth/Login/Login.jsx"));
 const Signup = lazy(() => import("./Pages/Auth/Signup/Signup.jsx"));
-/* Payment pages*/ 
+/* Payment pages*/
 const PaymentFailure = lazy(() => import("./Pages/Payment/PaymentFailure.jsx"));
 const PaymentSuccess = lazy(() => import("./Pages/Payment/PaymentSuccess.jsx"));
 
@@ -58,12 +75,31 @@ function App() {
             <Route path="gallery" element={<Gallery />} />
             <Route path="product/:id" element={<ProductDetails />} />
 
+
             {/* Protected */}
             <Route
               path="cart"
               element={
                 <PrivateRoute>
                   <Cart />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/admin/orders"
+              element={
+                <PrivateRoute>
+                  <AdminOrder />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/my-orders"
+              element={
+                <PrivateRoute>
+                  <UserOrders />
                 </PrivateRoute>
               }
             />

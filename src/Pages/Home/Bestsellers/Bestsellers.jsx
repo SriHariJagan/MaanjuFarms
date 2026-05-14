@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./BestSellers.module.css";
 import { useCart } from "../../../Store/useContext.jsx";
 import { PRODUCTS_API } from "../../../urls.js";
+import { getImageUrl } from "../../../utils/getImageUrl .js";
 
 const BestSellers = () => {
   const { addToCart } = useCart();
@@ -52,7 +53,7 @@ const BestSellers = () => {
           {products.map((product) => (
             <div key={product._id || product.id} className={styles.card}>
               <div className={styles.imageWrapper}>
-                <img src={product.image} alt={product.name} />
+                <img src={getImageUrl(product.image) || "/Images/image.png"} alt={product.name} />
               </div>
 
               <div className={styles.info}>

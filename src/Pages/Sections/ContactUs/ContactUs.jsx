@@ -187,7 +187,7 @@ const ContactUs = () => {
             <p>Pilani, Rajasthan</p>
 
             <h4>Phone</h4>
-            <p>+91 XXXXX XXXXX</p>
+            <p>+91 98765 43210</p>
 
             <h4>Email</h4>
             <p>info@maanjufarms.com</p>

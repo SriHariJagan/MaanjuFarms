@@ -1,54 +1,103 @@
+// Navbar.jsx
+
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+
 import {
   Sun,
   Moon,
-  Search,
   ShoppingCart,
   AlignJustify,
   X,
   ChevronDown,
   LogIn,
   LogOut,
+  Package,
+  ClipboardList,
 } from "lucide-react";
+
 import "./Navbar.css";
+
 import { useCart, useAuth } from "../../../Store/useContext";
 
 const Navbar = () => {
+  //
+  // CART
+  //
+
   const { cart } = useCart();
+
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+  //
+  // AUTH
+  //
 
   const { user, logout } = useAuth();
 
+  //
+  // ✅ ADMIN CHECK
+  //
+
+  const isAdmin = user?.role === "admin";
+
+  //
+  // STATES
+  //
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const [prevScrollPos, setPrevScrollPos] = useState(window.pageYOffset);
+
   const [visible, setVisible] = useState(true);
+
   const [theme, setTheme] = useState("light");
+
+  //
+  // REFS
+  //
 
   const mobileMenuRef = useRef(null);
 
-  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
-  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+  //
+  // TOGGLE MOBILE MENU
+  //
 
-  // Close menu after link click
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+
+  //
+  // CLOSE MENU AFTER LINK CLICK
+  //
+
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);
     setIsDropdownOpen(false);
   };
 
-  // Scroll hide/show
+  //
+  // NAVBAR HIDE / SHOW
+  //
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollPos = window.pageYOffset;
+
       setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 10);
+
       setPrevScrollPos(currentScrollPos);
     };
+
     window.addEventListener("scroll", handleScroll);
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, [prevScrollPos]);
 
-  // Close mobile menu when clicking outside
+  //
+  // CLOSE MOBILE MENU OUTSIDE CLICK
+  //
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -59,38 +108,59 @@ const Navbar = () => {
         setIsMobileMenuOpen(false);
       }
     };
+
     if (isMobileMenuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isMobileMenuOpen]);
 
-  // Theme toggle
+  //
+  // THEME TOGGLE
+  //
+
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
   };
+
   useEffect(() => {
-    if (theme === "dark") document.body.classList.add("dark");
-    else document.body.classList.remove("dark");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
   }, [theme]);
 
   return (
     <nav className={`navbar ${visible ? "" : "navbar-hidden"}`}>
       <div className="navbar-container">
-        {/* Logo */}
+        {/* LOGO */}
+
         <div className="navbar-logo">
           <Link to="/" className="logo-link" onClick={handleLinkClick}>
-            <span className="logo-text">🌿 Maanjoo Farms</span>
+            <img
+              src="/Images/logo.png"
+              alt="Maanjoo Farms Logo"
+              className="logo-image"
+              width={20}
+            />
+
+            <span className="logo-text">Maanjoo Farms</span>
           </Link>
         </div>
 
-        {/* Desktop Menu */}
+        {/* DESKTOP MENU */}
+
         <div className="navbar-menu">
           <Link to="/" className="nav-link">
             Home
           </Link>
+
+          {/* OFFERINGS */}
+
           <div
             className="nav-link dropdown"
             onMouseEnter={() => setIsDropdownOpen(true)}
@@ -102,44 +172,64 @@ const Navbar = () => {
                 <Link to="/organic-products" className="dropdown-item">
                   Organic Products
                 </Link>
+
                 <Link to="/horse-riding" className="dropdown-item">
                   Horse Riding
                 </Link>
+
                 <Link to="/camel-riding" className="dropdown-item">
                   Camel Riding
                 </Link>
+
                 <Link to="/villas" className="dropdown-item">
                   Villas & Stays
                 </Link>
               </div>
             )}
           </div>
+
           <Link to="/gallery" className="nav-link">
             Gallery
           </Link>
+
           <Link to="/about" className="nav-link">
             About Us
           </Link>
+
           <Link to="/contact" className="nav-link">
             Contact Us
           </Link>
+
+          {/* ✅ USER ORDERS */}
+
+          {user && !isAdmin && (
+            <Link to="/my-orders" className="nav-link">
+              My Orders
+            </Link>
+          )}
+
+          {/* ✅ ADMIN ORDERS */}
+
+          {user && isAdmin && (
+            <Link to="/admin/orders" className="nav-link">
+              Orders
+            </Link>
+          )}
         </div>
 
-        {/* Right Actions */}
-        <div className="navbar-actions">
-          {/* Search (desktop only) */}
-          {/* <div className="search-wrapper desktop-only">
-            <Search className="search-icon" size={16} />
-            <input type="text" placeholder="Search..." />
-          </div> */}
+        {/* RIGHT ACTIONS */}
 
-          {/* Cart */}
+        <div className="navbar-actions">
+          {/* CART */}
+
           <Link to="/cart" className="cart-button">
             <ShoppingCart size={18} />
+
             {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
           </Link>
 
-          {/* Theme Toggle */}
+          {/* THEME */}
+
           <button
             className="theme-toggle"
             onClick={toggleTheme}
@@ -148,19 +238,20 @@ const Navbar = () => {
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
           </button>
 
+          {/* LOGIN / LOGOUT */}
 
-           {/* Login / Logout */}
           {user ? (
             <button className="auth-button" onClick={logout}>
-               <LogOut size={16} />
+              <LogOut size={16} />
             </button>
           ) : (
             <Link to="/login" className="auth-button">
-               <LogIn size={16} />
+              <LogIn size={16} />
             </Link>
           )}
 
-          {/* Mobile Menu Button */}
+          {/* MOBILE MENU BUTTON */}
+
           <button
             className="mobile-menu-button"
             onClick={toggleMobileMenu}
@@ -171,7 +262,8 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* MOBILE MENU */}
+
       {isMobileMenuOpen && (
         <div
           ref={mobileMenuRef}
@@ -181,6 +273,7 @@ const Navbar = () => {
             <Link to="/" className="mobile-nav-link" onClick={handleLinkClick}>
               Home
             </Link>
+
             <Link
               to="/organic-products"
               className="mobile-nav-link"
@@ -188,6 +281,7 @@ const Navbar = () => {
             >
               Organic Products
             </Link>
+
             <Link
               to="/horse-riding"
               className="mobile-nav-link"
@@ -195,6 +289,7 @@ const Navbar = () => {
             >
               Horse Riding
             </Link>
+
             <Link
               to="/camel-riding"
               className="mobile-nav-link"
@@ -202,6 +297,7 @@ const Navbar = () => {
             >
               Camel Riding
             </Link>
+
             <Link
               to="/villas"
               className="mobile-nav-link"
@@ -209,6 +305,7 @@ const Navbar = () => {
             >
               Villas & Stays
             </Link>
+
             <Link
               to="/gallery"
               className="mobile-nav-link"
@@ -216,6 +313,7 @@ const Navbar = () => {
             >
               Gallery
             </Link>
+
             <Link
               to="/about"
               className="mobile-nav-link"
@@ -223,6 +321,7 @@ const Navbar = () => {
             >
               About Us
             </Link>
+
             <Link
               to="/contact"
               className="mobile-nav-link"
@@ -231,23 +330,44 @@ const Navbar = () => {
               Contact Us
             </Link>
 
-            {/* Mobile Search */}
-            {/* <div className="mobile-search-wrapper">
-              <input type="text" placeholder="Search..." />
-              <Search size={14} className="search-icon" />
-            </div> */}
+            {/* ✅ USER ORDERS */}
 
-            {/* Cart */}
+            {user && !isAdmin && (
+              <Link
+                to="/my-orders"
+                className="mobile-nav-link"
+                onClick={handleLinkClick}
+              >
+                My Orders
+              </Link>
+            )}
+
+            {/* ✅ ADMIN ORDERS */}
+
+            {user && isAdmin && (
+              <Link
+                to="/admin/orders"
+                className="mobile-nav-link"
+                onClick={handleLinkClick}
+              >
+                Orders
+              </Link>
+            )}
+
+            {/* CART */}
+
             <Link
               to="/cart"
               className="mobile-get-started-button"
               onClick={handleLinkClick}
             >
               <ShoppingCart size={16} />
+
               {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
             </Link>
-            
-            {/* Mobile Login / Logout */}
+
+            {/* LOGIN / LOGOUT */}
+
             {user ? (
               <button
                 className="mobile-auth-button"
@@ -264,7 +384,7 @@ const Navbar = () => {
                 className="mobile-auth-button"
                 onClick={handleLinkClick}
               >
-                <button className="mobile-auth-button">Login <LogIn size={16} /></button>
+                Login <LogIn size={16} />
               </Link>
             )}
           </div>
