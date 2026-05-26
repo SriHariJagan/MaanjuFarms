@@ -90,6 +90,14 @@ const GuestDetails = () => {
     try {
       setLoading(true);
 
+      console.log("Booking villa with details:", {
+        villaId: villa._id,
+        checkIn,
+        checkOut,
+        guests,
+        guestList,
+      }); 
+
       await bookVilla(
         villa._id,
         checkIn,

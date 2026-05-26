@@ -112,6 +112,14 @@ const bookVilla = async (
   try {
     setLoading(true);
 
+    console.log("Initiating booking with details:", {
+      villaId,
+      checkIn,
+      checkOut,
+      guests,
+      guestDetails,
+    });
+
     if (!villaId || !checkIn || !checkOut) {
       toast.error("Missing booking details");
       return;
