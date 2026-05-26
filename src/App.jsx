@@ -16,6 +16,8 @@ import Home from "./Pages/Home/Home.jsx";
 import ScrollToTop from "./Components/ScrollToTop.jsx";
 import Checkout from "./Pages/Checkout/Checkout.jsx";
 import GuestDetails from "./Pages/GuestDetails/GuestDetails.jsx";
+import PincodeManagement from "./Pages/PincodeManagement/PincodeManagement.jsx";
+import { useAuth } from "./Store/useContext.jsx";
 /* Lazy-loaded components */
 const ProductsPage = lazy(
   () => import("./Pages/Offerings/ProductsPage/ProductsPage.jsx"),
@@ -41,9 +43,12 @@ const ProductDetails = lazy(
 );
 
 const Cart = lazy(() => import("./Pages/Sections/Cart/Cart.jsx"));
-const AdminOrder = lazy(() => import("./Pages/Orders/AdminOrders/AdminOrders .jsx"));
-const UserOrders = lazy(() => import("./Pages/Orders/UserOrders/UserOrders.jsx"));
-
+const AdminOrder = lazy(
+  () => import("./Pages/Orders/AdminOrders/AdminOrders .jsx"),
+);
+const UserOrders = lazy(
+  () => import("./Pages/Orders/UserOrders/UserOrders.jsx"),
+);
 
 /*Auth pages*/
 const Login = lazy(() => import("./Pages/Auth/Login/Login.jsx"));
@@ -53,6 +58,7 @@ const PaymentFailure = lazy(() => import("./Pages/Payment/PaymentFailure.jsx"));
 const PaymentSuccess = lazy(() => import("./Pages/Payment/PaymentSuccess.jsx"));
 
 function App() {
+  const { isAdmin } = useAuth(); // Get isAdmin from AuthContext
   return (
     <Router>
       <ScrollToTop />
@@ -74,7 +80,6 @@ function App() {
             <Route path="contact" element={<ContactUs />} />
             <Route path="gallery" element={<Gallery />} />
             <Route path="product/:id" element={<ProductDetails />} />
-
 
             {/* Protected */}
             <Route
@@ -112,6 +117,20 @@ function App() {
                 </PrivateRoute>
               }
             />
+
+            <Route
+              path="admin/pincode-management"
+              element={
+                <PrivateRoute>
+                  {isAdmin ? (
+                    <PincodeManagement />
+                  ) : (
+                    <Navigate to="/" replace />
+                  )}
+                </PrivateRoute>
+              }
+            />
+
             <Route path="/guest-details" element={<GuestDetails />} />
           </Route>
 

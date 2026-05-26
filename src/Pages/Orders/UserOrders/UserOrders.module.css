@@ -1,7 +1,7 @@
 .userOrders {
   min-height: 100vh;
   background: #f6f8fb;
-  padding: 40px;
+  padding: 6rem 40px;
   font-family: var(--body-font);
 }
 

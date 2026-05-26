@@ -64,8 +64,6 @@ const UserOrders = () => {
 
       <div className={styles.header}>
         <div>
-          <p className={styles.subTitle}>Dashboard / My Orders</p>
-
           <h2>My Orders</h2>
         </div>
 

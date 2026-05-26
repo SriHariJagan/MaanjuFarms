@@ -215,6 +215,12 @@ const Navbar = () => {
               Orders
             </Link>
           )}
+
+          {user && isAdmin && (
+            <Link to="/admin/pincode-management" className="nav-link">
+              Pincode Management
+            </Link>
+          )}
         </div>
 
         {/* RIGHT ACTIONS */}
@@ -339,6 +345,16 @@ const Navbar = () => {
                 onClick={handleLinkClick}
               >
                 My Orders
+              </Link>
+            )}
+
+            {user && !isAdmin && (
+              <Link
+                to="/pincode-management"
+                className="mobile-nav-link"
+                onClick={handleLinkClick}
+              >
+                Pincode Management
               </Link>
             )}
 
