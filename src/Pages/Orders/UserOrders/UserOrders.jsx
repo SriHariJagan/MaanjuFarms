@@ -24,6 +24,7 @@ import {
 import styles from "./UserOrders.module.css";
 
 import { getImageUrl } from "../../../utils/getImageUrl ";
+import { API_BASE } from "../../../urls";
 
 const UserOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -51,7 +52,7 @@ const UserOrders = () => {
       const [ordersRes, bookingsRes] =
         await Promise.all([
           axios.get(
-            "http://localhost:5000/api/orders/my-orders",
+            `${API_BASE}/orders/my-orders`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -60,7 +61,7 @@ const UserOrders = () => {
           ),
 
           axios.get(
-            "http://localhost:5000/api/bookings/my-bookings",
+            `${API_BASE}/bookings/my-bookings`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,

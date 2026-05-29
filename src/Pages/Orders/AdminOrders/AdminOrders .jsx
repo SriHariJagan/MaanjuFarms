@@ -23,6 +23,7 @@ import {
 import styles from "./AdminOrders.module.css";
 
 import { getImageUrl } from "../../../utils/getImageUrl ";
+import { API_BASE } from "../../../urls";
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -58,13 +59,13 @@ const AdminOrders = () => {
       setLoading(true);
 
       const [ordersRes, bookingsRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/orders/all", {
+        axios.get(`${API_BASE}/orders/all`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }),
 
-        axios.get("http://localhost:5000/api/bookings", {
+        axios.get(`${API_BASE}/bookings`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -111,7 +112,7 @@ const AdminOrders = () => {
     try {
       setUpdatingId(id);
 
-      await axios.put(`http://localhost:5000/api/orders/update/${id}`, data, {
+      await axios.put(`${API_BASE}/orders/update/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -142,7 +143,7 @@ const AdminOrders = () => {
     try {
       setUpdatingId(id);
 
-      await axios.put(`http://localhost:5000/api/bookings/update/${id}`, data, {
+      await axios.put(`${API_BASE}/bookings/update/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
