@@ -16,6 +16,8 @@ import {
   BadgeCheck,
   Phone,
   Mail,
+  Hotel,
+  Filter,
 } from "lucide-react";
 
 import styles from "./AdminOrders.module.css";
@@ -25,6 +27,8 @@ import { getImageUrl } from "../../../utils/getImageUrl ";
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
 
+  const [bookings, setBookings] = useState([]);
+
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
@@ -33,27 +37,50 @@ const AdminOrders = () => {
 
   const [updatingId, setUpdatingId] = useState("");
 
+  // =======================================
+  // FILTERS
+  // =======================================
+
+  const [selectedType, setSelectedType] = useState("orders");
+
+  const [statusFilter, setStatusFilter] = useState("all");
+
+  const [dateFilter, setDateFilter] = useState("all");
+
   const token = localStorage.getItem("token");
 
-  //
-  // FETCH ORDERS
-  //
+  // =======================================
+  // FETCH DATA
+  // =======================================
 
-  const fetchOrders = async () => {
+  const fetchData = async () => {
     try {
       setLoading(true);
 
-      const res = await axios.get("http://localhost:5000/api/orders/all", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const [ordersRes, bookingsRes] = await Promise.all([
+        axios.get("http://localhost:5000/api/orders/all", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }),
 
-      const sortedOrders = res.data.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+        axios.get("http://localhost:5000/api/bookings", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+      ]);
+
+      setOrders(
+        ordersRes.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+        ),
       );
-
-      setOrders(sortedOrders);
+      setBookings(
+        bookingsRes.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+        ),
+      );
     } catch (err) {
       console.log(err);
     } finally {
@@ -62,12 +89,12 @@ const AdminOrders = () => {
   };
 
   useEffect(() => {
-    fetchOrders();
+    fetchData();
   }, []);
 
-  //
+  // =======================================
   // TOGGLE
-  //
+  // =======================================
 
   const toggleOrder = (id) => {
     setExpandedOrders((prev) => ({
@@ -76,9 +103,9 @@ const AdminOrders = () => {
     }));
   };
 
-  //
+  // =======================================
   // UPDATE ORDER
-  //
+  // =======================================
 
   const updateOrder = async (id, data) => {
     try {
@@ -107,39 +134,115 @@ const AdminOrders = () => {
     }
   };
 
-  //
-  // SEARCH
-  //
+  // =======================================
+  // UPDATE BOOKING
+  // =======================================
 
-  const filteredOrders = useMemo(() => {
-    return orders.filter((order) => {
+  const updateBooking = async (id, data) => {
+    try {
+      setUpdatingId(id);
+
+      await axios.put(`http://localhost:5000/api/bookings/update/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setBookings((prev) =>
+        prev.map((booking) =>
+          booking._id === id
+            ? {
+                ...booking,
+                ...data,
+              }
+            : booking,
+        ),
+      );
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setUpdatingId("");
+    }
+  };
+
+  // =======================================
+  // DATE FILTER
+  // =======================================
+
+  const filterByDate = (date) => {
+    const today = new Date();
+
+    const itemDate = new Date(date);
+
+    if (dateFilter === "today") {
+      return itemDate.toDateString() === today.toDateString();
+    }
+
+    if (dateFilter === "week") {
+      const weekAgo = new Date();
+
+      weekAgo.setDate(today.getDate() - 7);
+
+      return itemDate >= weekAgo;
+    }
+
+    if (dateFilter === "month") {
+      return (
+        itemDate.getMonth() === today.getMonth() &&
+        itemDate.getFullYear() === today.getFullYear()
+      );
+    }
+
+    return true;
+  };
+
+  // =======================================
+  // FILTERED DATA
+  // =======================================
+
+  const filteredData = useMemo(() => {
+    const data = selectedType === "orders" ? orders : bookings;
+
+    return data.filter((item) => {
       const query = search.toLowerCase();
 
-      return (
-        order.user?.name?.toLowerCase().includes(query) ||
-        order.user?.email?.toLowerCase().includes(query) ||
-        order._id?.toLowerCase().includes(query)
-      );
-    });
-  }, [orders, search]);
+      const matchesSearch =
+        item.user?.name?.toLowerCase().includes(query) ||
+        item.user?.email?.toLowerCase().includes(query) ||
+        item._id?.toLowerCase().includes(query);
 
-  //
+      const matchesStatus =
+        statusFilter === "all" ? true : item.status === statusFilter;
+
+      const matchesDate = filterByDate(item.createdAt);
+
+      return matchesSearch && matchesStatus && matchesDate;
+    });
+  }, [orders, bookings, search, selectedType, statusFilter, dateFilter]);
+
+  // =======================================
   // LOADING
-  //
+  // =======================================
 
   if (loading) {
-    return <div className={styles.loading}>Loading Orders...</div>;
+    return <div className={styles.loading}>Loading...</div>;
   }
 
   return (
     <div className={styles.adminOrders}>
+      {/* ======================================= */}
       {/* HEADER */}
+      {/* ======================================= */}
 
       <div className={styles.header}>
         <div>
-          <p className={styles.subTitle}>Dashboard / Orders</p>
+          <p className={styles.subTitle}>Dashboard / Management</p>
 
-          <h2>Orders Management</h2>
+          <h2>
+            {selectedType === "orders"
+              ? "Orders Management"
+              : "Villa Bookings Management"}
+          </h2>
         </div>
 
         <div className={styles.headerRight}>
@@ -148,232 +251,234 @@ const AdminOrders = () => {
 
             <input
               type="text"
-              placeholder="Search orders..."
+              placeholder="Search..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-
-          <div className={styles.totalOrders}>
-            {filteredOrders.length} Orders
-          </div>
         </div>
       </div>
 
-      {/* ORDERS */}
+      {/* ======================================= */}
+      {/* FILTERS */}
+      {/* ======================================= */}
 
-      <div className={styles.ordersGrid}>
-        {filteredOrders.map((order) => {
-          const isExpanded = expandedOrders[order._id];
+      <div className={styles.filtersWrapper}>
+        {/* TYPE FILTER */}
 
-          return (
-            <div className={styles.orderCard} key={order._id}>
-              {/* TOP */}
+        <div className={styles.typeTabs}>
+          <button
+            className={selectedType === "orders" ? styles.activeTab : ""}
+            onClick={() => setSelectedType("orders")}
+          >
+            <Package size={18} />
+            Product Orders
+          </button>
 
-              <div className={styles.topSection}>
-                <div className={styles.orderLeft}>
-                  <div className={styles.orderIcon}>
-                    <Package size={26} />
+          <button
+            className={selectedType === "bookings" ? styles.activeTab : ""}
+            onClick={() => setSelectedType("bookings")}
+          >
+            <Hotel size={18} />
+            Villa Bookings
+          </button>
+        </div>
+
+        {/* STATUS */}
+
+        <div className={styles.filterGroup}>
+          <Filter size={16} />
+
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="all">All Status</option>
+
+            <option value="pending">Pending</option>
+
+            <option value="confirmed">Confirmed</option>
+
+            <option value="shipped">Shipped</option>
+
+            <option value="delivered">Delivered</option>
+
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+
+        {/* DATE */}
+
+        <div className={styles.filterGroup}>
+          <CalendarDays size={16} />
+
+          <select
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+          >
+            <option value="all">All Time</option>
+
+            <option value="today">Today</option>
+
+            <option value="week">Last 7 Days</option>
+
+            <option value="month">This Month</option>
+          </select>
+        </div>
+
+        <div className={styles.totalOrders}>{filteredData.length} Results</div>
+      </div>
+
+      {/* ======================================= */}
+      {/* PRODUCT ORDERS */}
+      {/* ======================================= */}
+
+      {selectedType === "orders" && (
+        <div className={styles.ordersGrid}>
+          {filteredData.map((order) => {
+            const isExpanded = expandedOrders[order._id];
+
+            return (
+              <div className={styles.orderCard} key={order._id}>
+                {/* TOP */}
+
+                <div className={styles.topSection}>
+                  <div className={styles.orderLeft}>
+                    <div className={styles.orderIcon}>
+                      <Package size={26} />
+                    </div>
+
+                    <div>
+                      <p className={styles.label}>ORDER ID</p>
+
+                      <h3>#{order._id.slice(-8)}</h3>
+
+                      <div className={styles.dateRow}>
+                        <CalendarDays size={15} />
+
+                        <span>
+                          {new Date(order.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
+                  <span className={`${styles.status} ${styles[order.status]}`}>
+                    {order.status}
+                  </span>
+                </div>
+
+                {/* CUSTOMER */}
+
+                <div className={styles.section}>
+                  <div className={styles.sectionTitle}>Customer Details</div>
+
+                  <div className={styles.infoGrid}>
+                    <div className={styles.infoCard}>
+                      <User size={20} />
+
+                      <div>
+                        <label>Name</label>
+
+                        <p>{order.user?.name}</p>
+                      </div>
+                    </div>
+
+                    <div className={styles.infoCard}>
+                      <Mail size={20} />
+
+                      <div>
+                        <label>Email</label>
+
+                        <p>{order.user?.email}</p>
+                      </div>
+                    </div>
+
+                    <div className={styles.infoCard}>
+                      <Phone size={20} />
+
+                      <div>
+                        <label>Phone</label>
+
+                        <p>{order.deliveryAddress?.phone}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className={`${styles.section} ${styles.infoCard}` }>
+                  <MapPin size={20} />
                   <div>
-                    <p className={styles.label}>ORDER ID</p>
-
-                    <h3>#{order._id.slice(-8)}</h3>
-
-                    <div className={styles.dateRow}>
-                      <CalendarDays size={15} />
-
-                      <span>
-                        {new Date(order.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
+                    <label>Address</label>
+                    <p>{order.formattedAddress}</p>
                   </div>
                 </div>
 
-                <span className={`${styles.status} ${styles[order.status]}`}>
-                  {order.status}
-                </span>
-              </div>
+                {/* PRODUCTS */}
 
-              {/* CUSTOMER */}
-
-              <div className={styles.section}>
-                <div className={styles.sectionTitle}>Customer Details</div>
-
-                <div className={styles.infoGrid}>
-                  <div className={styles.infoCard}>
-                    <User size={20} />
-
-                    <div>
-                      <label>Name</label>
-
-                      <p>{order.user?.name}</p>
-                    </div>
-                  </div>
-
-                  <div className={styles.infoCard}>
-                    <Mail size={20} />
-
-                    <div>
-                      <label>Email</label>
-
-                      <p>{order.user?.email}</p>
-                    </div>
-                  </div>
-
-                  <div className={styles.infoCard}>
-                    <Phone size={20} />
-
-                    <div>
-                      <label>Phone</label>
-
-                      <p>{order.deliveryAddress?.phone}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* ADDRESS */}
-
-              <div className={styles.section}>
-                <div className={styles.sectionTitle}>Delivery Address</div>
-
-                <div className={styles.addressBox}>
-                  <MapPin size={22} />
-
-                  <div>
-                    <p>{order.deliveryAddress?.name}</p>
-
-                    <span>{order.formattedAddress}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* PRODUCTS */}
-
-              <div className={styles.orderDropdown}>
-                <button
-                  className={styles.dropdownButton}
-                  onClick={() => toggleOrder(order._id)}
-                >
-                  <div className={styles.dropdownLeft}>
-                    <div className={styles.dropdownIcon}>
-                      <Package size={18} />
-                    </div>
-
+                <div className={styles.orderDropdown}>
+                  <button
+                    className={styles.dropdownButton}
+                    onClick={() => toggleOrder(order._id)}
+                  >
                     <span>Ordered Products ({order.products.length})</span>
-                  </div>
 
-                  {isExpanded ? (
-                    <ChevronUp size={20} />
-                  ) : (
-                    <ChevronDown size={20} />
-                  )}
-                </button>
+                    {isExpanded ? (
+                      <ChevronUp size={20} />
+                    ) : (
+                      <ChevronDown size={20} />
+                    )}
+                  </button>
 
-                {isExpanded && (
-                  <div className={styles.dropdownContent}>
-                    <div className={styles.productsWrapper}>
-                      {order.products.map((item) => (
-                        <div className={styles.productCard} key={item._id}>
-                          <div className={styles.productImageWrapper}>
+                  {isExpanded && (
+                    <div className={styles.dropdownContent}>
+                      <div className={styles.productsWrapper}>
+                        {order.products.map((item) => (
+                          <div className={styles.productCard} key={item._id}>
                             <img
                               src={getImageUrl(item.product?.image)}
                               alt=""
                             />
 
-                            <div className={styles.productQuantity}>
-                              Qty {item.quantity}
-                            </div>
-                          </div>
-
-                          <div className={styles.productContent}>
                             <h4>{item.product?.name}</h4>
 
-                            <div className={styles.productFooter}>
-                              <div className={styles.productPrice}>
-                                <span>Price</span>
+                            <p>Qty: {item.quantity}</p>
 
-                                <b>₹{item.product?.price}</b>
-                              </div>
-
-                              <div className={styles.productStatus}>
-                                In Stock
-                              </div>
-                            </div>
+                            <b>₹{item.product?.price}</b>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
+                  )}
+                </div>
+
+                {/* PAYMENT */}
+
+                <div className={styles.paymentSection}>
+                  <div>
+                    <label>Total Amount</label>
+
+                    <h3>₹{order.totalAmount}</h3>
                   </div>
-                )}
-              </div>
 
-              {/* PAYMENT */}
+                  <div>
+                    <label>Payment</label>
 
-              <div className={styles.paymentSection}>
-                <div>
-                  <label>Total Amount</label>
-
-                  <h3>₹{order.totalAmount}</h3>
+                    <span
+                      className={`${styles.paymentBadge} ${
+                        order.paymentStatus === "paid"
+                          ? styles.paid
+                          : styles.pendingPayment
+                      }`}
+                    >
+                      {order.paymentStatus}
+                    </span>
+                  </div>
                 </div>
 
-                <div>
-                  <label>Payment</label>
+                {/* STATUS */}
 
-                  <span
-                    className={`${styles.paymentBadge} ${
-                      order.paymentStatus === "paid"
-                        ? styles.paid
-                        : styles.pendingPayment
-                    }`}
-                  >
-                    {order.paymentStatus === "paid" ? (
-                      <BadgeCheck size={15} />
-                    ) : (
-                      <Truck size={15} />
-                    )}
-
-                    {order.paymentStatus}
-                  </span>
-                </div>
-              </div>
-
-              {/* SHIPPING */}
-
-              <div className={styles.section}>
-                <div className={styles.sectionTitle}>Shipping Details</div>
-
-                <div className={styles.shippingGrid}>
-                  <input
-                    type="text"
-                    placeholder="Tracking ID"
-                    defaultValue={order.trackingId}
-                    onBlur={(e) =>
-                      updateOrder(order._id, {
-                        trackingId: e.target.value,
-                      })
-                    }
-                  />
-
-                  <input
-                    type="text"
-                    placeholder="Courier Name"
-                    defaultValue={order.courierName}
-                    onBlur={(e) =>
-                      updateOrder(order._id, {
-                        courierName: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-              </div>
-
-              {/* BOTTOM */}
-
-              <div className={styles.bottomActions}>
-                <div className={styles.statusBox}>
+                <div className={styles.bottomActions}>
                   <select
                     value={order.status}
                     onChange={(e) =>
@@ -393,22 +498,175 @@ const AdminOrders = () => {
                     <option value="cancelled">Cancelled</option>
                   </select>
 
-                  {updatingId === order._id && (
-                    <span className={styles.updating}>Updating...</span>
-                  )}
+                  {updatingId === order._id && <span>Updating...</span>}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* ======================================= */}
+      {/* BOOKINGS */}
+      {/* ======================================= */}
+
+      {selectedType === "bookings" && (
+        <div className={styles.ordersGrid}>
+          {filteredData.map((booking) => (
+            <div className={styles.orderCard} key={booking._id}>
+              {/* TOP */}
+
+              <div className={styles.topSection}>
+                <div className={styles.orderLeft}>
+                  <div className={styles.orderIcon}>
+                    <Hotel size={26} />
+                  </div>
+
+                  <div>
+                    <p className={styles.label}>BOOKING ID</p>
+
+                    <h3>#{booking._id.slice(-8)}</h3>
+
+                    <div className={styles.dateRow}>
+                      <CalendarDays size={15} />
+
+                      <span>
+                        {new Date(booking.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
-                {order.status === "delivered" && (
-                  <div className={styles.deliveredBadge}>
-                    <BadgeCheck size={16} />
-                    Delivered
+                <span className={`${styles.status} ${styles[booking.status]}`}>
+                  {booking.status}
+                </span>
+              </div>
+
+              {/* CUSTOMER */}
+
+              <div className={styles.section}>
+                <div className={styles.sectionTitle}>Customer Details</div>
+
+                <div className={styles.infoGrid}>
+                  <div className={styles.infoCard}>
+                    <User size={20} />
+
+                    <div>
+                      <label>Name</label>
+
+                      <p>{booking.user?.name}</p>
+                    </div>
                   </div>
-                )}
+
+                  <div className={styles.infoCard}>
+                    <Mail size={20} />
+
+                    <div>
+                      <label>Email</label>
+
+                      <p>{booking.user?.email}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* VILLA DETAILS */}
+
+              <div className={styles.section}>
+                <div className={styles.sectionTitle}>Villa Details</div>
+
+                <div className={styles.addressBox}>
+                  <Hotel size={22} />
+
+                  <div>
+                    <p>{booking.room?.name}</p>
+
+                    <span>
+                      Check In: {new Date(booking.checkIn).toLocaleDateString()}
+                    </span>
+
+                    <br />
+
+                    <span>
+                      Check Out:{" "}
+                      {new Date(booking.checkOut).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* GUESTS */}
+
+              <div className={styles.section}>
+                <div className={styles.sectionTitle}>Guest Details</div>
+                <div className={styles.guestSection}>
+                  {booking.guestDetails?.map((guest, index) => (
+                    <div
+                      className={`${styles.infoCard} ${styles.guestCard}`}
+                      key={index}
+                    >
+                      <User size={18} />
+
+                      <div>
+                        <p>{guest.name}</p>
+
+                        <span>
+                          {guest.age} yrs • {guest.gender}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* PAYMENT */}
+
+              <div className={styles.paymentSection}>
+                <div>
+                  <label>Total Amount</label>
+
+                  <h3>₹{booking.totalAmount}</h3>
+                </div>
+
+                <div>
+                  <label>Payment</label>
+
+                  <span
+                    className={`${styles.paymentBadge} ${
+                      booking.paymentStatus === "paid"
+                        ? styles.paid
+                        : styles.pendingPayment
+                    }`}
+                  >
+                    {booking.paymentStatus}
+                  </span>
+                </div>
+              </div>
+
+              {/* STATUS */}
+
+              <div className={styles.bottomActions}>
+                <select
+                  value={booking.status}
+                  onChange={(e) =>
+                    updateBooking(booking._id, {
+                      status: e.target.value,
+                    })
+                  }
+                >
+                  <option value="pending">Pending</option>
+
+                  <option value="confirmed">Confirmed</option>
+
+                  <option value="cancelled">Cancelled</option>
+                </select>
+
+                {updatingId === booking._id && <span>Updating...</span>}
               </div>
             </div>
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

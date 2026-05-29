@@ -1,148 +1,225 @@
 .userOrders {
   min-height: 100vh;
-  background: #f6f8fb;
+  background: linear-gradient(
+    to bottom,
+    #f8fafc,
+    #eef3f8
+  );
   padding: 6rem 40px;
   font-family: var(--body-font);
 }
 
-/* ================= HEADER ================= */
+/* ========================================= */
+/* HEADER */
+/* ========================================= */
 
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 35px;
-  gap: 20px;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 40px;
   flex-wrap: wrap;
 }
 
-.subTitle {
-  color: #6b7280;
-  font-size: 14px;
-  margin-bottom: 8px;
-  font-weight: 500;
+.header h2 {
+  font-size: 42px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -1px;
+  margin-bottom: 10px;
+  font-family: var(--heading-font);
 }
 
-.header h2 {
-  font-size: 40px;
-  color: #111827;
-  font-family: var(--heading-font);
-  font-weight: 800;
-  letter-spacing: -1px;
+.header p {
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.6;
 }
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+/* ========================================= */
+/* TABS */
+/* ========================================= */
+
+.switchTabs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  padding: 8px;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+}
+
+.switchTabs button {
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 14px 20px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.switchTabs button:hover {
+  background: #f1f5f9;
+  color: #111827;
+}
+
+.activeTab {
+  background: linear-gradient(
+    135deg,
+    #16a34a,
+    #15803d
+  ) !important;
+  color: white !important;
+  box-shadow: 0 10px 20px rgba(22, 163, 74, 0.2);
+}
+
+/* ========================================= */
+/* TOTAL BOX */
+/* ========================================= */
 
 .totalOrders {
   background: white;
-  border: 1px solid #e5e7eb;
-  padding: 14px 24px;
-  border-radius: 16px;
-  font-weight: 700;
-  color: #111827;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border-radius: 18px;
+  padding: 16px 24px;
+  font-weight: 800;
+  font-size: 15px;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.05);
 }
 
-/* ================= WRAPPER ================= */
+/* ========================================= */
+/* WRAPPER */
+/* ========================================= */
 
 .ordersWrapper {
   display: flex;
   flex-direction: column;
-  gap: 26px;
+  gap: 28px;
 }
 
-/* ================= ORDER CARD ================= */
+/* ========================================= */
+/* CARD */
+/* ========================================= */
 
 .orderCard {
-  background: white;
-  border-radius: 24px;
-  border: 1px solid #e5e7eb;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  border-radius: 28px;
+  border: 1px solid #e2e8f0;
   overflow: hidden;
-  transition: 0.3s ease;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.04);
+  transition: all 0.35s ease;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
 }
 
 .orderCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
 }
 
-/* ================= TOP SUMMARY ================= */
+/* ========================================= */
+/* SUMMARY */
+/* ========================================= */
 
 .orderSummary {
-  padding: 26px 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 30px;
+  gap: 24px;
+  padding: 28px 30px;
   cursor: pointer;
   transition: 0.3s ease;
 }
 
 .orderSummary:hover {
-  background: #fafafa;
+  background: rgba(248, 250, 252, 0.7);
 }
 
-/* ================= LEFT ================= */
+/* ========================================= */
+/* LEFT */
+/* ========================================= */
 
 .summaryLeft {
   display: flex;
   align-items: center;
   gap: 18px;
-  min-width: 300px;
+  min-width: 320px;
 }
 
 .orderIcon {
-  width: 64px;
-  height: 64px;
-  border-radius: 18px;
+  width: 68px;
+  height: 68px;
+  border-radius: 22px;
   background: linear-gradient(
     135deg,
-    rgba(67, 160, 71, 0.12),
-    rgba(67, 160, 71, 0.2)
+    rgba(34, 197, 94, 0.12),
+    rgba(22, 163, 74, 0.2)
   );
   display: flex;
-  align-items: center;
   justify-content: center;
-  color: #2e7d32;
+  align-items: center;
+  color: #15803d;
   flex-shrink: 0;
 }
 
 .summaryLeft h3 {
   font-size: 22px;
-  color: #111827;
-  margin-bottom: 8px;
   font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 6px;
 }
 
 .summaryLeft p {
-  color: #6b7280;
   font-size: 14px;
+  color: #64748b;
 }
 
-/* ================= CENTER ================= */
+/* ========================================= */
+/* CENTER */
+/* ========================================= */
 
 .summaryCenter {
   display: flex;
   align-items: center;
-  gap: 50px;
+  gap: 60px;
 }
 
 .summaryCenter label {
   display: block;
-  font-size: 12px;
-  color: #9ca3af;
   margin-bottom: 8px;
+  font-size: 11px;
+  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-weight: 700;
-}
-
-.summaryCenter h4 {
-  color: #111827;
-  font-size: 22px;
   font-weight: 800;
 }
 
-/* ================= RIGHT ================= */
+.summaryCenter h4 {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+/* ========================================= */
+/* RIGHT */
+/* ========================================= */
 
 .summaryRight {
   display: flex;
@@ -151,101 +228,110 @@
 }
 
 .summaryRight svg {
-  color: #6b7280;
+  color: #64748b;
 }
 
-/* ================= STATUS ================= */
+/* ========================================= */
+/* STATUS */
+/* ========================================= */
 
 .status {
   padding: 10px 18px;
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
 }
 
 .pending {
-  background: #fff7e6;
-  color: #b26a00;
+  background: #fff7ed;
+  color: #c2410c;
 }
 
 .confirmed {
-  background: #eafaf0;
+  background: #ecfdf3;
   color: #15803d;
 }
 
 .shipped {
-  background: #e8f3ff;
-  color: #1565c0;
+  background: #eff6ff;
+  color: #1d4ed8;
 }
 
 .delivered {
-  background: #e7f8ea;
+  background: #ecfdf3;
   color: #166534;
 }
 
 .cancelled {
-  background: #ffeaea;
+  background: #fef2f2;
   color: #dc2626;
 }
 
-/* ================= DETAILS ================= */
+/* ========================================= */
+/* DETAILS */
+/* ========================================= */
 
 .orderDetails {
-  padding: 0 30px 30px;
+  padding: 0 30px 32px;
   border-top: 1px solid #f1f5f9;
-  animation: fadeDown 0.3s ease;
+  animation: fadeDown 0.35s ease;
 }
 
-/* ================= SECTION ================= */
+/* ========================================= */
+/* SECTION */
+/* ========================================= */
 
 .section {
-  margin-top: 30px;
+  margin-top: 34px;
 }
 
 .sectionTitle {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 800;
-  color: #111827;
-  margin-bottom: 18px;
+  color: #0f172a;
+  margin-bottom: 20px;
 }
 
-/* ================= PRODUCTS ================= */
+/* ========================================= */
+/* PRODUCTS */
+/* ========================================= */
 
 .productsWrapper {
-  display: flex;
-  gap: 18px;
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(320px, 1fr)
+  );
+  gap: 20px;
 }
-
-/* AMAZON STYLE PRODUCT CARD */
 
 .productItem {
   display: flex;
   align-items: center;
   gap: 20px;
   padding: 20px;
-  border-radius: 20px;
-  background: #fafafa;
-  border: 1px solid #eceff3;
+  border-radius: 22px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   transition: 0.3s ease;
 }
 
 .productItem:hover {
   background: white;
-  border-color: rgba(67, 160, 71, 0.2);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  border-color: rgba(22, 163, 74, 0.2);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
 }
 
-/* IMAGE */
-
 .productImageWrapper {
-  width: 110px;
-  height: 110px;
+  width: 120px;
+  height: 120px;
   border-radius: 20px;
   overflow: hidden;
   background: white;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #e2e8f0;
   flex-shrink: 0;
   padding: 10px;
 }
@@ -256,151 +342,272 @@
   object-fit: contain;
 }
 
-/* CONTENT */
-
 .productContent {
   flex: 1;
 }
 
 .productContent h4 {
-  font-size: 19px;
-  color: #111827;
-  margin-bottom: 12px;
+  font-size: 18px;
   font-weight: 700;
   line-height: 1.5;
+  color: #111827;
+  margin-bottom: 12px;
 }
 
 .productContent p {
-  color: #6b7280;
+  color: #64748b;
   font-size: 15px;
-  margin-bottom: 10px;
 }
 
 .productContent span {
-  color: #2e7d32;
+  color: #15803d;
   font-weight: 800;
   margin-left: 6px;
 }
 
-/* EXTRA PRODUCT INFO */
-
-.productMeta {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-top: 12px;
-}
-
-.metaBadge {
-  background: white;
-  border: 1px solid #e5e7eb;
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-size: 13px;
-  color: #374151;
-  font-weight: 600;
-}
-
-/* ================= PAYMENT ================= */
+/* ========================================= */
+/* PAYMENT */
+/* ========================================= */
 
 .paymentSection {
-  margin-top: 30px;
+  margin-top: 34px;
+  padding: 26px;
+  border-radius: 24px;
+  border: 1px solid #e2e8f0;
   background: linear-gradient(
     135deg,
-    #f9fbff,
-    #f3f8f4
+    #ffffff,
+    #f8fafc
   );
-  border-radius: 24px;
-  padding: 24px;
-  border: 1px solid #edf2f7;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 25px;
+  gap: 24px;
 }
 
 .paymentSection label {
   display: block;
-  font-size: 12px;
-  color: #9ca3af;
   margin-bottom: 10px;
+  font-size: 11px;
+  color: #94a3b8;
   text-transform: uppercase;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .paymentBadge {
   padding: 10px 18px;
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
 }
 
 .paid {
-  background: #eafaf0;
+  background: #dcfce7;
   color: #15803d;
 }
 
 .pendingPayment {
-  background: #fff7e6;
-  color: #b26a00;
+  background: #fff7ed;
+  color: #c2410c;
 }
 
 .statusInfo {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #111827;
   font-weight: 700;
+  color: #111827;
 }
 
-/* ================= SHIPPING ================= */
+/* ========================================= */
+/* SHIPPING */
+/* ========================================= */
 
 .shippingBox {
   display: flex;
-  gap: 18px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
 .shippingItem {
   flex: 1;
   min-width: 240px;
-  background: #fafafa;
-  border: 1px solid #eceff3;
-  border-radius: 18px;
-  padding: 20px;
+  background: #f8fafc;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  padding: 22px;
 }
 
 .shippingItem label {
   display: block;
-  font-size: 12px;
-  color: #9ca3af;
   margin-bottom: 10px;
+  font-size: 11px;
+  color: #94a3b8;
   text-transform: uppercase;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .shippingItem p {
-  color: #111827;
+  color: #0f172a;
   font-weight: 700;
-  line-height: 1.5;
-  word-break: break-word;
+  line-height: 1.7;
 }
 
-/* ================= ADDRESS ================= */
+/* ========================================= */
+/* ADDRESS */
+/* ========================================= */
 
 .addressBox {
-  background: #fafafa;
-  border-radius: 20px;
-  padding: 22px;
-  border: 1px solid #eceff3;
-  color: #4b5563;
-  line-height: 1.9;
-  font-size: 15px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 22px;
+  padding: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  color: #475569;
+  line-height: 1.8;
 }
 
-/* ================= ANIMATION ================= */
+.addressBox svg {
+  color: #16a34a;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+/* ========================================= */
+/* ROOM CARD */
+/* ========================================= */
+
+.roomCard {
+  display: flex;
+  gap: 24px;
+  background: #f8fafc;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.roomCard img {
+  width: 320px;
+  height: 240px;
+  object-fit: cover;
+}
+
+.roomContent {
+  padding: 24px 24px 24px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.roomContent h3 {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.roomContent p {
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* ========================================= */
+/* BOOKING GRID */
+/* ========================================= */
+
+.bookingGrid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(240px, 1fr)
+  );
+  gap: 18px;
+  margin-top: 30px;
+}
+
+.bookingInfo {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #f8fafc;
+  border-radius: 20px;
+  padding: 22px;
+  border: 1px solid #e2e8f0;
+}
+
+.bookingInfo svg {
+  color: #16a34a;
+  margin-top: 2px;
+}
+
+.bookingInfo label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 11px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.bookingInfo p {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* ========================================= */
+/* GUESTS */
+/* ========================================= */
+
+.guestGrid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(220px, 1fr)
+  );
+  gap: 18px;
+}
+
+.guestCard {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 22px;
+  padding: 22px;
+}
+
+.guestCard h4 {
+  font-size: 18px;
+  color: #0f172a;
+  margin-bottom: 14px;
+  font-weight: 800;
+}
+
+.guestCard p {
+  color: #64748b;
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+/* ========================================= */
+/* LOADING */
+/* ========================================= */
+
+.loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* ========================================= */
+/* ANIMATION */
+/* ========================================= */
 
 @keyframes fadeDown {
   from {
@@ -414,7 +621,9 @@
   }
 }
 
-/* ================= MOBILE ================= */
+/* ========================================= */
+/* TABLET */
+/* ========================================= */
 
 @media (max-width: 992px) {
   .orderSummary {
@@ -435,27 +644,68 @@
   .summaryLeft {
     min-width: 100%;
   }
+
+  .roomCard {
+    flex-direction: column;
+  }
+
+  .roomCard img {
+    width: 100%;
+  }
+
+  .roomContent {
+    padding: 24px;
+  }
 }
+
+/* ========================================= */
+/* MOBILE */
+/* ========================================= */
 
 @media (max-width: 768px) {
   .userOrders {
-    padding: 18px;
+    padding: 20px;
+  }
+
+  .header {
+    align-items: flex-start;
   }
 
   .header h2 {
-    font-size: 30px;
+    font-size: 32px;
+  }
+
+  .headerRight {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .switchTabs {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .switchTabs button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .totalOrders {
+    width: 100%;
+    text-align: center;
   }
 
   .orderSummary {
-    padding: 22px;
+    padding: 24px;
   }
 
   .orderDetails {
-    padding: 0 22px 22px;
+    padding: 0 24px 24px;
   }
 
   .summaryCenter {
-    gap: 20px;
+    gap: 24px;
   }
 
   .paymentSection {
@@ -474,10 +724,10 @@
 
   .productImageWrapper {
     width: 100%;
-    height: 220px;
+    height: 240px;
   }
 
-  .productImageWrapper img {
-    object-fit: contain;
+  .roomContent h3 {
+    font-size: 24px;
   }
 }
