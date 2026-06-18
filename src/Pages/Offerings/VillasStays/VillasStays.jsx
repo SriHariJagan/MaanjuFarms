@@ -1,140 +1,91 @@
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import styles from "./VillasStays.module.css";
 import { useAuth, useVillas } from "../../../Store/useContext";
-import { useNavigate, useLocation  } from "react-router-dom";
-
+import { useNavigate, useLocation } from "react-router-dom";
 import VillaCard from "./VillaCard";
 import BookingModal from "./BookingModal";
 import BookingsTable from "./BookingsTable";
 import VillaFormModal from "./VillaFormModal";
 import Loader from "../../../Components/Loader";
 
-const VillasStays = () => {
-  const {
-    villas,
-    bookings,
-    bookVilla,
-    fetchVillas,
-    fetchBookings,
-    addVilla,
-    updateVilla,
-    loading,
-    error,
-  } = useVillas();
+const stagger = { animate: { transition: { staggerChildren: 0.08 } } };
+const fadeUp = { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } } };
 
+const VillasStays = () => {
+  const { villas, bookings, bookVilla, fetchVillas, fetchBookings, addVilla, updateVilla, loading, error } = useVillas();
   const { user, token, isAdmin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
   const [selectedVilla, setSelectedVilla] = useState(null);
   const [showVillaForm, setShowVillaForm] = useState(false);
   const [editingVilla, setEditingVilla] = useState(null);
   const [prefillData, setPrefillData] = useState(null);
 
-  useEffect(() => {
-    fetchVillas();
-    fetchBookings();
-  }, []);
+  useEffect(() => { fetchVillas(); fetchBookings(); }, []);
 
   useEffect(() => {
-  if (location.state?.restoreBooking) {
-    const data = location.state.bookingData;
-
-    if (data) {
-      setSelectedVilla(data.villa);
-      setPrefillData(data);
-
-      // fallback save (in case refresh happens)
-      localStorage.setItem("booking_prefill", JSON.stringify(data));
+    if (location.state?.restoreBooking) {
+      const data = location.state.bookingData;
+      if (data) {
+        setSelectedVilla(data.villa);
+        setPrefillData(data);
+        localStorage.setItem("booking_prefill", JSON.stringify(data));
+      }
     }
-  }
-}, [location.state]);
+  }, [location.state]);
 
   if (loading) return <Loader />;
   if (error) return <p className={styles.error}>{error}</p>;
 
   return (
-    <section className={styles.villasSection}>
+    <motion.section className={styles.villasSection} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
       <div className={styles.container}>
-        {/* HERO */}
-        <div className={styles.hero}>
+        <motion.div className={styles.hero} variants={fadeUp} initial="initial" animate="animate">
           <h2 className={styles.heading}>Villas & Stays at Maanjoo Farms</h2>
-          <p className={styles.subtext}>
-            Immerse yourself in the tranquility of Maanjoo Farms with our exclusive stays.
-          </p>
-
+          <p className={styles.subtext}>Immerse yourself in the tranquility of Maanjoo Farms with our exclusive stays.</p>
           {isAdmin && (
-            <button
-              className={styles.addVillaBtn}
-              onClick={() => {
-                setEditingVilla(null);
-                setShowVillaForm(true);
-              }}
-            >
+            <motion.button className={styles.addVillaBtn} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+              onClick={() => { setEditingVilla(null); setShowVillaForm(true); }}>
               + Add New Villa
-            </button>
+            </motion.button>
           )}
-        </div>
+        </motion.div>
 
-        {/* GRID */}
-        <div className={styles.villasGrid}>
+        <motion.div className={styles.villasGrid} variants={stagger} initial="initial" animate="animate">
           {villas.length === 0 ? (
             <p className={styles.empty}>No villas available</p>
           ) : (
             villas.map((villa) => (
-              <VillaCard
-                key={villa._id}
-                villa={villa}
-                bookings={bookings}
-                isAdmin={isAdmin}
+              <VillaCard key={villa._id} villa={villa} bookings={bookings} isAdmin={isAdmin}
                 onOpenBooking={() => setSelectedVilla(villa)}
-                onEdit={() => {
-                  setEditingVilla(villa);
-                  setShowVillaForm(true);
-                }}
-                onStatusChange={updateVilla}
-              />
+                onEdit={() => { setEditingVilla(villa); setShowVillaForm(true); }}
+                onStatusChange={updateVilla} />
             ))
           )}
-        </div>
+        </motion.div>
 
-        {/* ADMIN TABLE */}
-        {isAdmin && bookings.length > 0 && (
-          <BookingsTable bookings={bookings} />
-        )}
+        {isAdmin && bookings.length > 0 && <BookingsTable bookings={bookings} />}
 
-        {/* BOOKING MODAL */}
-        {selectedVilla && (
-          <BookingModal
-            villa={selectedVilla}
-            bookings={bookings}
-            onClose={() => setSelectedVilla(null)}
-            bookVilla={bookVilla}
-            user={user}
-            token={token}
-            navigate={navigate}
-            prefillData={prefillData}
-          />
-        )}
+        <AnimatePresence>
+          {selectedVilla && (
+            <BookingModal villa={selectedVilla} bookings={bookings} onClose={() => setSelectedVilla(null)}
+              bookVilla={bookVilla} user={user} token={token} navigate={navigate} prefillData={prefillData} />
+          )}
+        </AnimatePresence>
 
-        {/* ADD / EDIT MODAL */}
-        {showVillaForm && (
-          <VillaFormModal
-            villa={editingVilla}
-            onClose={() => setShowVillaForm(false)}
-            onSubmit={async (data) => {
-              if (editingVilla) {
-                await updateVilla(editingVilla._id, data);
-              } else {
-                await addVilla(data);
-              }
-              fetchVillas();
-              setShowVillaForm(false);
-            }}
-          />
-        )}
+        <AnimatePresence>
+          {showVillaForm && (
+            <VillaFormModal villa={editingVilla} onClose={() => setShowVillaForm(false)}
+              onSubmit={async (data) => {
+                if (editingVilla) { await updateVilla(editingVilla._id, data); }
+                else { await addVilla(data); }
+                fetchVillas(); setShowVillaForm(false);
+              }} />
+          )}
+        </AnimatePresence>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

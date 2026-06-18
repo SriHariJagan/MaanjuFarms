@@ -1,11 +1,7 @@
 .wrapper {
   min-height: 100vh;
-  background: linear-gradient(
-    135deg,
-    var(--primary-bg),
-    #f7fff8
-  );
-  padding: 2rem;
+  background: var(--primary-bg);
+  padding: 120px 2rem 4rem;
   font-family: var(--body-font);
 }
 
@@ -21,17 +17,17 @@
   align-items: center;
   padding: 0.5rem 1rem;
   border-radius: 999px;
-  background: rgba(67, 160, 71, 0.12);
-  color: var(--accent-color);
-  font-size: 0.85rem;
+  background: rgba(96, 153, 102, 0.1);
+  color: var(--primary-green);
+  font-size: 0.78rem;
   font-weight: 700;
   margin-bottom: 1rem;
 }
 
 .headerSection h1 {
-  font-size: 3rem;
+  font-size: 2.6rem;
   font-family: var(--heading-font);
-  color: var(--primary-text);
+  color: var(--dark-green);
   margin-bottom: 0.5rem;
 }
 
@@ -46,28 +42,31 @@
   gap: 2rem;
 }
 
-.formCard,
-.listCard {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 28px;
+.formCard, .listCard {
+  background: #fff;
+  border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-light);
 }
 
 .cardTop {
   margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .cardTop h2 {
-  font-size: 1.5rem;
-  color: var(--primary-text);
-  margin-bottom: 0.4rem;
+  font-family: var(--heading-font);
+  font-size: 1.35rem;
+  color: var(--dark-green);
 }
 
 .cardTop p {
   color: var(--muted-text);
+  font-size: 0.9rem;
 }
 
 .form {
@@ -83,7 +82,7 @@
 }
 
 .inputGroup label {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 700;
   color: var(--secondary-text);
 }
@@ -93,42 +92,36 @@
   width: 100%;
   border: 1px solid var(--border-color);
   background: var(--secondary-bg);
-  border-radius: 16px;
-  padding: 1rem;
+  border-radius: 12px;
+  padding: 12px;
   outline: none;
-  transition: 0.3s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   color: var(--primary-text);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  font-family: var(--body-font);
 }
 
 .inputGroup input:focus,
 .inputGroup textarea:focus {
   border-color: var(--accent-color);
-  box-shadow: 0 0 0 4px
-    var(--accent-color-light);
+  box-shadow: 0 0 0 3px rgba(157, 192, 139, 0.15);
 }
 
 .submitBtn {
   border: none;
-  height: 56px;
-  border-radius: 18px;
-  background: linear-gradient(
-    135deg,
-    var(--button-bg),
-    var(--accent-hover)
-  );
-  color: white;
-  font-size: 1rem;
+  height: 52px;
+  border-radius: 12px;
+  background: var(--primary-green);
+  color: #fff;
+  font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: background 0.3s ease;
   margin-top: 0.5rem;
 }
 
 .submitBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px
-    rgba(67, 160, 71, 0.3);
+  background: var(--accent-color);
 }
 
 .submitBtn:disabled {
@@ -136,31 +129,31 @@
   cursor: not-allowed;
 }
 
-.successBox,
-.errorBox {
-  padding: 1rem;
-  border-radius: 16px;
-  font-size: 0.95rem;
+.successBox, .errorBox {
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 
 .successBox {
-  background: rgba(67, 160, 71, 0.1);
-  color: var(--accent-color);
+  background: rgba(96, 153, 102, 0.08);
+  color: var(--primary-green);
 }
 
 .errorBox {
-  background: rgba(255, 0, 0, 0.08);
-  color: #d32f2f;
+  background: rgba(239, 68, 68, 0.08);
+  color: #ef4444;
 }
 
 .countBadge {
-  background: rgba(67, 160, 71, 0.12);
-  color: var(--accent-color);
+  background: rgba(96, 153, 102, 0.08);
+  color: var(--primary-green);
   padding: 0.5rem 1rem;
   border-radius: 999px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .tableWrapper {
@@ -173,22 +166,25 @@ table {
 }
 
 thead tr {
-  background: rgba(67, 160, 71, 0.08);
+  background: var(--secondary-bg);
 }
 
 th {
   text-align: left;
-  padding: 1rem;
-  color: var(--primary-text);
-  font-size: 0.9rem;
+  padding: 14px 16px;
+  color: var(--dark-green);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 td {
-  padding: 1rem;
-  border-bottom: 1px solid
-    rgba(0, 0, 0, 0.05);
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-color);
   color: var(--secondary-text);
-  transition: 0.3s ease;
+  font-size: 0.88rem;
+  transition: background 0.2s ease;
 }
 
 tbody tr:hover {
@@ -199,31 +195,32 @@ tbody tr:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.45rem 0.9rem;
+  padding: 0.4rem 0.8rem;
   border-radius: 999px;
-  background: rgba(67, 160, 71, 0.1);
-  color: var(--accent-color);
+  background: rgba(96, 153, 102, 0.08);
+  color: var(--primary-green);
   font-weight: 700;
+  font-size: 0.85rem;
 }
 
 .deleteBtn {
-  border: 1px solid #ef5350;
+  border: 1px solid #ef4444;
   background: transparent;
-  color: #ef5350;
-  padding: 0.7rem 1rem;
-  border-radius: 12px;
+  color: #ef4444;
+  padding: 8px 16px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: 0.3s ease;
-  font-weight: 700;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  font-size: 0.82rem;
 }
 
 .deleteBtn:hover {
-  background: #ef5350;
-  color: white;
+  background: #ef4444;
+  color: #fff;
 }
 
-.loaderBox,
-.emptyBox {
+.loaderBox, .emptyBox {
   height: 250px;
   display: flex;
   align-items: center;
@@ -233,27 +230,12 @@ tbody tr:hover {
 }
 
 @media (max-width: 1100px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
+  .grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 768px) {
-  .wrapper {
-    padding: 1rem;
-  }
-
-  .headerSection h1 {
-    font-size: 2rem;
-  }
-
-  .formCard,
-  .listCard {
-    padding: 1.3rem;
-    border-radius: 22px;
-  }
-
-  table {
-    min-width: 700px;
-  }
+  .wrapper { padding: 100px 1rem 3rem; }
+  .headerSection h1 { font-size: 1.8rem; }
+  .formCard, .listCard { padding: 1.3rem; }
+  table { min-width: 700px; }
 }
