@@ -1,104 +1,74 @@
-/* ================= BASE ================= */
-
 .container {
-  background: linear-gradient(
-    135deg,
-    var(--primary-bg),
-    var(--secondary-bg)
-  );
+  background: var(--primary-bg);
   min-height: 100vh;
-  padding: 6rem 16px;
+  padding: 120px 24px 60px;
   font-family: var(--body-font);
 }
 
 .wrapper {
-  max-width: 1000px;
-  margin: auto;
+  max-width: 700px;
+  margin: 0 auto;
 }
-
-/* ================= TOP BAR ================= */
 
 .topBar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 18px;
-  position: absolute;
+  margin-bottom: 32px;
 }
-
-/* ===== BACK BUTTON (PREMIUM STYLE) ===== */
 
 .backBtn {
   display: flex;
   align-items: center;
   gap: 8px;
-
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-
-  padding: 10px 16px;
-  border-radius: 12px;
-
-  font-size: 14px;
+  padding: 10px 18px;
+  background: #fff;
+  border: 1px solid rgba(96, 153, 102, 0.15);
+  border-radius: 10px;
+  font-size: 0.88rem;
   font-weight: 500;
   color: var(--primary-text);
-
   cursor: pointer;
   transition: all 0.25s ease;
-
-  box-shadow: var(--shadow-light);
+  box-shadow: 0 2px 8px rgba(64, 81, 59, 0.04);
 }
 
-/* ICON */
-.backIcon {
-  font-size: 16px;
-  transition: transform 0.25s ease;
-}
-
-/* HOVER EFFECT */
 .backBtn:hover {
-  background: var(--hover-bg);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-hover);
-  border-color: var(--accent-color);
+  border-color: var(--primary-green);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(64, 81, 59, 0.08);
 }
 
-/* ARROW ANIMATION */
-.backBtn:hover .backIcon {
-  transform: translateX(-4px);
+.stepText {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--secondary-text);
+  padding: 6px 14px;
+  background: rgba(96, 153, 102, 0.08);
+  border-radius: 100px;
 }
-
-/* ACTIVE CLICK */
-.backBtn:active {
-  transform: scale(0.96);
-}
-
-/* DARK MODE FIX */
-.dark .backBtn {
-  background: var(--secondary-bg);
-}
-
-/* ================= HEADER ================= */
 
 .header {
   text-align: center;
-  margin-bottom: 35px;
+  margin-bottom: 40px;
+}
+
+.headerIcon {
+  color: var(--primary-green);
+  margin-bottom: 12px;
 }
 
 .header h1 {
-  font-size: 34px;
   font-family: var(--heading-font);
-  color: var(--primary-text);
-  margin-bottom: 6px;
-  letter-spacing: 0.5px;
+  font-size: 2rem;
+  color: var(--dark-green);
+  margin-bottom: 8px;
 }
 
 .header p {
+  font-size: 1rem;
   color: var(--secondary-text);
-  font-size: 15px;
 }
-
-/* ================= GUEST LIST ================= */
 
 .guestList {
   display: flex;
@@ -106,40 +76,18 @@
   gap: 20px;
 }
 
-/* ================= CARD ================= */
-
 .guestCard {
-  background: var(--card-bg);
+  background: #fff;
   border-radius: 16px;
-  padding: 22px;
-  border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-light);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  padding: 24px;
+  border: 1px solid rgba(96, 153, 102, 0.08);
+  box-shadow: 0 2px 12px rgba(64, 81, 59, 0.06);
+  transition: box-shadow 0.3s ease;
 }
 
 .guestCard:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-hover);
+  box-shadow: 0 8px 24px rgba(64, 81, 59, 0.1);
 }
-
-/* gradient accent bar */
-.guestCard::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 5px;
-  background: linear-gradient(
-    180deg,
-    var(--accent-color),
-    var(--highlight-color)
-  );
-}
-
-/* ================= HEADER ================= */
 
 .cardHeader {
   display: flex;
@@ -149,137 +97,133 @@
 }
 
 .cardHeader h3 {
-  font-size: 18px;
-  color: var(--primary-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--dark-green);
 }
 
-/* REMOVE BUTTON */
-
 .removeBtn {
-  background: transparent;
-  border: 1px solid #ff4d4f;
-  color: #ff4d4f;
-  padding: 5px 12px;
+  padding: 5px 14px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.15);
   border-radius: 8px;
-  font-size: 13px;
+  color: #ef4444;
+  font-size: 0.82rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
 }
 
 .removeBtn:hover {
-  background: #ff4d4f;
-  color: white;
-  transform: scale(1.05);
+  background: #ef4444;
+  color: #fff;
 }
-
-/* ================= FORM ================= */
 
 .formRow {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
-  gap: 14px;
+  gap: 12px;
 }
 
-/* INPUTS */
-
-input,
-select {
-  padding: 13px;
+.formRow input,
+.formRow select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(96, 153, 102, 0.15);
   border-radius: 10px;
-  border: 1px solid var(--border-color);
-  background: var(--secondary-bg);
+  font-family: var(--body-font);
+  font-size: 0.9rem;
   color: var(--primary-text);
-  font-size: 14px;
-  transition: all 0.25s ease;
+  background: var(--secondary-bg);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-input::placeholder {
+.formRow input:focus,
+.formRow select:focus {
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 3px rgba(96, 153, 102, 0.1);
+}
+
+.formRow input::placeholder {
   color: var(--muted-text);
 }
 
-/* FOCUS EFFECT */
-
-input:focus,
-select:focus {
-  outline: none;
-  border-color: var(--accent-color);
-  box-shadow: 0 0 8px var(--accent-color-light);
-  transform: scale(1.02);
-}
-
-/* ================= ERROR ================= */
-
 .errorBox {
-  margin-top: 15px;
-  padding: 12px;
+  margin-top: 20px;
+  padding: 12px 16px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.15);
   border-radius: 10px;
-  background: rgba(255, 77, 79, 0.1);
-  color: #ff4d4f;
-  font-size: 14px;
+  color: #ef4444;
+  font-size: 0.88rem;
   text-align: center;
 }
 
-/* ================= ACTIONS ================= */
-
 .actions {
-  margin-top: 30px;
+  margin-top: 32px;
   display: flex;
   gap: 12px;
 }
 
-/* ADD BUTTON */
-
 .addBtn {
   flex: 1;
-  background: var(--secondary-bg);
-  border: 2px dashed var(--accent-color);
-  color: var(--accent-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   padding: 14px;
+  background: var(--secondary-bg);
+  border: 2px dashed rgba(96, 153, 102, 0.3);
   border-radius: 12px;
-  font-weight: 500;
+  color: var(--primary-green);
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.addBtn:hover {
-  background: var(--hover-bg);
-  transform: scale(1.03);
+.addBtn:hover:not(:disabled) {
+  border-color: var(--primary-green);
+  background: rgba(96, 153, 102, 0.04);
 }
 
-/* CONTINUE BUTTON */
+.addBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 
 .continueBtn {
   flex: 1;
-  background: linear-gradient(
-    135deg,
-    var(--button-bg),
-    var(--accent-hover)
-  );
-  color: var(--button-color);
-  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   padding: 14px;
+  background: var(--primary-green);
+  border: none;
   border-radius: 12px;
+  color: #fff;
+  font-size: 0.9rem;
   font-weight: 600;
-  letter-spacing: 0.4px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.continueBtn:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: var(--shadow-hover);
+.continueBtn:hover:not(:disabled) {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(96, 153, 102, 0.25);
 }
 
-/* DISABLED */
-
-.continueBtn:disabled,
-.addBtn:disabled {
+.continueBtn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
 }
-
-/* ================= INVALID ================= */
 
 .invalidContainer {
   min-height: 100vh;
@@ -287,32 +231,55 @@ select:focus {
   align-items: center;
   justify-content: center;
   background: var(--primary-bg);
+  padding: 24px;
 }
 
 .invalidCard {
-  background: var(--card-bg);
-  padding: 30px;
-  border-radius: 16px;
+  background: #fff;
+  padding: 40px 36px;
+  border-radius: 20px;
   text-align: center;
-  border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-light);
+  max-width: 400px;
+  box-shadow: 0 2px 20px rgba(64, 81, 59, 0.06);
+}
+
+.invalidCard h2 {
+  font-family: var(--heading-font);
+  font-size: 1.3rem;
+  color: var(--dark-green);
+  margin-bottom: 12px;
+}
+
+.invalidCard p {
+  font-size: 0.92rem;
+  color: var(--secondary-text);
+  margin-bottom: 20px;
 }
 
 .primaryBtn {
-  margin-top: 15px;
-  background: var(--button-bg);
-  color: var(--button-color);
+  padding: 12px 28px;
+  background: var(--primary-green);
+  color: #fff;
   border: none;
-  padding: 12px 18px;
   border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-/* ================= RESPONSIVE ================= */
+.primaryBtn:hover {
+  background: var(--accent-hover);
+}
 
 @media (max-width: 768px) {
+  .container {
+    padding: 100px 16px 40px;
+  }
+
   .formRow {
     grid-template-columns: 1fr;
+    gap: 10px;
   }
 
   .actions {
@@ -320,6 +287,14 @@ select:focus {
   }
 
   .header h1 {
-    font-size: 26px;
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .topBar {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
   }
 }

@@ -1,22 +1,22 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./GuestDetails.module.css";
-
 import { useVillas } from "../../Store/useContext";
+import { ArrowLeft, Plus, User, Users } from "lucide-react";
 
 const GuestDetails = () => {
   const { state } = useLocation();
+  const navigate = useNavigate();
+  const { bookVilla } = useVillas();
+  const [loading, setLoading] = useState(false);
 
-  /* ================= INVALID ACCESS ================= */
   if (!state) {
     return (
       <div className={styles.invalidContainer}>
         <div className={styles.invalidCard}>
-          <h2>⚠️ Invalid Access</h2>
-          <p>
-            This page cannot be accessed directly. Please start your booking
-            from the villas page.
-          </p>
+          <h2>Invalid Access</h2>
+          <p>This page cannot be accessed directly. Please start your booking from the villas page.</p>
           <button onClick={() => navigate("/")} className={styles.primaryBtn}>
             Go to Home
           </button>
@@ -25,19 +25,13 @@ const GuestDetails = () => {
     );
   }
 
-  const navigate = useNavigate();
-  const { bookVilla } = useVillas();
-  const [loading, setLoading] = useState(false);
-
   const { villa, checkIn, checkOut, guests, totalPrice } = state;
 
-  /* ================= UNIQUE STORAGE KEY ================= */
   const storageKey = useMemo(
     () => `guestDetails_${villa._id}_${checkIn}_${checkOut}`,
     [villa._id, checkIn, checkOut],
   );
 
-  /* ================= STATE ================= */
   const [guestList, setGuestList] = useState(() => {
     const saved = localStorage.getItem(storageKey);
     return saved ? JSON.parse(saved) : [{ name: "", age: "", gender: "" }];
@@ -45,12 +39,9 @@ const GuestDetails = () => {
 
   const [error, setError] = useState("");
 
-  /* ================= AUTO SAVE ================= */
   useEffect(() => {
     localStorage.setItem(storageKey, JSON.stringify(guestList));
   }, [guestList, storageKey]);
-
-  /* ================= HANDLERS ================= */
 
   const handleChange = (index, field, value) => {
     const updated = [...guestList];
@@ -68,45 +59,21 @@ const GuestDetails = () => {
     setGuestList((prev) => prev.filter((_, i) => i !== index));
   };
 
-  /* ================= VALIDATION ================= */
-
   const isValid = useMemo(() => {
     return (
       guestList.length === guests &&
-      guestList.every(
-        (g) => g.name.trim().length >= 3 && Number(g.age) > 0 && g.gender,
-      )
+      guestList.every((g) => g.name.trim().length >= 3 && Number(g.age) > 0 && g.gender)
     );
   }, [guestList, guests]);
-
-  /* ================= CONTINUE ================= */
 
   const handleContinue = async () => {
     if (!isValid) {
       setError("Please fill all guest details correctly");
       return;
     }
-
     try {
       setLoading(true);
-
-      console.log("Booking villa with details:", {
-        villaId: villa._id,
-        checkIn,
-        checkOut,
-        guests,
-        guestList,
-      }); 
-
-      await bookVilla(
-        villa._id,
-        checkIn,
-        checkOut,
-        guests,
-        guestList, // ✅ SEND GUEST DETAILS
-      );
-
-      // clear saved data after success
+      await bookVilla(villa._id, checkIn, checkOut, guests, guestList);
       localStorage.removeItem(storageKey);
     } catch (err) {
       setError("Booking failed");
@@ -115,76 +82,73 @@ const GuestDetails = () => {
     }
   };
 
-  /* ================= BACK ================= */
-
   const handleBack = () => {
     navigate("/villas", {
       state: {
         restoreBooking: true,
-        bookingData: {
-          villa,
-          checkIn,
-          checkOut,
-          guests,
-        },
+        bookingData: { villa, checkIn, checkOut, guests },
       },
     });
   };
 
-  /* ================= UI ================= */
-
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
-        {/* TOP BAR */}
-        <div className={styles.topBar}>
+        <motion.div
+          className={styles.topBar}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4 }}
+        >
           <button onClick={handleBack} className={styles.backBtn}>
-            <span className={styles.backIcon}>←</span>
-            <span>Back to Booking</span>
+            <ArrowLeft size={16} />
+            Back to Booking
           </button>
-
           <span className={styles.stepText}>Step 2 of 3</span>
-        </div>
+        </motion.div>
 
-        {/* HEADER */}
-        <div className={styles.header}>
+        <motion.div
+          className={styles.header}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Users size={28} className={styles.headerIcon} />
           <h1>Guest Details</h1>
           <p>
             Add {guests} {guests === 1 ? "guest" : "guests"} details
           </p>
-        </div>
+        </motion.div>
 
-        {/* GUEST LIST */}
         <div className={styles.guestList}>
           {guestList.map((g, i) => (
-            <div key={i} className={styles.guestCard}>
+            <motion.div
+              key={i}
+              className={styles.guestCard}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.08, duration: 0.4 }}
+            >
               <div className={styles.cardHeader}>
-                <h3>Guest {i + 1}</h3>
-
+                <h3><User size={16} /> Guest {i + 1}</h3>
                 {guestList.length > 1 && (
-                  <button
-                    className={styles.removeBtn}
-                    onClick={() => removeGuest(i)}
-                  >
+                  <button className={styles.removeBtn} onClick={() => removeGuest(i)}>
                     Remove
                   </button>
                 )}
               </div>
-
               <div className={styles.formRow}>
                 <input
                   placeholder="Full Name"
                   value={g.name}
                   onChange={(e) => handleChange(i, "name", e.target.value)}
                 />
-
                 <input
                   type="number"
                   placeholder="Age"
                   value={g.age}
                   onChange={(e) => handleChange(i, "age", e.target.value)}
                 />
-
                 <select
                   value={g.gender}
                   onChange={(e) => handleChange(i, "gender", e.target.value)}
@@ -195,21 +159,20 @@ const GuestDetails = () => {
                   <option>Other</option>
                 </select>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
-        {/* ERROR */}
-        {error && <div className={styles.errorBox}>⚠️ {error}</div>}
+        {error && <div className={styles.errorBox}>{error}</div>}
 
-        {/* ACTIONS */}
         <div className={styles.actions}>
           <button
             className={styles.addBtn}
             disabled={guestList.length >= guests}
             onClick={addGuest}
           >
-            + Add Guest
+            <Plus size={16} />
+            Add Guest
           </button>
 
           <button

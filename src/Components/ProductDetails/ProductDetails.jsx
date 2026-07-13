@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth, useCart, useProducts } from "../../Store/useContext";
 import styles from "./ProductDetails.module.css";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ShoppingBag, Package, ShieldCheck } from "lucide-react";
 import { getImageUrl } from "../../utils/getImageUrl ";
 
 const ProductDetails = () => {
@@ -21,14 +22,12 @@ const ProductDetails = () => {
   const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState("");
 
-  /* ================= LOAD PRODUCT ================= */
   useEffect(() => {
     if (!loading) {
       const found = products.find((p) => p._id === id);
       if (found) {
         setProduct(found);
         setMainImage(found.image || "");
-
         setEditData({
           name: found.name,
           category: found.category,
@@ -37,7 +36,6 @@ const ProductDetails = () => {
           description: found.description,
           image: found.image,
         });
-
         const related = products.filter(
           (p) => p.category === found.category && p._id !== id,
         );
@@ -49,10 +47,7 @@ const ProductDetails = () => {
   if (loading) return <p className={styles.loading}>Loading product...</p>;
   if (!product) return <p className={styles.loading}>Product not found.</p>;
 
-  /* ================= STOCK LOGIC ================= */
   const isOutOfStock = product.stock <= 0;
-
-  /* ================= HANDLERS ================= */
 
   const handleDelete = () => {
     if (window.confirm("Are you sure you want to delete this product?")) {
@@ -64,19 +59,16 @@ const ProductDetails = () => {
   const handleSave = async () => {
     try {
       let formData = new FormData();
-
       formData.append("name", editData.name);
       formData.append("category", editData.category);
       formData.append("price", editData.price);
       formData.append("stock", editData.stock);
       formData.append("description", editData.description);
-
       if (imageFile) {
         formData.append("image", imageFile);
       } else if (editData.image) {
         formData.append("image", editData.image);
       }
-
       await updateProduct(product._id, formData);
       setIsEditing(false);
     } catch (err) {
@@ -84,241 +76,173 @@ const ProductDetails = () => {
     }
   };
 
-  /* ================= UI ================= */
-
   return (
-    <div className={styles.productDetailsWrapper}>
-      <div className={styles.productMainCard}>
-        {/* BACK */}
-        <button className={styles.btnBack} onClick={() => navigate(-1)}>
-          <ArrowLeft size={20} />
-        </button>
+    <div className={styles.wrapper}>
+      <div className={styles.container}>
+        <motion.div
+          className={styles.mainCard}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <button className={styles.backBtn} onClick={() => navigate(-1)}>
+            <ArrowLeft size={18} />
+            Back
+          </button>
 
-        {/* ================= MEDIA ================= */}
-        <div className={styles.productMedia}>
-          <div className={styles.mainProductImage}>
-            {isEditing ? (
-              <>
-                <div className={styles.imageInputsRow}>
-                  <input
-                    type="text"
-                    value={editData.image}
-                    onChange={(e) =>
-                      setEditData({ ...editData, image: e.target.value })
-                    }
-                    placeholder="Paste Image URL"
-                    className={styles.editInput}
-                  />
-
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      if (file) {
-                        setImageFile(file);
-                        setPreview(URL.createObjectURL(file));
-                        setEditData({ ...editData, image: "" });
-                      }
-                    }}
-                    className={styles.fileInput}
-                  />
-                </div>
-
-                {(preview || editData.image) && (
-                  <div className={styles.previewWrapper}>
+          <div className={styles.mediaSection}>
+            <div className={styles.mainImage}>
+              {isEditing ? (
+                <div className={styles.editImageArea}>
+                  <div className={styles.imageInputs}>
+                    <input
+                      type="text"
+                      value={editData.image}
+                      onChange={(e) => setEditData({ ...editData, image: e.target.value })}
+                      placeholder="Paste Image URL"
+                    />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          setImageFile(file);
+                          setPreview(URL.createObjectURL(file));
+                          setEditData({ ...editData, image: "" });
+                        }
+                      }}
+                    />
+                  </div>
+                  {(preview || editData.image) && (
                     <img
                       src={preview || getImageUrl(mainImage)}
                       alt="Preview"
-                      className={styles.previewImage}
+                      className={styles.previewImg}
                     />
-                  </div>
-                )}
-              </>
-            ) : (
-              <img
-                src={getImageUrl(mainImage) || "/images/default-product.jpg"}
-                alt={product.name}
-              />
-            )}
-          </div>
-
-          {product.images && product.images.length > 1 && !isEditing && (
-            <div className={styles.productThumbnails}>
-              {product.images.map((img, idx) => (
-                <img
-                  key={idx}
-                  src={getImageUrl(img)}
-                  alt={`${product.name} ${idx}`}
-                  className={mainImage === img ? styles.thumbActive : ""}
-                  onClick={() => setMainImage(img)}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* ================= INFO ================= */}
-        <div className={styles.productInfo}>
-          {isEditing ? (
-            <>
-              <input
-                value={editData.name}
-                onChange={(e) =>
-                  setEditData({ ...editData, name: e.target.value })
-                }
-                className={styles.editInput}
-              />
-              <input
-                value={editData.category}
-                onChange={(e) =>
-                  setEditData({ ...editData, category: e.target.value })
-                }
-                className={styles.editInput}
-              />
-              <input
-                type="number"
-                value={editData.price}
-                onChange={(e) =>
-                  setEditData({ ...editData, price: e.target.value })
-                }
-                className={styles.editInput}
-              />
-              <input
-                type="number"
-                value={editData.stock}
-                onChange={(e) =>
-                  setEditData({ ...editData, stock: e.target.value })
-                }
-                className={styles.editInput}
-              />
-              <textarea
-                value={editData.description}
-                onChange={(e) =>
-                  setEditData({ ...editData, description: e.target.value })
-                }
-                className={styles.editTextarea}
-              />
-            </>
-          ) : (
-            <>
-              <h1 className={styles.productTitle}>{product.name}</h1>
-
-              <p className={styles.category}>Category: {product.category}</p>
-
-              <p className={styles.price}>₹{product.price}</p>
-
-              {/* ✅ STOCK UI */}
-              <p
-                className={`${styles.stock} ${
-                  isOutOfStock ? styles.outStock : styles.inStock
-                }`}
-              >
-                {isOutOfStock ? "Out of Stock" : `In Stock (${product.stock})`}
-              </p>
-
-              <p className={styles.productDesc}>{product.description}</p>
-            </>
-          )}
-
-          {/* ================= ACTIONS ================= */}
-          <div className={styles.actionButtons}>
-            {isAdmin ? (
-              isEditing ? (
-                <>
-                  <button
-                    className={styles.btnProductSave}
-                    onClick={handleSave}
-                  >
-                    💾 Save
-                  </button>
-                  <button
-                    className={styles.btnProductCancel}
-                    onClick={() => setIsEditing(false)}
-                  >
-                    ❌ Cancel
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    className={styles.btnEdit}
-                    onClick={() => setIsEditing(true)}
-                  >
-                    ✏️ Edit Product
-                  </button>
-                  <button className={styles.btnDelete} onClick={handleDelete}>
-                    🗑 Delete Product
-                  </button>
-                </>
-              )
-            ) : (
-              <button
-                className={`${styles.btnAddCart} ${
-                  isOutOfStock ? styles.disabledBtn : ""
-                }`}
-                disabled={isOutOfStock}
-                onClick={() => {
-                  if (isOutOfStock) return;
-                  addToCart(product);
-                }}
-              >
-                {isOutOfStock ? "❌ Out of Stock" : "🛒 Add to Cart"}
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* ================= SIMILAR ================= */}
-      {similarProducts.length > 0 && (
-        <div className={styles.similarProducts}>
-          <h2>Related Products</h2>
-
-          <div className={styles.similarGrid}>
-            {similarProducts.map((item) => {
-              const isOut = item.stock <= 0;
-
-              return (
-                <div key={item._id} className={styles.similarCard}>
-                  {/* IMAGE */}
-                  <div
-                    className={styles.similarImageWrapper}
-                    onClick={() => navigate(`/product/${item._id}`)}
-                  >
-                    <img
-                      src={
-                        getImageUrl(item.image) || "/images/default-product.jpg"
-                      }
-                      alt={item.name}
-                      className={styles.similarImg}
-                    />
-
-                    {isOut && <span className={styles.badgeOut}>Out</span>}
-                  </div>
-
-                  {/* INFO */}
-                  <div className={styles.similarInfo}>
-                    <p className={styles.similarName}>{item.name}</p>
-
-                    <p className={styles.similarPrice}>₹{item.price}</p>
-
-                    <button
-                      className={`${styles.similarCartBtn} ${
-                        isOut ? styles.disabledBtn : ""
-                      }`}
-                      disabled={isOut}
-                      onClick={() => addToCart(item)}
-                    >
-                      {isOut ? "Out of Stock" : "Add to Cart"}
-                    </button>
-                  </div>
+                  )}
                 </div>
-              );
-            })}
+              ) : (
+                <img
+                  src={getImageUrl(mainImage) || "/images/default-product.jpg"}
+                  alt={product.name}
+                />
+              )}
+            </div>
+
+            {product.images && product.images.length > 1 && !isEditing && (
+              <div className={styles.thumbnails}>
+                {product.images.map((img, idx) => (
+                  <button
+                    key={idx}
+                    className={`${styles.thumb} ${mainImage === img ? styles.thumbActive : ""}`}
+                    onClick={() => setMainImage(img)}
+                  >
+                    <img src={getImageUrl(img)} alt={`${product.name} ${idx}`} />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-        </div>
-      )}
+
+          <div className={styles.infoSection}>
+            {isEditing ? (
+              <div className={styles.editForm}>
+                <input value={editData.name} onChange={(e) => setEditData({ ...editData, name: e.target.value })} />
+                <input value={editData.category} onChange={(e) => setEditData({ ...editData, category: e.target.value })} />
+                <div className={styles.editRow}>
+                  <input type="number" value={editData.price} onChange={(e) => setEditData({ ...editData, price: e.target.value })} />
+                  <input type="number" value={editData.stock} onChange={(e) => setEditData({ ...editData, stock: e.target.value })} />
+                </div>
+                <textarea value={editData.description} onChange={(e) => setEditData({ ...editData, description: e.target.value })} />
+              </div>
+            ) : (
+              <>
+                <h1 className={styles.productTitle}>{product.name}</h1>
+
+                <div className={styles.badges}>
+                  <span className={styles.categoryBadge}>{product.category}</span>
+                  <span className={`${styles.stockBadge} ${isOutOfStock ? styles.outStock : styles.inStock}`}>
+                    <Package size={14} />
+                    {isOutOfStock ? "Out of Stock" : `In Stock (${product.stock})`}
+                  </span>
+                </div>
+
+                <p className={styles.price}>₹{product.price}</p>
+
+                <p className={styles.description}>{product.description}</p>
+
+                <div className={styles.trustBadges}>
+                  <span><ShieldCheck size={16} /> 100% Organic</span>
+                  <span><ShieldCheck size={16} /> Free Shipping</span>
+                </div>
+              </>
+            )}
+
+            <div className={styles.actions}>
+              {isAdmin ? (
+                isEditing ? (
+                  <div className={styles.editActions}>
+                    <button className={styles.saveBtn} onClick={handleSave}>Save</button>
+                    <button className={styles.cancelBtn} onClick={() => setIsEditing(false)}>Cancel</button>
+                  </div>
+                ) : (
+                  <div className={styles.editActions}>
+                    <button className={styles.editBtn} onClick={() => setIsEditing(true)}>Edit Product</button>
+                    <button className={styles.deleteBtn} onClick={handleDelete}>Delete</button>
+                  </div>
+                )
+              ) : (
+                <button
+                  className={`${styles.addToCartBtn} ${isOutOfStock ? styles.disabled : ""}`}
+                  disabled={isOutOfStock}
+                  onClick={() => !isOutOfStock && addToCart(product)}
+                >
+                  <ShoppingBag size={18} />
+                  {isOutOfStock ? "Out of Stock" : "Add to Cart"}
+                </button>
+              )}
+            </div>
+          </div>
+        </motion.div>
+
+        {similarProducts.length > 0 && (
+          <section className={styles.similarSection}>
+            <h2>Related Products</h2>
+            <div className={styles.similarGrid}>
+              {similarProducts.map((item) => {
+                const isOut = item.stock <= 0;
+                return (
+                  <motion.div
+                    key={item._id}
+                    className={styles.similarCard}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <div className={styles.similarImage} onClick={() => navigate(`/product/${item._id}`)}>
+                      <img src={getImageUrl(item.image) || "/images/default-product.jpg"} alt={item.name} loading="lazy" />
+                      {isOut && <span className={styles.outBadge}>Out</span>}
+                    </div>
+                    <div className={styles.similarInfo}>
+                      <p className={styles.similarName}>{item.name}</p>
+                      <p className={styles.similarPrice}>₹{item.price}</p>
+                      <button
+                        className={`${styles.similarBtn} ${isOut ? styles.disabled : ""}`}
+                        disabled={isOut}
+                        onClick={() => addToCart(item)}
+                      >
+                        {isOut ? "Out of Stock" : "Add to Cart"}
+                      </button>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </section>
+        )}
+      </div>
     </div>
   );
 };

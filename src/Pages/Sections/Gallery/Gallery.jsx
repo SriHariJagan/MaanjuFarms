@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { X, ChevronLeft, ChevronRight, Edit, Plus, Trash2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, ChevronLeft, ChevronRight, Plus, Trash2, Edit, Image as ImageIcon } from "lucide-react";
 import styles from "./Gallery.module.css";
 import axios from "axios";
 import { GALLERY_API } from "../../../urls";
@@ -7,36 +8,55 @@ import { useAuth } from "../../../Store/useContext";
 import { getImageUrl } from "../../../utils/getImageUrl ";
 import { useSwipeable } from "react-swipeable";
 
-/* ================= CARD ================= */
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.06, delayChildren: 0.1 },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20, scale: 0.98 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
 const GalleryCard = ({ item, index, isAdmin, onEdit, onDelete, onOpen }) => {
   return (
-    <div className={styles.card}>
+    <motion.div
+      className={styles.card}
+      layout
+      variants={cardVariants}
+      whileHover={{ y: -4 }}
+    >
       <img
         src={getImageUrl(item.imageUrl)}
         alt={item.title}
         className={styles.image}
         onClick={() => onOpen(index)}
+        loading="lazy"
       />
-
       <div className={styles.overlay}>
         <span>{item.title}</span>
       </div>
-
       {isAdmin && (
         <div className={styles.cardActions}>
           <button onClick={() => onEdit(item)}>
-            <Edit size={16} /> Edit
+            <Edit size={14} />
           </button>
           <button onClick={() => onDelete(item._id)}>
-            <Trash2 size={16} /> Delete
+            <Trash2 size={14} />
           </button>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
-
-/* ================= LIGHTBOX ================= */
 
 const Lightbox = ({ items, index, onClose, onPrev, onNext }) => {
   if (index === null) return null;
@@ -45,118 +65,95 @@ const Lightbox = ({ items, index, onClose, onPrev, onNext }) => {
     onSwipedLeft: () => onNext({ stopPropagation: () => {} }),
     onSwipedRight: () => onPrev({ stopPropagation: () => {} }),
     trackTouch: true,
-    trackMouse: false, // optional (disable mouse drag)
   });
 
   return (
-    <div className={styles.lightbox} onClick={onClose}>
+    <motion.div
+      className={styles.lightbox}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
       <button className={styles.closeBtn} onClick={onClose}>
-        <X size={28} />
+        <X size={24} />
       </button>
-
-      {/* Prev Button (hidden on mobile via CSS) */}
-      <button className={styles.prevBtn} onClick={onPrev}>
-        <ChevronLeft className={styles.icon} />
+      <button className={styles.navBtn} onClick={onPrev}>
+        <ChevronLeft size={28} />
       </button>
-
-      {/* 👇 SWIPE AREA */}
-      <div
-        {...handlers}
-        className={styles.lightboxContent}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <img
+      <div {...handlers} className={styles.lightboxContent} onClick={(e) => e.stopPropagation()}>
+        <motion.img
+          key={index}
           src={getImageUrl(items[index].imageUrl)}
           alt={items[index].title}
           className={styles.lightboxImage}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
         />
         <p className={styles.lightboxTitle}>{items[index].title}</p>
       </div>
-
-      {/* Next Button */}
-      <button className={styles.nextBtn} onClick={onNext}>
-        <ChevronRight className={styles.icon} />
+      <button className={`${styles.navBtn} ${styles.nextBtn}`} onClick={onNext}>
+        <ChevronRight size={28} />
       </button>
-    </div>
+    </motion.div>
   );
 };
 
-/* ================= MODAL ================= */
-const GalleryModal = ({
-  show,
-  isEditing,
-  formData,
-  onChange,
-  onClose,
-  onSave,
-}) => {
+const GalleryModal = ({ show, isEditing, formData, onChange, onClose, onSave }) => {
   if (!show) return null;
 
   return (
-    <div className={styles.modal} onClick={onClose}>
-      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+    <motion.div
+      className={styles.modal}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <motion.div
+        className={styles.modalContent}
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        onClick={(e) => e.stopPropagation()}
+      >
         <h3>{isEditing ? "Update Image" : "Add New Image"}</h3>
 
         <label>Title</label>
-        <input
-          type="text"
-          name="title"
-          value={formData.title}
-          onChange={onChange}
-        />
+        <input type="text" name="title" value={formData.title} onChange={onChange} />
 
         <label>Upload Image</label>
         <input type="file" name="image" onChange={onChange} />
 
         <label>Or Image URL</label>
-        <input
-          type="text"
-          name="imageUrl"
-          value={formData.imageUrl}
-          onChange={onChange}
-        />
+        <input type="text" name="imageUrl" value={formData.imageUrl} onChange={onChange} />
 
         {formData.preview && (
-          <img
-            src={getImageUrl(formData.preview)}
-            alt="Preview"
-            className={styles.previewImage}
-          />
+          <img src={getImageUrl(formData.preview)} alt="Preview" className={styles.previewImage} />
         )}
 
         <div className={styles.modalActions}>
-          <button onClick={onClose} className={styles.btnCancel}>
-            Cancel
-          </button>
-
+          <button onClick={onClose} className={styles.btnCancel}>Cancel</button>
           <button onClick={onSave} className={styles.btnPrimary}>
             {isEditing ? "Update" : "Save"}
           </button>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
-/* ================= MAIN ================= */
 const Gallery = () => {
   const { isAdmin, token } = useAuth();
-
   const [galleryItems, setGalleryItems] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(null);
-
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
   const [formData, setFormData] = useState({
-    title: "",
-    image: null,
-    imageUrl: "",
-    id: null,
-    preview: null,
+    title: "", image: null, imageUrl: "", id: null, preview: null,
   });
 
-  /* API */
   const fetchGallery = async () => {
     try {
       const { data } = await axios.get(GALLERY_API);
@@ -166,11 +163,8 @@ const Gallery = () => {
     }
   };
 
-  useEffect(() => {
-    fetchGallery();
-  }, []);
+  useEffect(() => { fetchGallery(); }, []);
 
-  /* LIGHTBOX */
   const showPrev = (e) => {
     e.stopPropagation();
     setCurrentIndex((i) => (i === 0 ? galleryItems.length - 1 : i - 1));
@@ -181,42 +175,23 @@ const Gallery = () => {
     setCurrentIndex((i) => (i === galleryItems.length - 1 ? 0 : i + 1));
   };
 
-  /* MODAL */
   const openAdd = () => {
     setIsEditing(false);
-    setFormData({
-      title: "",
-      image: null,
-      imageUrl: "",
-      id: null,
-      preview: null,
-    });
+    setFormData({ title: "", image: null, imageUrl: "", id: null, preview: null });
     setShowModal(true);
   };
 
   const openEdit = (item) => {
     setIsEditing(true);
-    setFormData({
-      title: item.title,
-      image: null,
-      imageUrl: item.imageUrl,
-      id: item._id,
-      preview: item.imageUrl,
-    });
+    setFormData({ title: item.title, image: null, imageUrl: item.imageUrl, id: item._id, preview: item.imageUrl });
     setShowModal(true);
   };
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-
     if (name === "image" && files[0]) {
       const file = files[0];
-      setFormData((prev) => ({
-        ...prev,
-        image: file,
-        imageUrl: "",
-        preview: URL.createObjectURL(file),
-      }));
+      setFormData((prev) => ({ ...prev, image: file, imageUrl: "", preview: URL.createObjectURL(file) }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -226,13 +201,10 @@ const Gallery = () => {
     if (!formData.title || (!formData.image && !formData.imageUrl)) {
       return alert("Title & Image required");
     }
-
     const form = new FormData();
     form.append("title", formData.title);
-
     if (formData.image) form.append("image", formData.image);
     else form.append("imageUrl", formData.imageUrl);
-
     try {
       if (isEditing) {
         await axios.put(`${GALLERY_API}/${formData.id}`, form, {
@@ -258,47 +230,84 @@ const Gallery = () => {
     fetchGallery();
   };
 
-  /* UI */
   return (
     <section className={styles.gallerySection}>
-      <h2 className={styles.title}>Gallery</h2>
+      <div className={styles.galleryHeader}>
+        <motion.h2
+          className={styles.title}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          Gallery
+        </motion.h2>
+        <motion.p
+          className={styles.subtitle}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+        >
+          Capturing the essence of farm life
+        </motion.p>
+      </div>
 
       {isAdmin && (
-        <button className={styles.addImageBtn} onClick={openAdd}>
-          <Plus size={22} />
+        <button className={styles.addBtn} onClick={openAdd}>
+          <Plus size={18} />
+          Add Image
         </button>
       )}
 
-      <div className={styles.grid}>
-        {galleryItems.map((item, index) => (
-          <GalleryCard
-            key={item._id}
-            item={item}
-            index={index}
-            isAdmin={isAdmin}
-            onEdit={openEdit}
-            onDelete={handleDelete}
-            onOpen={setCurrentIndex}
+      {galleryItems.length === 0 ? (
+        <div className={styles.empty}>
+          <ImageIcon size={48} className={styles.emptyIcon} />
+          <p>No images yet</p>
+        </div>
+      ) : (
+        <motion.div
+          className={styles.grid}
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {galleryItems.map((item, index) => (
+            <GalleryCard
+              key={item._id}
+              item={item}
+              index={index}
+              isAdmin={isAdmin}
+              onEdit={openEdit}
+              onDelete={handleDelete}
+              onOpen={setCurrentIndex}
+            />
+          ))}
+        </motion.div>
+      )}
+
+      <AnimatePresence>
+        {currentIndex !== null && (
+          <Lightbox
+            items={galleryItems}
+            index={currentIndex}
+            onClose={() => setCurrentIndex(null)}
+            onPrev={showPrev}
+            onNext={showNext}
           />
-        ))}
-      </div>
+        )}
+      </AnimatePresence>
 
-      <Lightbox
-        items={galleryItems}
-        index={currentIndex}
-        onClose={() => setCurrentIndex(null)}
-        onPrev={showPrev}
-        onNext={showNext}
-      />
-
-      <GalleryModal
-        show={showModal}
-        isEditing={isEditing}
-        formData={formData}
-        onChange={handleChange}
-        onClose={() => setShowModal(false)}
-        onSave={handleSave}
-      />
+      <AnimatePresence>
+        {showModal && (
+          <GalleryModal
+            show={showModal}
+            isEditing={isEditing}
+            formData={formData}
+            onChange={handleChange}
+            onClose={() => setShowModal(false)}
+            onSave={handleSave}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 };

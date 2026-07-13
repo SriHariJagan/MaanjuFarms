@@ -1,17 +1,10 @@
 .userOrders {
   min-height: 100vh;
-  background: linear-gradient(
-    to bottom,
-    #f8fafc,
-    #eef3f8
-  );
-  padding: 6rem 40px;
+  padding: 120px 40px 40px;
+  background: var(--primary-bg);
   font-family: var(--body-font);
+  color: var(--primary-text);
 }
-
-/* ========================================= */
-/* HEADER */
-/* ========================================= */
 
 .header {
   display: flex;
@@ -23,17 +16,17 @@
 }
 
 .header h2 {
-  font-size: 42px;
-  font-weight: 800;
-  color: #0f172a;
-  letter-spacing: -1px;
-  margin-bottom: 10px;
   font-family: var(--heading-font);
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--dark-green);
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
 }
 
 .header p {
-  color: #64748b;
-  font-size: 15px;
+  color: var(--secondary-text);
+  font-size: 0.95rem;
   line-height: 1.6;
 }
 
@@ -44,19 +37,15 @@
   flex-wrap: wrap;
 }
 
-/* ========================================= */
-/* TABS */
-/* ========================================= */
-
 .switchTabs {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: white;
+  background: #fff;
   padding: 8px;
   border-radius: 18px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-light);
 }
 
 .switchTabs button {
@@ -66,9 +55,9 @@
   padding: 14px 20px;
   border-radius: 14px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 0.85rem;
   font-weight: 700;
-  color: #475569;
+  color: var(--secondary-text);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -76,38 +65,26 @@
 }
 
 .switchTabs button:hover {
-  background: #f1f5f9;
-  color: #111827;
+  background: var(--hover-bg);
+  color: var(--primary-text);
 }
 
 .activeTab {
-  background: linear-gradient(
-    135deg,
-    #16a34a,
-    #15803d
-  ) !important;
-  color: white !important;
-  box-shadow: 0 10px 20px rgba(22, 163, 74, 0.2);
+  background: var(--primary-green) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 20px rgba(96, 153, 102, 0.2);
 }
-
-/* ========================================= */
-/* TOTAL BOX */
-/* ========================================= */
 
 .totalOrders {
-  background: white;
+  background: #fff;
   border-radius: 18px;
   padding: 16px 24px;
-  font-weight: 800;
-  font-size: 15px;
-  color: #0f172a;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.05);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--dark-green);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-light);
 }
-
-/* ========================================= */
-/* WRAPPER */
-/* ========================================= */
 
 .ordersWrapper {
   display: flex;
@@ -115,28 +92,19 @@
   gap: 28px;
 }
 
-/* ========================================= */
-/* CARD */
-/* ========================================= */
-
 .orderCard {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(10px);
-  border-radius: 28px;
-  border: 1px solid #e2e8f0;
+  background: #fff;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-color);
   overflow: hidden;
-  transition: all 0.35s ease;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+  box-shadow: var(--shadow-light);
 }
 
 .orderCard:hover {
   transform: translateY(-4px);
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--shadow-hover);
 }
-
-/* ========================================= */
-/* SUMMARY */
-/* ========================================= */
 
 .orderSummary {
   display: flex;
@@ -145,16 +113,12 @@
   gap: 24px;
   padding: 28px 30px;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: background 0.3s ease;
 }
 
 .orderSummary:hover {
-  background: rgba(248, 250, 252, 0.7);
+  background: var(--hover-bg);
 }
-
-/* ========================================= */
-/* LEFT */
-/* ========================================= */
 
 .summaryLeft {
   display: flex;
@@ -167,33 +131,25 @@
   width: 68px;
   height: 68px;
   border-radius: 22px;
-  background: linear-gradient(
-    135deg,
-    rgba(34, 197, 94, 0.12),
-    rgba(22, 163, 74, 0.2)
-  );
+  background: rgba(96, 153, 102, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #15803d;
+  color: var(--primary-green);
   flex-shrink: 0;
 }
 
 .summaryLeft h3 {
-  font-size: 22px;
+  font-size: 1.35rem;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--dark-green);
   margin-bottom: 6px;
 }
 
 .summaryLeft p {
-  font-size: 14px;
-  color: #64748b;
+  font-size: 0.88rem;
+  color: var(--secondary-text);
 }
-
-/* ========================================= */
-/* CENTER */
-/* ========================================= */
 
 .summaryCenter {
   display: flex;
@@ -204,22 +160,18 @@
 .summaryCenter label {
   display: block;
   margin-bottom: 8px;
-  font-size: 11px;
-  color: #94a3b8;
+  font-size: 0.7rem;
+  color: var(--muted-text);
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 800;
 }
 
 .summaryCenter h4 {
-  font-size: 24px;
+  font-size: 1.4rem;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--dark-green);
 }
-
-/* ========================================= */
-/* RIGHT */
-/* ========================================= */
 
 .summaryRight {
   display: flex;
@@ -228,82 +180,63 @@
 }
 
 .summaryRight svg {
-  color: #64748b;
+  color: var(--muted-text);
 }
-
-/* ========================================= */
-/* STATUS */
-/* ========================================= */
 
 .status {
   padding: 10px 18px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 0.7rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .pending {
-  background: #fff7ed;
-  color: #c2410c;
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
 }
 
 .confirmed {
-  background: #ecfdf3;
-  color: #15803d;
+  background: rgba(96, 153, 102, 0.1);
+  color: var(--primary-green);
 }
 
 .shipped {
-  background: #eff6ff;
-  color: #1d4ed8;
+  background: rgba(59, 130, 246, 0.1);
+  color: #2563eb;
 }
 
 .delivered {
-  background: #ecfdf3;
-  color: #166534;
+  background: rgba(96, 153, 102, 0.15);
+  color: var(--dark-green);
 }
 
 .cancelled {
-  background: #fef2f2;
-  color: #dc2626;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
 }
-
-/* ========================================= */
-/* DETAILS */
-/* ========================================= */
 
 .orderDetails {
   padding: 0 30px 32px;
-  border-top: 1px solid #f1f5f9;
-  animation: fadeDown 0.35s ease;
+  border-top: 1px solid var(--border-color);
 }
-
-/* ========================================= */
-/* SECTION */
-/* ========================================= */
 
 .section {
   margin-top: 34px;
 }
 
 .sectionTitle {
-  font-size: 18px;
-  font-weight: 800;
-  color: #0f172a;
+  font-family: var(--heading-font);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--dark-green);
   margin-bottom: 20px;
 }
 
-/* ========================================= */
-/* PRODUCTS */
-/* ========================================= */
-
 .productsWrapper {
   display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(320px, 1fr)
-  );
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 20px;
 }
 
@@ -313,16 +246,16 @@
   gap: 20px;
   padding: 20px;
   border-radius: 22px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  transition: 0.3s ease;
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
 }
 
 .productItem:hover {
-  background: white;
+  background: #fff;
   transform: translateY(-3px);
-  border-color: rgba(22, 163, 74, 0.2);
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+  border-color: rgba(96, 153, 102, 0.2);
+  box-shadow: var(--shadow-light);
 }
 
 .productImageWrapper {
@@ -330,8 +263,8 @@
   height: 120px;
   border-radius: 20px;
   overflow: hidden;
-  background: white;
-  border: 1px solid #e2e8f0;
+  background: #fff;
+  border: 1px solid var(--border-color);
   flex-shrink: 0;
   padding: 10px;
 }
@@ -347,38 +280,30 @@
 }
 
 .productContent h4 {
-  font-size: 18px;
+  font-size: 1.1rem;
   font-weight: 700;
   line-height: 1.5;
-  color: #111827;
+  color: var(--dark-green);
   margin-bottom: 12px;
 }
 
 .productContent p {
-  color: #64748b;
-  font-size: 15px;
+  color: var(--secondary-text);
+  font-size: 0.9rem;
 }
 
 .productContent span {
-  color: #15803d;
+  color: var(--primary-green);
   font-weight: 800;
   margin-left: 6px;
 }
-
-/* ========================================= */
-/* PAYMENT */
-/* ========================================= */
 
 .paymentSection {
   margin-top: 34px;
   padding: 26px;
   border-radius: 24px;
-  border: 1px solid #e2e8f0;
-  background: linear-gradient(
-    135deg,
-    #ffffff,
-    #f8fafc
-  );
+  border: 1px solid var(--border-color);
+  background: var(--secondary-bg);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -388,8 +313,8 @@
 .paymentSection label {
   display: block;
   margin-bottom: 10px;
-  font-size: 11px;
-  color: #94a3b8;
+  font-size: 0.7rem;
+  color: var(--muted-text);
   text-transform: uppercase;
   font-weight: 800;
 }
@@ -397,19 +322,19 @@
 .paymentBadge {
   padding: 10px 18px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 0.7rem;
   font-weight: 800;
   text-transform: uppercase;
 }
 
 .paid {
-  background: #dcfce7;
-  color: #15803d;
+  background: rgba(96, 153, 102, 0.12);
+  color: var(--primary-green);
 }
 
 .pendingPayment {
-  background: #fff7ed;
-  color: #c2410c;
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
 }
 
 .statusInfo {
@@ -417,12 +342,8 @@
   align-items: center;
   gap: 10px;
   font-weight: 700;
-  color: #111827;
+  color: var(--dark-green);
 }
-
-/* ========================================= */
-/* SHIPPING */
-/* ========================================= */
 
 .shippingBox {
   display: flex;
@@ -433,60 +354,52 @@
 .shippingItem {
   flex: 1;
   min-width: 240px;
-  background: #f8fafc;
+  background: var(--secondary-bg);
   border-radius: 20px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
   padding: 22px;
 }
 
 .shippingItem label {
   display: block;
   margin-bottom: 10px;
-  font-size: 11px;
-  color: #94a3b8;
+  font-size: 0.7rem;
+  color: var(--muted-text);
   text-transform: uppercase;
   font-weight: 800;
 }
 
 .shippingItem p {
-  color: #0f172a;
+  color: var(--dark-green);
   font-weight: 700;
   line-height: 1.7;
 }
 
-/* ========================================= */
-/* ADDRESS */
-/* ========================================= */
-
 .addressBox {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
   border-radius: 22px;
   padding: 24px;
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  color: #475569;
+  color: var(--secondary-text);
   line-height: 1.8;
 }
 
 .addressBox svg {
-  color: #16a34a;
+  color: var(--primary-green);
   margin-top: 2px;
   flex-shrink: 0;
 }
 
-/* ========================================= */
-/* ROOM CARD */
-/* ========================================= */
-
 .roomCard {
   display: flex;
   gap: 24px;
-  background: #f8fafc;
+  background: var(--secondary-bg);
   border-radius: 24px;
   overflow: hidden;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
 }
 
 .roomCard img {
@@ -503,28 +416,22 @@
 }
 
 .roomContent h3 {
-  font-size: 28px;
-  font-weight: 800;
-  color: #0f172a;
+  font-family: var(--heading-font);
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--dark-green);
   margin-bottom: 12px;
 }
 
 .roomContent p {
-  color: #64748b;
-  font-size: 15px;
+  color: var(--secondary-text);
+  font-size: 0.9rem;
   line-height: 1.7;
 }
 
-/* ========================================= */
-/* BOOKING GRID */
-/* ========================================= */
-
 .bookingGrid {
   display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(240px, 1fr)
-  );
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 18px;
   margin-top: 30px;
 }
@@ -533,97 +440,66 @@
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  background: #f8fafc;
+  background: var(--secondary-bg);
   border-radius: 20px;
   padding: 22px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
 }
 
 .bookingInfo svg {
-  color: #16a34a;
+  color: var(--primary-green);
   margin-top: 2px;
 }
 
 .bookingInfo label {
   display: block;
   margin-bottom: 8px;
-  font-size: 11px;
-  color: #94a3b8;
+  font-size: 0.7rem;
+  color: var(--muted-text);
   text-transform: uppercase;
   font-weight: 800;
 }
 
 .bookingInfo p {
-  color: #0f172a;
+  color: var(--dark-green);
   font-weight: 700;
 }
 
-/* ========================================= */
-/* GUESTS */
-/* ========================================= */
-
 .guestGrid {
   display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(220px, 1fr)
-  );
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 18px;
 }
 
 .guestCard {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
   border-radius: 22px;
   padding: 22px;
 }
 
 .guestCard h4 {
-  font-size: 18px;
-  color: #0f172a;
+  font-size: 1.1rem;
+  color: var(--dark-green);
   margin-bottom: 14px;
   font-weight: 800;
 }
 
 .guestCard p {
-  color: #64748b;
+  color: var(--secondary-text);
   line-height: 1.8;
-  font-size: 14px;
+  font-size: 0.85rem;
 }
-
-/* ========================================= */
-/* LOADING */
-/* ========================================= */
 
 .loading {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
-  font-weight: 700;
-  color: #0f172a;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--secondary-text);
 }
-
-/* ========================================= */
-/* ANIMATION */
-/* ========================================= */
-
-@keyframes fadeDown {
-  from {
-    opacity: 0;
-    transform: translateY(-12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ========================================= */
-/* TABLET */
-/* ========================================= */
 
 @media (max-width: 992px) {
   .orderSummary {
@@ -658,13 +534,9 @@
   }
 }
 
-/* ========================================= */
-/* MOBILE */
-/* ========================================= */
-
 @media (max-width: 768px) {
   .userOrders {
-    padding: 20px;
+    padding: 100px 16px 30px;
   }
 
   .header {
@@ -672,7 +544,7 @@
   }
 
   .header h2 {
-    font-size: 32px;
+    font-size: 1.8rem;
   }
 
   .headerRight {
@@ -728,6 +600,6 @@
   }
 
   .roomContent h3 {
-    font-size: 24px;
+    font-size: 1.4rem;
   }
 }

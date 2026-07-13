@@ -1,412 +1,299 @@
-// Navbar.jsx
-
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-
+import { Link, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  Sun,
-  Moon,
   ShoppingCart,
-  AlignJustify,
+  Menu,
   X,
   ChevronDown,
   LogIn,
   LogOut,
-  Package,
-  ClipboardList,
+  Leaf,
 } from "lucide-react";
 
 import "./Navbar.css";
-
 import { useCart, useAuth } from "../../../Store/useContext";
 
-const Navbar = () => {
-  //
-  // CART
-  //
+const navItems = [
+  { path: "/", label: "Home" },
+  { path: "/organic-products", label: "Products" },
+  { path: "/gallery", label: "Gallery" },
+  { path: "/about", label: "About" },
+  { path: "/contact", label: "Contact" },
+];
 
+const offeringsDropdown = [
+  { path: "/organic-products", label: "Organic Products" },
+  { path: "/horse-riding", label: "Horse Riding" },
+  { path: "/camel-riding", label: "Camel Riding" },
+  { path: "/villas", label: "Villas & Stays" },
+];
+
+const Navbar = () => {
   const { cart } = useCart();
+  const { user, logout } = useAuth();
+  const location = useLocation();
+  const isAdmin = user?.role === "admin";
+
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [prevScroll, setPrevScroll] = useState(0);
+  const [visible, setVisible] = useState(true);
+  const mobileRef = useRef(null);
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
-  //
-  // AUTH
-  //
+  useEffect(() => {
+    const handleScroll = () => {
+      const current = window.pageYOffset;
+      setIsScrolled(current > 20);
+      setVisible(prevScroll > current || current < 20);
+      setPrevScroll(current);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [prevScroll]);
 
-  const { user, logout } = useAuth();
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (mobileRef.current && !mobileRef.current.contains(e.target)) {
+        setIsMobileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-  //
-  // ✅ ADMIN CHECK
-  //
+  useEffect(() => {
+    setIsMobileOpen(false);
+    setIsDropdownOpen(false);
+  }, [location]);
 
-  const isAdmin = user?.role === "admin";
-
-  //
-  // STATES
-  //
-
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const [prevScrollPos, setPrevScrollPos] = useState(window.pageYOffset);
-
-  const [visible, setVisible] = useState(true);
-
-  const [theme, setTheme] = useState("light");
-
-  //
-  // REFS
-  //
-
-  const mobileMenuRef = useRef(null);
-
-  //
-  // TOGGLE MOBILE MENU
-  //
-
-  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
-
-  //
-  // CLOSE MENU AFTER LINK CLICK
-  //
-
-  const handleLinkClick = () => {
-    setIsMobileMenuOpen(false);
+  const closeMenu = () => {
+    setIsMobileOpen(false);
     setIsDropdownOpen(false);
   };
 
-  //
-  // NAVBAR HIDE / SHOW
-  //
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollPos = window.pageYOffset;
-
-      setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 10);
-
-      setPrevScrollPos(currentScrollPos);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [prevScrollPos]);
-
-  //
-  // CLOSE MOBILE MENU OUTSIDE CLICK
-  //
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        mobileMenuRef.current &&
-        !mobileMenuRef.current.contains(event.target) &&
-        !event.target.closest(".mobile-menu-button")
-      ) {
-        setIsMobileMenuOpen(false);
-      }
-    };
-
-    if (isMobileMenuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isMobileMenuOpen]);
-
-  //
-  // THEME TOGGLE
-  //
-
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
-  };
-
-  useEffect(() => {
-    if (theme === "dark") {
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
-    }
-  }, [theme]);
-
   return (
-    <nav className={`navbar ${visible ? "" : "navbar-hidden"}`}>
-      <div className="navbar-container">
-        {/* LOGO */}
-
-        <div className="navbar-logo">
-          <Link to="/" className="logo-link" onClick={handleLinkClick}>
-            <img
-              src="/Images/logo.png"
-              alt="Maanjoo Farms Logo"
-              className="logo-image"
-              width={20}
-            />
-
+    <>
+      <motion.nav
+        className={`navbar ${isScrolled ? "scrolled" : ""} ${visible ? "" : "hidden"}`}
+        initial={{ y: -80 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <div className="navbar-container">
+          <Link to="/" className="navbar-logo" onClick={closeMenu}>
+            <Leaf size={22} className="logo-icon" />
             <span className="logo-text">Maanjoo Farms</span>
           </Link>
-        </div>
 
-        {/* DESKTOP MENU */}
+          <div className="navbar-links">
+            <Link
+              to="/"
+              className={`nav-link ${location.pathname === "/" ? "active" : ""}`}
+            >
+              Home
+              <div className="nav-indicator" />
+            </Link>
 
-        <div className="navbar-menu">
-          <Link to="/" className="nav-link">
-            Home
-          </Link>
+            <div
+              className="nav-link dropdown-trigger"
+              onMouseEnter={() => setIsDropdownOpen(true)}
+              onMouseLeave={() => setIsDropdownOpen(false)}
+            >
+              <span className="dropdown-label">
+                Offerings <ChevronDown size={14} className="chevron" />
+              </span>
+              <AnimatePresence>
+                {isDropdownOpen && (
+                  <motion.div
+                    className="dropdown-menu"
+                    initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                  >
+                    {offeringsDropdown.map((item) => (
+                      <Link
+                        key={item.path}
+                        to={item.path}
+                        className="dropdown-item"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
-          {/* OFFERINGS */}
-
-          <div
-            className="nav-link dropdown"
-            onMouseEnter={() => setIsDropdownOpen(true)}
-            onMouseLeave={() => setIsDropdownOpen(false)}
-          >
-            Offerings <ChevronDown size={14} />
-            {isDropdownOpen && (
-              <div className="dropdown-menu">
-                <Link to="/organic-products" className="dropdown-item">
-                  Organic Products
-                </Link>
-
-                <Link to="/horse-riding" className="dropdown-item">
-                  Horse Riding
-                </Link>
-
-                <Link to="/camel-riding" className="dropdown-item">
-                  Camel Riding
-                </Link>
-
-                <Link to="/villas" className="dropdown-item">
-                  Villas & Stays
-                </Link>
-              </div>
-            )}
+            {navItems.slice(1).map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`nav-link ${location.pathname === item.path ? "active" : ""}`}
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
 
-          <Link to="/gallery" className="nav-link">
-            Gallery
-          </Link>
-
-          <Link to="/about" className="nav-link">
-            About Us
-          </Link>
-
-          <Link to="/contact" className="nav-link">
-            Contact Us
-          </Link>
-
-          {/* ✅ USER ORDERS */}
-
-          {user && !isAdmin && (
-            <Link to="/my-orders" className="nav-link">
-              My Orders
+          <div className="navbar-actions">
+            <Link to="/cart" className="cart-btn">
+              <ShoppingCart size={18} />
+              {cartCount > 0 && (
+                <motion.span
+                  className="cart-badge"
+                  key={cartCount}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 25 }}
+                >
+                  {cartCount}
+                </motion.span>
+              )}
             </Link>
-          )}
-
-          {/* ✅ ADMIN ORDERS */}
-
-          {user && isAdmin && (
-            <Link to="/admin/orders" className="nav-link">
-              Orders
-            </Link>
-          )}
-
-          {user && isAdmin && (
-            <Link to="/admin/pincode-management" className="nav-link">
-              Pincode Management
-            </Link>
-          )}
-        </div>
-
-        {/* RIGHT ACTIONS */}
-
-        <div className="navbar-actions">
-          {/* CART */}
-
-          <Link to="/cart" className="cart-button">
-            <ShoppingCart size={18} />
-
-            {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
-          </Link>
-
-          {/* THEME */}
-
-          <button
-            className="theme-toggle"
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
-          >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-
-          {/* LOGIN / LOGOUT */}
-
-          {user ? (
-            <button className="auth-button" onClick={logout}>
-              <LogOut size={16} />
-            </button>
-          ) : (
-            <Link to="/login" className="auth-button">
-              <LogIn size={16} />
-            </Link>
-          )}
-
-          {/* MOBILE MENU BUTTON */}
-
-          <button
-            className="mobile-menu-button"
-            onClick={toggleMobileMenu}
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? <X size={22} /> : <AlignJustify size={22} />}
-          </button>
-        </div>
-      </div>
-
-      {/* MOBILE MENU */}
-
-      {isMobileMenuOpen && (
-        <div
-          ref={mobileMenuRef}
-          className={`mobile-menu ${isMobileMenuOpen ? "open" : ""}`}
-        >
-          <div className="mobile-menu-content">
-            <Link to="/" className="mobile-nav-link" onClick={handleLinkClick}>
-              Home
-            </Link>
-
-            <Link
-              to="/organic-products"
-              className="mobile-nav-link"
-              onClick={handleLinkClick}
-            >
-              Organic Products
-            </Link>
-
-            <Link
-              to="/horse-riding"
-              className="mobile-nav-link"
-              onClick={handleLinkClick}
-            >
-              Horse Riding
-            </Link>
-
-            <Link
-              to="/camel-riding"
-              className="mobile-nav-link"
-              onClick={handleLinkClick}
-            >
-              Camel Riding
-            </Link>
-
-            <Link
-              to="/villas"
-              className="mobile-nav-link"
-              onClick={handleLinkClick}
-            >
-              Villas & Stays
-            </Link>
-
-            <Link
-              to="/gallery"
-              className="mobile-nav-link"
-              onClick={handleLinkClick}
-            >
-              Gallery
-            </Link>
-
-            <Link
-              to="/about"
-              className="mobile-nav-link"
-              onClick={handleLinkClick}
-            >
-              About Us
-            </Link>
-
-            <Link
-              to="/contact"
-              className="mobile-nav-link"
-              onClick={handleLinkClick}
-            >
-              Contact Us
-            </Link>
-
-            {/* ✅ USER ORDERS */}
-
-            {user && !isAdmin && (
-              <Link
-                to="/my-orders"
-                className="mobile-nav-link"
-                onClick={handleLinkClick}
-              >
-                My Orders
-              </Link>
-            )}
-
-            {user && !isAdmin && (
-              <Link
-                to="/pincode-management"
-                className="mobile-nav-link"
-                onClick={handleLinkClick}
-              >
-                Pincode Management
-              </Link>
-            )}
-
-            {/* ✅ ADMIN ORDERS */}
-
-            {user && isAdmin && (
-              <Link
-                to="/admin/orders"
-                className="mobile-nav-link"
-                onClick={handleLinkClick}
-              >
-                Orders
-              </Link>
-            )}
-
-            {/* CART */}
-
-            <Link
-              to="/cart"
-              className="mobile-get-started-button"
-              onClick={handleLinkClick}
-            >
-              <ShoppingCart size={16} />
-
-              {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
-            </Link>
-
-            {/* LOGIN / LOGOUT */}
 
             {user ? (
-              <button
-                className="mobile-auth-button"
-                onClick={() => {
-                  logout();
-                  handleLinkClick();
-                }}
+              <motion.button
+                className="icon-btn"
+                onClick={logout}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                title="Logout"
               >
-                Logout <LogOut size={16} />
-              </button>
+                <LogOut size={18} />
+              </motion.button>
             ) : (
-              <Link
-                to="/login"
-                className="mobile-auth-button"
-                onClick={handleLinkClick}
-              >
-                Login <LogIn size={16} />
+              <Link to="/login" className="icon-btn">
+                <LogIn size={18} />
               </Link>
             )}
+
+            <motion.button
+              className="mobile-toggle"
+              onClick={() => setIsMobileOpen(!isMobileOpen)}
+              whileTap={{ scale: 0.9 }}
+              aria-label="Toggle menu"
+            >
+              {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
+            </motion.button>
           </div>
         </div>
-      )}
-    </nav>
+      </motion.nav>
+
+      <AnimatePresence>
+        {isMobileOpen && (
+          <motion.div
+            ref={mobileRef}
+            className="mobile-menu"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="mobile-menu-content">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0 }}
+              >
+                <Link to="/" className="mobile-link" onClick={closeMenu}>
+                  Home
+                </Link>
+              </motion.div>
+
+              <div className="mobile-section-label">Offerings</div>
+
+              {offeringsDropdown.map((item, i) => (
+                <motion.div
+                  key={item.path}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (i + 1) * 0.05 }}
+                >
+                  <Link
+                    to={item.path}
+                    className="mobile-link mobile-link-sub"
+                    onClick={closeMenu}
+                  >
+                    {item.label}
+                  </Link>
+                </motion.div>
+              ))}
+
+              <div className="mobile-divider" />
+
+              {navItems.slice(1).map((item, i) => (
+                <motion.div
+                  key={item.path}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (offeringsDropdown.length + 1 + i) * 0.05 }}
+                >
+                  <Link to={item.path} className="mobile-link" onClick={closeMenu}>
+                    {item.label}
+                  </Link>
+                </motion.div>
+              ))}
+
+              {user && !isAdmin && (
+                <Link to="/my-orders" className="mobile-link" onClick={closeMenu}>
+                  My Orders
+                </Link>
+              )}
+              {user && isAdmin && (
+                <>
+                  <Link to="/admin/orders" className="mobile-link" onClick={closeMenu}>
+                    Orders
+                  </Link>
+                  <Link
+                    to="/admin/pincode-management"
+                    className="mobile-link"
+                    onClick={closeMenu}
+                  >
+                    Pincode Management
+                  </Link>
+                </>
+              )}
+
+              <div className="mobile-divider" />
+
+              <div className="mobile-actions">
+                <Link to="/cart" className="mobile-action-btn" onClick={closeMenu}>
+                  <ShoppingCart size={16} />
+                  Cart {cartCount > 0 && `(${cartCount})`}
+                </Link>
+
+                {user ? (
+                  <button
+                    className="mobile-action-btn"
+                    onClick={() => {
+                      logout();
+                      closeMenu();
+                    }}
+                  >
+                    <LogOut size={16} />
+                    Logout
+                  </button>
+                ) : (
+                  <Link
+                    to="/login"
+                    className="mobile-action-btn"
+                    onClick={closeMenu}
+                  >
+                    <LogIn size={16} />
+                    Login
+                  </Link>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
