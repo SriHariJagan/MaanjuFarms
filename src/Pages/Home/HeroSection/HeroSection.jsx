@@ -1,41 +1,48 @@
-import React, { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import "./HeroSection.css";
+
+const slides = [
+  { image: "/Images/home/farmer.jpg" },
+  { image: "/Images/aboutUs/farm.jpg" },
+  { image: "/Images/aboutUs/about-1.webp" },
+];
 
 const Hero = () => {
   const navigate = useNavigate();
-  const sectionRef = useRef(null);
-  const videoRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
-  });
-
-  const videoScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
-  const overlayOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-  const contentY = useTransform(scrollYProgress, [0, 1], [0, 150]);
-
-  const videos = ["/videos/video1.mp4"];
 
   return (
-    <section ref={sectionRef} className="hero">
-      <motion.div className="hero-video-wrapper" style={{ scale: videoScale }}>
-        <video
-          ref={videoRef}
-          src={videos[0]}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="hero-video"
-        />
-      </motion.div>
+    <section className="hero">
+      <Swiper
+        modules={[Navigation, Pagination, Autoplay]}
+        navigation
+        pagination={{ clickable: true }}
+        autoplay={{ delay: 5000, disableOnInteraction: false }}
+        loop
+        className="hero-carousel"
+      >
+        {slides.map((slide, i) => (
+          <SwiperSlide key={i} className="hero-slide">
+            <img src={slide.image} alt="" className="hero-slide-img" />
+          </SwiperSlide>
+        ))}
+      </Swiper>
 
-      <motion.div className="hero-overlay" style={{ opacity: overlayOpacity }}>
+      <div className="hero-overlay">
         <div className="hero-gradient" />
-        <motion.div className="hero-content" style={{ y: contentY }}>
+        <motion.div
+          className="hero-content"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
           <motion.span
             className="hero-badge"
             initial={{ opacity: 0, y: 20 }}
@@ -82,7 +89,7 @@ const Hero = () => {
             </button>
           </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 };
