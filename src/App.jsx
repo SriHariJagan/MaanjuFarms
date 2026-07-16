@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import PrivateRoute from "./Components/PrivateRoute.jsx";
 import Loader from "./Components/Loader.jsx";
 import HomeLayout from "./Components/layout/HomeLayout.jsx";
+import DashboardLayout from "./Components/layout/DashboardLayout.jsx";
 
 import Home from "./Pages/Home/Home.jsx";
 import ScrollToTop from "./Components/ScrollToTop.jsx";
@@ -57,6 +58,16 @@ const Signup = lazy(() => import("./Pages/Auth/Signup/Signup.jsx"));
 const PaymentFailure = lazy(() => import("./Pages/Payment/PaymentFailure.jsx"));
 const PaymentSuccess = lazy(() => import("./Pages/Payment/PaymentSuccess.jsx"));
 const AdminDashboard = lazy(() => import("./Pages/AdminDashboard/AdminDashboard.jsx"));
+const DashboardSection = lazy(() => import("./Pages/AdminDashboard/DashboardSection.jsx"));
+const OrdersPage = lazy(() => import("./Pages/AdminDashboard/OrdersPage/OrdersPage.jsx"));
+const AdminProductsPage = lazy(() => import("./Pages/AdminDashboard/ProductsPage/ProductsPage.jsx"));
+const CustomersPage = lazy(() => import("./Pages/AdminDashboard/CustomersPage/CustomersPage.jsx"));
+const AdminGalleryPage = lazy(() => import("./Pages/AdminDashboard/GalleryPage/GalleryPage.jsx"));
+const AdminBookingsPage = lazy(() => import("./Pages/AdminDashboard/BookingsPage/BookingsPage.jsx"));
+const AdminRoomsPage = lazy(() => import("./Pages/AdminDashboard/RoomsPage/RoomsPage.jsx"));
+const AdminPincodePage = lazy(() => import("./Pages/AdminDashboard/PincodePage/PincodePage.jsx"));
+const AdminAnalyticsPage = lazy(() => import("./Pages/AdminDashboard/AnalyticsPage/AnalyticsPage.jsx"));
+const AdminSettingsPage = lazy(() => import("./Pages/AdminDashboard/SettingsPage/SettingsPage.jsx"));
 
 function App() {
   const { isAdmin } = useAuth(); // Get isAdmin from AuthContext
@@ -132,19 +143,37 @@ function App() {
               }
             />
 
+            <Route path="/guest-details" element={<GuestDetails />} />
+          </Route>
+
+          {/* Dashboard */}
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <DashboardLayout />
+              </PrivateRoute>
+            }
+          >
             <Route
-              path="dashboard"
+              index
               element={
-                <PrivateRoute>
-                  {isAdmin ? (
-                    <AdminDashboard />
-                  ) : (
-                    <Navigate to="/" replace />
-                  )}
-                </PrivateRoute>
+                isAdmin ? (
+                  <AdminDashboard />
+                ) : (
+                  <Navigate to="/" replace />
+                )
               }
             />
-            <Route path="/guest-details" element={<GuestDetails />} />
+            <Route path="orders" element={<OrdersPage />} />
+            <Route path="products" element={<AdminProductsPage />} />
+            <Route path="bookings" element={<AdminBookingsPage />} />
+            <Route path="rooms" element={<AdminRoomsPage />} />
+            <Route path="customers" element={<CustomersPage />} />
+            <Route path="gallery" element={<AdminGalleryPage />} />
+            <Route path="pincode" element={<AdminPincodePage />} />
+            <Route path="analytics" element={<AdminAnalyticsPage />} />
+            <Route path="settings" element={<AdminSettingsPage />} />
           </Route>
 
           {/* Routes WITHOUT layout (no navbar/footer) */}
