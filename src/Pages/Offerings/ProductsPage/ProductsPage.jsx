@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useCart, useProducts } from "../../../Store/useContext";
@@ -8,9 +8,24 @@ import {
   X,
   Plus,
   Leaf,
-  Search,
-  SlidersHorizontal,
+  Image as ImageIcon,
 } from "lucide-react";
+
+const ProductImage = ({ src, alt }) => {
+  const [imgError, setImgError] = useState(false);
+  const handleError = useCallback(() => setImgError(true), []);
+
+  if (imgError || !src || src === "/Images/image.png") {
+    return (
+      <div className="img-fallback">
+        <ImageIcon size={32} />
+        <span>Image coming soon</span>
+      </div>
+    );
+  }
+
+  return <img src={src} alt={alt} loading="lazy" onError={handleError} />;
+};
 import "./ProductsPage.css";
 import { getImageUrl } from "../../../utils/getImageUrl ";
 import { Badge } from "../../../Components/ui";
@@ -198,13 +213,9 @@ const ProductsPage = () => {
                             className="product-card-image"
                             onClick={() => handleViewDetails(product._id)}
                           >
-                            <img
-                              src={
-                                getImageUrl(product.image) ||
-                                "/Images/image.png"
-                              }
+                            <ProductImage
+                              src={getImageUrl(product.image)}
                               alt={product.name}
-                              loading="lazy"
                             />
                             {product.stock <= 0 && (
                               <div className="product-out-badge">
