@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import PrivateRoute from "./Components/PrivateRoute.jsx";
+import ProtectedAdminRoute from "./Components/ProtectedAdminRoute.jsx";
 import Loader from "./Components/Loader.jsx";
 import HomeLayout from "./Components/layout/HomeLayout.jsx";
 
@@ -17,7 +18,17 @@ import ScrollToTop from "./Components/ScrollToTop.jsx";
 import Checkout from "./Pages/Checkout/Checkout.jsx";
 import GuestDetails from "./Pages/GuestDetails/GuestDetails.jsx";
 import PincodeManagement from "./Pages/PincodeManagement/PincodeManagement.jsx";
-import { useAuth } from "./Store/useContext.jsx";
+/* Admin pages */
+const AdminLayout = lazy(() => import("./Pages/Admin/AdminLayout.jsx"));
+const AdminDashboard = lazy(() => import("./Pages/Admin/AdminDashboard.jsx"));
+const AdminProducts = lazy(() => import("./Pages/Admin/AdminProducts.jsx"));
+const AdminVillas = lazy(() => import("./Pages/Admin/AdminVillas.jsx"));
+const AdminGallery = lazy(() => import("./Pages/Admin/AdminGallery.jsx"));
+const AdminOrdersNew = lazy(() => import("./Pages/Admin/AdminOrders.jsx"));
+const AdminCustomers = lazy(() => import("./Pages/Admin/AdminCustomers.jsx"));
+const AdminMessages = lazy(() => import("./Pages/Admin/AdminMessages.jsx"));
+const AdminAnalytics = lazy(() => import("./Pages/Admin/AdminAnalytics.jsx"));
+const AdminSettings = lazy(() => import("./Pages/Admin/AdminSettings.jsx"));
 /* Lazy-loaded components */
 const ProductsPage = lazy(
   () => import("./Pages/Offerings/ProductsPage/ProductsPage.jsx"),
@@ -58,7 +69,6 @@ const PaymentFailure = lazy(() => import("./Pages/Payment/PaymentFailure.jsx"));
 const PaymentSuccess = lazy(() => import("./Pages/Payment/PaymentSuccess.jsx"));
 
 function App() {
-  const { isAdmin } = useAuth(); // Get isAdmin from AuthContext
   return (
     <Router>
       <ScrollToTop />
@@ -92,15 +102,6 @@ function App() {
             />
 
             <Route
-              path="/admin/orders"
-              element={
-                <PrivateRoute>
-                  <AdminOrder />
-                </PrivateRoute>
-              }
-            />
-
-            <Route
               path="/my-orders"
               element={
                 <PrivateRoute>
@@ -118,20 +119,28 @@ function App() {
               }
             />
 
-            <Route
-              path="admin/pincode-management"
-              element={
-                <PrivateRoute>
-                  {isAdmin ? (
-                    <PincodeManagement />
-                  ) : (
-                    <Navigate to="/" replace />
-                  )}
-                </PrivateRoute>
-              }
-            />
-
             <Route path="/guest-details" element={<GuestDetails />} />
+          </Route>
+
+          {/* Admin routes (outside HomeLayout — admin shell with sidebar/topbar) */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedAdminRoute>
+                <AdminLayout />
+              </ProtectedAdminRoute>
+            }
+          >
+            <Route index element={<AdminDashboard />} />
+            <Route path="products" element={<AdminProducts />} />
+            <Route path="villas" element={<AdminVillas />} />
+            <Route path="gallery" element={<AdminGallery />} />
+            <Route path="orders" element={<AdminOrdersNew />} />
+            <Route path="customers" element={<AdminCustomers />} />
+            <Route path="messages" element={<AdminMessages />} />
+            <Route path="analytics" element={<AdminAnalytics />} />
+            <Route path="settings" element={<AdminSettings />} />
+            <Route path="pincode-management" element={<PincodeManagement />} />
           </Route>
 
           {/* Routes WITHOUT layout (no navbar/footer) */}
