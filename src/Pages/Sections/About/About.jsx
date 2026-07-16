@@ -36,7 +36,7 @@ const CountUp = ({ value, suffix = "" }) => {
 };
 
 const fadeUp = {
-  initial: { opacity: 0, y: 30 },
+  initial: { opacity: 1, y: 30 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, amount: 0.1 },
   transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
@@ -52,13 +52,13 @@ const staggerContainer = {
 };
 
 const staggerItem = {
-  initial: { opacity: 0, y: 20 },
+  initial: { opacity: 1, y: 20 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, amount: 0.1 },
   transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
 };
 
-const highlights = [
+const produceItems = [
   {
     title: "Fruits & Crops",
     desc: "Dates, Olives, Kinnow, Ber and other high-value crops.",
@@ -81,7 +81,7 @@ const highlights = [
   },
 ];
 
-const livestock = [
+const experienceItems = [
   {
     title: "Horse Riding",
     desc: "Guided rides on Marwari horses.",
@@ -99,6 +99,13 @@ const livestock = [
   },
 ];
 
+const sustainableItems = [
+  "Zero-chemical organic farming",
+  "Rainwater harvesting & drip irrigation",
+  "Solar-powered farm operations",
+  "Waste recycling & composting",
+];
+
 const stats = [
   { icon: Sprout, value: "20+", num: "20", suffix: "+", label: "Acres of Farm" },
   { icon: Leaf, value: "2016", num: "2016", suffix: "", label: "Established" },
@@ -109,10 +116,11 @@ const stats = [
 const AboutUs = () => {
   return (
     <div className={styles.page}>
-      {/* Hero */}
+      {/* ===== HERO ===== */}
       <section className={styles.hero}>
         <div className={styles.heroBg} />
         <div className={styles.heroOverlay} />
+        <div className={styles.heroGrain} />
         <motion.div
           className={styles.heroContent}
           initial={{ opacity: 0, y: 30 }}
@@ -153,8 +161,8 @@ const AboutUs = () => {
       </section>
 
       <div className={styles.inner}>
-        {/* Intro + Carousel */}
-        <section className={styles.introSection}>
+        {/* ===== OUR STORY ===== */}
+        <section id="our-story" className={styles.introSection} style={{ scrollMarginTop: 80 }}>
           <motion.div className={styles.introContent} {...fadeUp}>
             <span className={styles.sectionLabel}>Our Story</span>
             <h2>Rooted in Purpose, Growing with Passion</h2>
@@ -170,7 +178,11 @@ const AboutUs = () => {
               <strong>profitable, sustainable, and inspiring</strong>.
             </p>
           </motion.div>
-          <motion.div className={styles.carouselBlock} {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.1 }}>
+          <motion.div
+            className={styles.carouselBlock}
+            {...fadeUp}
+            transition={{ ...fadeUp.transition, delay: 0.1 }}
+          >
             <Swiper
               modules={[Navigation, Pagination, Autoplay, EffectFade]}
               effect="fade"
@@ -191,8 +203,12 @@ const AboutUs = () => {
           </motion.div>
         </section>
 
-        {/* Stats */}
-        <motion.section className={styles.statsGrid} variants={staggerContainer} {...staggerContainer}>
+        {/* ===== STATS ===== */}
+        <motion.section
+          className={styles.statsGrid}
+          variants={staggerContainer}
+          {...staggerContainer}
+        >
           {stats.map((stat, i) => (
             <motion.div key={i} className={styles.statCard} variants={staggerItem}>
               <div className={styles.statIcon}>
@@ -206,18 +222,33 @@ const AboutUs = () => {
           ))}
         </motion.section>
 
-        {/* Highlights */}
-        <motion.section className={styles.section} {...fadeUp}>
+        {/* ===== WHAT WE GROW & BUILD ===== */}
+        <motion.section
+          id="what-we-grow"
+          className={styles.section}
+          style={{ scrollMarginTop: 80 }}
+          {...fadeUp}
+        >
           <div className={styles.sectionHeader}>
             <span className={styles.sectionLabel}>Our Produce</span>
             <h2>What We Grow & Build</h2>
-            <p>Combining agriculture with innovation and sustainability</p>
+            <p className={styles.sectionSub}>
+              Combining agriculture with innovation and sustainability
+            </p>
           </div>
-          <motion.div className={styles.grid} variants={staggerContainer} {...staggerContainer}>
-            {highlights.map((item, i) => (
+          <motion.div
+            className={styles.grid}
+            variants={staggerContainer}
+            {...staggerContainer}
+          >
+            {produceItems.map((item, i) => (
               <motion.div className={styles.card} key={i} variants={staggerItem}>
                 <div className={styles.cardImage}>
-                  <img src={`/Images/aboutUs/${item.img}`} alt={item.title} loading="lazy" />
+                  <img
+                    src={`/Images/aboutUs/${item.img}`}
+                    alt={item.title}
+                    loading="lazy"
+                  />
                 </div>
                 <div className={styles.cardBody}>
                   <h3>{item.title}</h3>
@@ -228,37 +259,29 @@ const AboutUs = () => {
           </motion.div>
         </motion.section>
 
-        {/* Experience */}
-        <motion.section className={styles.experienceSection} {...fadeUp}>
-          <div className={styles.experienceImage}>
-            <img src="/Images/aboutUs/farm.jpg" alt="Farm Experience" />
-          </div>
-          <div className={styles.experienceContent}>
-            <span className={styles.sectionLabel}>Experience</span>
-            <h2>Agro Tourism & Farm Life</h2>
-            <p>
-              Stay in our serene farm villas and reconnect with nature through
-              immersive experiences like horse riding, camel rides, tractor
-              rides, and guided farm walks.
-            </p>
-            <p>
-              Enjoy authentic Rajasthani cuisine, cultural evenings, and
-              hands-on organic workshops.
-            </p>
-          </div>
-        </motion.section>
-
-        {/* Livestock */}
-        <motion.section className={styles.section} {...fadeUp}>
+        {/* ===== ANIMAL & FARM EXPERIENCES ===== */}
+        <motion.section
+          id="animal-experiences"
+          className={styles.section}
+          style={{ scrollMarginTop: 80 }}
+          {...fadeUp}
+        >
           <div className={styles.sectionHeader}>
-            <span className={styles.sectionLabel}>Animals</span>
             <h2>Animal & Farm Experiences</h2>
           </div>
-          <motion.div className={styles.grid} variants={staggerContainer} {...staggerContainer}>
-            {livestock.map((item, i) => (
+          <motion.div
+            className={styles.grid}
+            variants={staggerContainer}
+            {...staggerContainer}
+          >
+            {experienceItems.map((item, i) => (
               <motion.div className={styles.card} key={i} variants={staggerItem}>
                 <div className={styles.cardImage}>
-                  <img src={`/Images/aboutUs/${item.img}`} alt={item.title} loading="lazy" />
+                  <img
+                    src={`/Images/aboutUs/${item.img}`}
+                    alt={item.title}
+                    loading="lazy"
+                  />
                 </div>
                 <div className={styles.cardBody}>
                   <h3>{item.title}</h3>
@@ -269,25 +292,24 @@ const AboutUs = () => {
           </motion.div>
         </motion.section>
 
-        {/* Sustainability */}
-        <motion.section className={styles.sustainabilitySection} {...fadeUp}>
+        {/* ===== SUSTAINABLE PRACTICES ===== */}
+        <motion.section
+          id="sustainable-practices"
+          className={styles.sustainabilitySection}
+          style={{ scrollMarginTop: 80 }}
+          {...fadeUp}
+        >
           <div className={styles.sectionHeader}>
-            <span className={styles.sectionLabel}>Eco-Friendly</span>
             <h2>Sustainable Practices</h2>
           </div>
           <div className={styles.sustainGrid}>
-            {[
-              "Zero-chemical organic farming",
-              "Rainwater harvesting & drip irrigation",
-              "Solar-powered farm operations",
-              "Waste recycling & composting",
-            ].map((item, i) => (
+            {sustainableItems.map((item, i) => (
               <motion.div
                 key={i}
                 className={styles.sustainItem}
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 1, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.4, delay: i * 0.1 }}
               >
                 <div className={styles.sustainDot} />
@@ -297,58 +319,19 @@ const AboutUs = () => {
           </div>
         </motion.section>
 
-        {/* Vision */}
-        <motion.section className={styles.visionSection} {...fadeUp}>
+        {/* ===== OUR VISION ===== */}
+        <motion.section
+          id="our-vision"
+          className={styles.visionSection}
+          style={{ scrollMarginTop: 80 }}
+          {...fadeUp}
+        >
           <h2>Our Vision</h2>
           <p>
             We aim to redefine agriculture by making it{" "}
             <strong>profitable, sustainable, and respected</strong>, inspiring
             future generations to embrace farming as a modern career.
           </p>
-        </motion.section>
-
-        {/* Trusted By */}
-        <motion.section className={styles.trustSection} {...fadeUp}>
-          <h2>Trusted By</h2>
-          <p>
-            Proud suppliers to <strong>Taj, Hyatt, Radisson</strong> and leading
-            retail buyers across Delhi-NCR.
-          </p>
-        </motion.section>
-
-        {/* Quick Facts Table */}
-        <motion.section className={styles.factsSection} {...fadeUp}>
-          <h2>Quick Facts</h2>
-          <div className={styles.tableWrapper}>
-            <table className={styles.factsTable}>
-              <tbody>
-                <tr>
-                  <th>Founder</th>
-                  <td>Mukesh Manjoo</td>
-                </tr>
-                <tr>
-                  <th>Location</th>
-                  <td>Pilani, Rajasthan</td>
-                </tr>
-                <tr>
-                  <th>Established</th>
-                  <td>2016</td>
-                </tr>
-                <tr>
-                  <th>Land Area</th>
-                  <td>20+ Acres</td>
-                </tr>
-                <tr>
-                  <th>Livestock</th>
-                  <td>Horses, Camels, Poultry, Cows</td>
-                </tr>
-                <tr>
-                  <th>Activities</th>
-                  <td>Farm Stay, Riding, Tours</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
         </motion.section>
       </div>
     </div>

@@ -15,21 +15,38 @@
   padding: 140px 24px 80px;
   text-align: center;
   overflow: hidden;
-  background: linear-gradient(135deg, #2a3526 0%, #40513b 50%, #2a3526 100%);
 }
 
 .heroBg {
   position: absolute;
   inset: 0;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
-  pointer-events: none;
+  background-image: url("/Images/aboutUSBanner.jpg");
+  background-size: cover;
+  background-position: center;
+  animation: heroZoom 12s ease-in-out forwards;
+}
+
+@keyframes heroZoom {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.08); }
 }
 
 .heroOverlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, transparent 0%, rgba(42, 53, 38, 0.4) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(42, 53, 38, 0.35) 0%,
+    rgba(42, 53, 38, 0.55) 50%,
+    rgba(42, 53, 38, 0.8) 100%
+  );
+  pointer-events: none;
+}
+
+.heroGrain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
   pointer-events: none;
 }
 
@@ -86,7 +103,7 @@
   margin-bottom: 16px;
 }
 
-/* ===== Intro Section ===== */
+/* ===== Our Story ===== */
 .introSection {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -177,12 +194,13 @@
   padding: 24px;
   border-radius: 16px;
   background: rgba(246, 248, 234, 0.5);
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .statCard:hover {
   background: #fff;
-  box-shadow: 0 4px 20px rgba(64, 81, 59, 0.06);
+  box-shadow: 0 8px 28px rgba(64, 81, 59, 0.1);
+  transform: translateY(-2px);
 }
 
 .statIcon {
@@ -232,7 +250,8 @@
   line-height: 1.2;
 }
 
-.sectionHeader p {
+.sectionHeader p,
+.sectionSub {
   font-size: 0.95rem;
   color: rgba(64, 81, 59, 0.6);
   max-width: 500px;
@@ -295,45 +314,7 @@
   line-height: 1.5;
 }
 
-/* ===== Experience Section ===== */
-.experienceSection {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  align-items: center;
-  padding: 60px 0;
-}
-
-.experienceImage {
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 8px 30px rgba(64, 81, 59, 0.1);
-}
-
-.experienceImage img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  aspect-ratio: 4/3;
-}
-
-.experienceContent h2 {
-  font-family: "Playfair Display", serif;
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-  font-weight: 700;
-  color: #40513b;
-  margin-bottom: 16px;
-  line-height: 1.2;
-}
-
-.experienceContent p {
-  font-size: 0.95rem;
-  color: rgba(64, 81, 59, 0.7);
-  line-height: 1.8;
-  margin-bottom: 12px;
-}
-
-/* ===== Sustainability ===== */
+/* ===== Sustainable Practices ===== */
 .sustainabilitySection {
   padding: 60px 0;
   text-align: center;
@@ -357,6 +338,11 @@
   font-size: 0.9rem;
   color: rgba(64, 81, 59, 0.7);
   font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.sustainItem:hover {
+  background: rgba(157, 192, 139, 0.12);
 }
 
 .sustainDot {
@@ -365,97 +351,51 @@
   border-radius: 50%;
   background: #9dc08b;
   flex-shrink: 0;
+  animation: sustainPulse 2s ease-in-out infinite;
+}
+
+.sustainDot {
+  animation: none;
+}
+
+.sustainItem:hover .sustainDot {
+  animation: sustainPulse 2s ease-in-out infinite;
+}
+
+@keyframes sustainPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.7; }
 }
 
 /* ===== Vision ===== */
 .visionSection {
-  padding: 60px 0;
+  padding: 80px 40px;
   text-align: center;
-  max-width: 640px;
-  margin: 0 auto;
+  max-width: 700px;
+  margin: 40px auto 0;
+  background: rgba(157, 192, 139, 0.06);
+  border-radius: 24px;
 }
 
 .visionSection h2 {
   font-family: "Playfair Display", serif;
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
   font-weight: 700;
   color: #40513b;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  line-height: 1.2;
 }
 
 .visionSection p {
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   color: rgba(64, 81, 59, 0.7);
   line-height: 1.8;
-}
-
-/* ===== Trust ===== */
-.trustSection {
-  padding: 60px 0;
-  text-align: center;
-  max-width: 500px;
-  margin: 0 auto;
-  border-top: 1px solid rgba(157, 192, 139, 0.1);
-}
-
-.trustSection h2 {
-  font-family: "Playfair Display", serif;
-  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
-  font-weight: 700;
-  color: #40513b;
-  margin-bottom: 12px;
-}
-
-.trustSection p {
-  font-size: 0.95rem;
-  color: rgba(64, 81, 59, 0.7);
-  line-height: 1.8;
-}
-
-/* ===== Facts ===== */
-.factsSection {
-  padding: 60px 0;
-  text-align: center;
-}
-
-.factsSection h2 {
-  font-family: "Playfair Display", serif;
-  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
-  font-weight: 700;
-  color: #40513b;
-  margin-bottom: 24px;
-}
-
-.tableWrapper {
-  max-width: 500px;
+  max-width: 580px;
   margin: 0 auto;
 }
 
-.factsTable {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.factsTable tr {
-  border-bottom: 1px solid rgba(157, 192, 139, 0.1);
-}
-
-.factsTable th,
-.factsTable td {
-  padding: 12px 16px;
-  font-size: 0.9rem;
-  text-align: left;
-}
-
-.factsTable th {
-  font-weight: 600;
-  color: rgba(64, 81, 59, 0.5);
-  width: 40%;
-}
-
-.factsTable td {
+.visionSection strong {
   color: #40513b;
-  font-weight: 500;
 }
 
 /* ===== Responsive ===== */
@@ -468,8 +408,7 @@
     padding: 0 16px 60px;
   }
 
-  .introSection,
-  .experienceSection {
+  .introSection {
     grid-template-columns: 1fr;
     gap: 32px;
   }
@@ -480,5 +419,21 @@
 
   .sustainGrid {
     grid-template-columns: 1fr;
+  }
+
+  .visionSection {
+    padding: 60px 24px;
+    margin: 20px auto 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroBg {
+    animation: none;
+  }
+
+  .sustainDot,
+  .sustainItem:hover .sustainDot {
+    animation: none;
   }
 }
