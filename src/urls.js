@@ -14,11 +14,28 @@ export const AUTH_API = `${API_BASE}/auth`;
 
 // ================= E-COMMERCE =================
 export const CART_API = `${API_BASE}/cart`;
-export const PRODUCTS_API = `${API_BASE}/products`;
+
+const PRODUCTS_BASE = `${API_BASE}/products`;
+
+export const PRODUCTS_API = PRODUCTS_BASE;
+export const PRODUCTS_ENDPOINTS = {
+  ALL: PRODUCTS_BASE,
+  ADD: PRODUCTS_BASE,
+  UPDATE: (id) => `${PRODUCTS_BASE}/${id}`,
+  DELETE: (id) => `${PRODUCTS_BASE}/${id}`,
+};
 
 
 // ================= VILLAS / ROOMS =================
 export const ROOMS_API = `${API_BASE}/rooms`;
+export const ROOMS_ENDPOINTS = {
+  ALL: ROOMS_API,
+  DETAILS: (id) => `${ROOMS_API}/${id}`,
+  AVAILABILITY: (id) => `${ROOMS_API}/${id}/availability`,
+  ADD: ROOMS_API,
+  UPDATE: (id) => `${ROOMS_API}/${id}`,
+  DELETE: (id) => `${ROOMS_API}/${id}`,
+};
 export const BOOKINGS_API = `${API_BASE}/bookings`;
 
 
@@ -41,6 +58,28 @@ export const PAYMENT_ENDPOINTS = {
 };
 
 
+// ================= ORDERS =================
+
+const ORDERS_BASE = `${API_BASE}/orders`;
+
+export const ORDERS_API = {
+  ALL: `${ORDERS_BASE}/all`,
+  UPDATE: (id) => `${ORDERS_BASE}/update/${id}`,
+  MY_ORDERS: `${ORDERS_BASE}/my-orders`,
+};
+
+
+// ================= USERS =================
+
+const USERS_BASE = `${API_BASE}/users`;
+
+export const USERS_API = {
+  ALL: `${USERS_BASE}/all`,
+  DETAILS: (id) => `${USERS_BASE}/${id}`,
+  UPDATE: (id) => `${USERS_BASE}/${id}`,
+};
+
+
 // ================= PINCODE =================
 
 export const PINCODE_API = `${API_BASE}/pincode`;
@@ -48,6 +87,7 @@ export const PINCODE_ENDPOINTS = {
   CHECK: (pin) =>
     `${PINCODE_API}/check/${pin}`,
   BLOCKED: `${PINCODE_API}/blocked`,
+  ADD: `${PINCODE_API}/blocked`,
   DELETE: (id) =>
     `${PINCODE_API}/blocked/${id}`,
 };
