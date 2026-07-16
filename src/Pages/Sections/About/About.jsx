@@ -2,11 +2,12 @@ import React from "react";
 import { motion } from "framer-motion";
 import styles from "./about.module.css";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Navigation, Pagination, Autoplay, EffectFade } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Leaf, Award, Users, Sprout } from "lucide-react";
+import "swiper/css/effect-fade";
+import { Leaf, Award, Users, Sprout, ArrowRight } from "lucide-react";
 
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
@@ -32,29 +33,59 @@ const staggerItem = {
 };
 
 const highlights = [
-  { title: "Fruits & Crops", desc: "Dates, Olives, Kinnow, Ber and other high-value crops.", img: "crops.jpg" },
-  { title: "Beekeeping", desc: "50+ hives producing natural organic honey.", img: "beekeeping.avif" },
-  { title: "Kadaknath Poultry", desc: "Protein-rich eggs & premium meat production.", img: "poultry.avif" },
-  { title: "Agro-Forestry", desc: "Sandalwood, date palms and native trees.", img: "agroforestry.avif" },
+  {
+    title: "Fruits & Crops",
+    desc: "Dates, Olives, Kinnow, Ber and other high-value crops.",
+    img: "crops.jpg",
+  },
+  {
+    title: "Beekeeping",
+    desc: "50+ hives producing natural organic honey.",
+    img: "beekeeping.avif",
+  },
+  {
+    title: "Kadaknath Poultry",
+    desc: "Protein-rich eggs & premium meat production.",
+    img: "poultry.avif",
+  },
+  {
+    title: "Agro-Forestry",
+    desc: "Sandalwood, date palms and native trees.",
+    img: "agroforestry.avif",
+  },
 ];
 
 const livestock = [
-  { title: "Horse Riding", desc: "Guided rides on Marwari horses.", img: "horse-riding.avif" },
-  { title: "Camel Safari", desc: "Traditional rides across rural trails.", img: "camel-safari.avif" },
-  { title: "Dairy Farming", desc: "Organic milk from indigenous breeds.", img: "dairy-farming.avif" },
+  {
+    title: "Horse Riding",
+    desc: "Guided rides on Marwari horses.",
+    img: "horse-riding.avif",
+  },
+  {
+    title: "Camel Safari",
+    desc: "Traditional rides across rural trails.",
+    img: "camel-safari.avif",
+  },
+  {
+    title: "Dairy Farming",
+    desc: "Organic milk from indigenous breeds.",
+    img: "dairy-farming.avif",
+  },
 ];
 
 const stats = [
-  { icon: <Sprout size={24} />, value: "20+", label: "Acres of Farm" },
-  { icon: <Leaf size={24} />, value: "2016", label: "Established" },
-  { icon: <Award size={24} />, value: "100%", label: "Organic" },
-  { icon: <Users size={24} />, value: "50+", label: "Bee Hives" },
+  { icon: Sprout, value: "20+", label: "Acres of Farm" },
+  { icon: Leaf, value: "2016", label: "Established" },
+  { icon: Award, value: "100%", label: "Organic" },
+  { icon: Users, value: "50+", label: "Bee Hives" },
 ];
 
 const AboutUs = () => {
   return (
-    <div className={styles.aboutPage}>
-      <section className={styles.heroSection}>
+    <div className={styles.page}>
+      {/* Hero */}
+      <section className={styles.hero}>
+        <div className={styles.heroBg} />
         <div className={styles.heroOverlay} />
         <motion.div
           className={styles.heroContent}
@@ -62,7 +93,10 @@ const AboutUs = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
-          <span className={styles.heroBadge}>Since 2016</span>
+          <span className={styles.heroBadge}>
+            <Leaf size={12} />
+            Since 2016
+          </span>
           <h1 className={styles.heroTitle}>Maanjoo Farms</h1>
           <p className={styles.heroTagline}>
             Where Tradition, Nature & Innovation Come Together
@@ -70,9 +104,10 @@ const AboutUs = () => {
         </motion.div>
       </section>
 
-      <div className={styles.innerContainer}>
-        <motion.section className={styles.introSection} {...fadeUp}>
-          <div className={styles.textBlock}>
+      <div className={styles.inner}>
+        {/* Intro + Carousel */}
+        <section className={styles.introSection}>
+          <motion.div className={styles.introContent} {...fadeUp}>
             <span className={styles.sectionLabel}>Our Story</span>
             <h2>Rooted in Purpose, Growing with Passion</h2>
             <p>
@@ -86,10 +121,11 @@ const AboutUs = () => {
               Our mission is simple — to prove that agriculture can be{" "}
               <strong>profitable, sustainable, and inspiring</strong>.
             </p>
-          </div>
-          <div className={styles.carouselContainer}>
+          </motion.div>
+          <motion.div className={styles.carouselBlock} {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.1 }}>
             <Swiper
-              modules={[Navigation, Pagination, Autoplay]}
+              modules={[Navigation, Pagination, Autoplay, EffectFade]}
+              effect="fade"
               navigation
               pagination={{ clickable: true }}
               autoplay={{ delay: 4000, disableOnInteraction: false }}
@@ -97,25 +133,33 @@ const AboutUs = () => {
             >
               {["about-1.webp", "about-2.webp", "about-3.webp"].map((img, i) => (
                 <SwiperSlide key={i}>
-                  <img src={`/Images/aboutUs/${img}`} alt="Farm View" />
+                  <div
+                    className={styles.carouselImage}
+                    style={{ backgroundImage: `url(/Images/aboutUs/${img})` }}
+                  />
                 </SwiperSlide>
               ))}
             </Swiper>
-          </div>
-        </motion.section>
+          </motion.div>
+        </section>
 
-        <motion.section className={styles.statsSection} variants={staggerContainer} {...staggerContainer}>
+        {/* Stats */}
+        <motion.section className={styles.statsGrid} variants={staggerContainer} {...staggerContainer}>
           {stats.map((stat, i) => (
             <motion.div key={i} className={styles.statCard} variants={staggerItem}>
-              <div className={styles.statIcon}>{stat.icon}</div>
+              <div className={styles.statIcon}>
+                <stat.icon size={24} />
+              </div>
               <span className={styles.statValue}>{stat.value}</span>
               <span className={styles.statLabel}>{stat.label}</span>
             </motion.div>
           ))}
         </motion.section>
 
-        <motion.section className={styles.highlightSection} {...fadeUp}>
+        {/* Highlights */}
+        <motion.section className={styles.section} {...fadeUp}>
           <div className={styles.sectionHeader}>
+            <span className={styles.sectionLabel}>Our Produce</span>
             <h2>What We Grow & Build</h2>
             <p>Combining agriculture with innovation and sustainability</p>
           </div>
@@ -125,18 +169,21 @@ const AboutUs = () => {
                 <div className={styles.cardImage}>
                   <img src={`/Images/aboutUs/${item.img}`} alt={item.title} loading="lazy" />
                 </div>
-                <h3>{item.title}</h3>
-                <p>{item.desc}</p>
+                <div className={styles.cardBody}>
+                  <h3>{item.title}</h3>
+                  <p>{item.desc}</p>
+                </div>
               </motion.div>
             ))}
           </motion.div>
         </motion.section>
 
-        <motion.section className={styles.facilitySection} {...fadeUp}>
-          <div className={styles.imageBlock}>
+        {/* Experience */}
+        <motion.section className={styles.experienceSection} {...fadeUp}>
+          <div className={styles.experienceImage}>
             <img src="/Images/aboutUs/farm.jpg" alt="Farm Experience" />
           </div>
-          <div className={styles.textBlock}>
+          <div className={styles.experienceContent}>
             <span className={styles.sectionLabel}>Experience</span>
             <h2>Agro Tourism & Farm Life</h2>
             <p>
@@ -145,14 +192,16 @@ const AboutUs = () => {
               rides, and guided farm walks.
             </p>
             <p>
-              Enjoy authentic Rajasthani cuisine, cultural evenings, and hands-on
-              organic workshops.
+              Enjoy authentic Rajasthani cuisine, cultural evenings, and
+              hands-on organic workshops.
             </p>
           </div>
         </motion.section>
 
-        <motion.section className={styles.livestockSection} {...fadeUp}>
+        {/* Livestock */}
+        <motion.section className={styles.section} {...fadeUp}>
           <div className={styles.sectionHeader}>
+            <span className={styles.sectionLabel}>Animals</span>
             <h2>Animal & Farm Experiences</h2>
           </div>
           <motion.div className={styles.grid} variants={staggerContainer} {...staggerContainer}>
@@ -161,28 +210,45 @@ const AboutUs = () => {
                 <div className={styles.cardImage}>
                   <img src={`/Images/aboutUs/${item.img}`} alt={item.title} loading="lazy" />
                 </div>
-                <h3>{item.title}</h3>
-                <p>{item.desc}</p>
+                <div className={styles.cardBody}>
+                  <h3>{item.title}</h3>
+                  <p>{item.desc}</p>
+                </div>
               </motion.div>
             ))}
           </motion.div>
         </motion.section>
 
+        {/* Sustainability */}
         <motion.section className={styles.sustainabilitySection} {...fadeUp}>
           <div className={styles.sectionHeader}>
+            <span className={styles.sectionLabel}>Eco-Friendly</span>
             <h2>Sustainable Practices</h2>
           </div>
           <div className={styles.sustainGrid}>
-            {["Zero-chemical organic farming", "Rainwater harvesting & drip irrigation", "Solar-powered farm operations", "Waste recycling & composting"].map((item, i) => (
-              <div key={i} className={styles.sustainItem}>
+            {[
+              "Zero-chemical organic farming",
+              "Rainwater harvesting & drip irrigation",
+              "Solar-powered farm operations",
+              "Waste recycling & composting",
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                className={styles.sustainItem}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.1 }}
+              >
                 <div className={styles.sustainDot} />
                 <span>{item}</span>
-              </div>
+              </motion.div>
             ))}
           </div>
         </motion.section>
 
-        <motion.section className={styles.teamSection} {...fadeUp}>
+        {/* Vision */}
+        <motion.section className={styles.visionSection} {...fadeUp}>
           <h2>Our Vision</h2>
           <p>
             We aim to redefine agriculture by making it{" "}
@@ -191,7 +257,8 @@ const AboutUs = () => {
           </p>
         </motion.section>
 
-        <motion.section className={styles.partnersSection} {...fadeUp}>
+        {/* Trusted By */}
+        <motion.section className={styles.trustSection} {...fadeUp}>
           <h2>Trusted By</h2>
           <p>
             Proud suppliers to <strong>Taj, Hyatt, Radisson</strong> and leading
@@ -199,17 +266,36 @@ const AboutUs = () => {
           </p>
         </motion.section>
 
+        {/* Quick Facts Table */}
         <motion.section className={styles.factsSection} {...fadeUp}>
-          <h2 className={styles.tableTitle}>Quick Facts</h2>
-          <div className={styles.tableContainer}>
+          <h2>Quick Facts</h2>
+          <div className={styles.tableWrapper}>
             <table className={styles.factsTable}>
               <tbody>
-                <tr><th>Founder</th><td>Mukesh Manjoo</td></tr>
-                <tr><th>Location</th><td>Pilani, Rajasthan</td></tr>
-                <tr><th>Established</th><td>2016</td></tr>
-                <tr><th>Land Area</th><td>20+ Acres</td></tr>
-                <tr><th>Livestock</th><td>Horses, Camels, Poultry, Cows</td></tr>
-                <tr><th>Activities</th><td>Farm Stay, Riding, Tours</td></tr>
+                <tr>
+                  <th>Founder</th>
+                  <td>Mukesh Manjoo</td>
+                </tr>
+                <tr>
+                  <th>Location</th>
+                  <td>Pilani, Rajasthan</td>
+                </tr>
+                <tr>
+                  <th>Established</th>
+                  <td>2016</td>
+                </tr>
+                <tr>
+                  <th>Land Area</th>
+                  <td>20+ Acres</td>
+                </tr>
+                <tr>
+                  <th>Livestock</th>
+                  <td>Horses, Camels, Poultry, Cows</td>
+                </tr>
+                <tr>
+                  <th>Activities</th>
+                  <td>Farm Stay, Riding, Tours</td>
+                </tr>
               </tbody>
             </table>
           </div>
