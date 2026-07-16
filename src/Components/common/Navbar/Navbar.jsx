@@ -9,9 +9,14 @@ import {
   LogIn,
   LogOut,
   Leaf,
+  Sprout,
+  Trees,
+  Tent,
+  Warehouse,
+  User,
 } from "lucide-react";
-
 import "./Navbar.css";
+
 import { useCart, useAuth } from "../../../Store/useContext";
 
 const navItems = [
@@ -22,12 +27,41 @@ const navItems = [
   { path: "/contact", label: "Contact" },
 ];
 
-const offeringsDropdown = [
-  { path: "/organic-products", label: "Organic Products" },
-  { path: "/horse-riding", label: "Horse Riding" },
-  { path: "/camel-riding", label: "Camel Riding" },
-  { path: "/villas", label: "Villas & Stays" },
+const offeringsData = [
+  {
+    path: "/organic-products",
+    label: "Organic Products",
+    desc: "Pure ghee, honey, spices & grains",
+    icon: Sprout,
+  },
+  {
+    path: "/horse-riding",
+    label: "Horse Riding",
+    desc: "Explore trails on horseback",
+    icon: Trees,
+  },
+  {
+    path: "/camel-riding",
+    label: "Camel Safari",
+    desc: "Desert adventure experience",
+    icon: Tent,
+  },
+  {
+    path: "/villas",
+    label: "Villas & Stays",
+    desc: "Luxury farm stay retreats",
+    icon: Warehouse,
+  },
 ];
+
+const staggerItem = {
+  hidden: { opacity: 0, y: 8 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.05, duration: 0.3, ease: [0.16, 1, 0.3, 1] },
+  }),
+};
 
 const Navbar = () => {
   const { cart } = useCart();
@@ -38,25 +72,26 @@ const Navbar = () => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [prevScroll, setPrevScroll] = useState(0);
-  const [visible, setVisible] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
+  const dropdownRef = useRef(null);
   const mobileRef = useRef(null);
+  const timerRef = useRef(null);
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   useEffect(() => {
     const handleScroll = () => {
-      const current = window.pageYOffset;
-      setIsScrolled(current > 20);
-      setVisible(prevScroll > current || current < 20);
-      setPrevScroll(current);
+      setIsScrolled(window.pageYOffset > 20);
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [prevScroll]);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setIsDropdownOpen(false);
+      }
       if (mobileRef.current && !mobileRef.current.contains(e.target)) {
         setIsMobileOpen(false);
       }
@@ -70,6 +105,17 @@ const Navbar = () => {
     setIsDropdownOpen(false);
   }, [location]);
 
+  const handleMouseEnter = () => {
+    clearTimeout(timerRef.current);
+    setIsDropdownOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timerRef.current = setTimeout(() => {
+      setIsDropdownOpen(false);
+    }, 150);
+  };
+
   const closeMenu = () => {
     setIsMobileOpen(false);
     setIsDropdownOpen(false);
@@ -78,7 +124,7 @@ const Navbar = () => {
   return (
     <>
       <motion.nav
-        className={`navbar ${isScrolled ? "scrolled" : ""} ${visible ? "" : "hidden"}`}
+        className={`navbar ${isScrolled ? "scrolled" : ""}`}
         initial={{ y: -80 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -94,36 +140,66 @@ const Navbar = () => {
               to="/"
               className={`nav-link ${location.pathname === "/" ? "active" : ""}`}
             >
-              Home
-              <div className="nav-indicator" />
+              <span className="nav-label">Home</span>
+              {location.pathname === "/" && (
+                <motion.div
+                  className="nav-indicator"
+                  layoutId="navIndicator"
+                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                />
+              )}
             </Link>
 
             <div
-              className="nav-link dropdown-trigger"
-              onMouseEnter={() => setIsDropdownOpen(true)}
-              onMouseLeave={() => setIsDropdownOpen(false)}
+              className={`nav-link dropdown-trigger ${isDropdownOpen ? "dropdown-active" : ""}`}
+              ref={dropdownRef}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
             >
-              <span className="dropdown-label">
-                Offerings <ChevronDown size={14} className="chevron" />
+              <span className="nav-label dropdown-label">
+                Offerings
+                <ChevronDown
+                  size={14}
+                  className={`chevron ${isDropdownOpen ? "chevron-open" : ""}`}
+                />
               </span>
+
               <AnimatePresence>
                 {isDropdownOpen && (
                   <motion.div
-                    className="dropdown-menu"
-                    initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                    className="mega-menu"
+                    initial={{ opacity: 0, y: 12, scale: 0.96 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    exit={{ opacity: 0, y: 12, scale: 0.96 }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
                   >
-                    {offeringsDropdown.map((item) => (
-                      <Link
-                        key={item.path}
-                        to={item.path}
-                        className="dropdown-item"
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
+                    <div className="mega-menu-inner">
+                      {offeringsData.map((item, i) => (
+                        <motion.div
+                          key={item.path}
+                          custom={i}
+                          variants={staggerItem}
+                          initial="hidden"
+                          animate="visible"
+                        >
+                          <Link
+                            to={item.path}
+                            className="mega-item"
+                            onClick={closeMenu}
+                          >
+                            <span className="mega-icon">
+                              <item.icon size={18} />
+                            </span>
+                            <span className="mega-text">
+                              <span className="mega-label">{item.label}</span>
+                              <span className="mega-desc">{item.desc}</span>
+                            </span>
+                          </Link>
+                        </motion.div>
+                      ))}
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -135,7 +211,14 @@ const Navbar = () => {
                 to={item.path}
                 className={`nav-link ${location.pathname === item.path ? "active" : ""}`}
               >
-                {item.label}
+                <span className="nav-label">{item.label}</span>
+                {location.pathname === item.path && (
+                  <motion.div
+                    className="nav-indicator"
+                    layoutId="navIndicator"
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
+                )}
               </Link>
             ))}
           </div>
@@ -143,17 +226,24 @@ const Navbar = () => {
           <div className="navbar-actions">
             <Link to="/cart" className="cart-btn">
               <ShoppingCart size={18} />
-              {cartCount > 0 && (
-                <motion.span
-                  className="cart-badge"
-                  key={cartCount}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                >
-                  {cartCount}
-                </motion.span>
-              )}
+              <AnimatePresence mode="wait">
+                {cartCount > 0 && (
+                  <motion.span
+                    className="cart-badge"
+                    key={cartCount}
+                    initial={{ scale: 0, y: -10 }}
+                    animate={{ scale: 1, y: 0 }}
+                    exit={{ scale: 0, y: 10 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 25,
+                    }}
+                  >
+                    {cartCount > 99 ? "99+" : cartCount}
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </Link>
 
             {user ? (
@@ -173,103 +263,196 @@ const Navbar = () => {
             )}
 
             <motion.button
-              className="mobile-toggle"
+              className={`mobile-toggle ${isMobileOpen ? "mobile-toggle-open" : ""}`}
               onClick={() => setIsMobileOpen(!isMobileOpen)}
               whileTap={{ scale: 0.9 }}
               aria-label="Toggle menu"
             >
-              {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
+              <div className="hamburger-box">
+                <span className={`hamburger-line top ${isMobileOpen ? "open" : ""}`} />
+                <span className={`hamburger-line middle ${isMobileOpen ? "open" : ""}`} />
+                <span className={`hamburger-line bottom ${isMobileOpen ? "open" : ""}`} />
+              </div>
             </motion.button>
           </div>
         </div>
       </motion.nav>
 
+      {/* Mobile Menu - Full Screen Drawer */}
       <AnimatePresence>
         {isMobileOpen && (
           <motion.div
-            ref={mobileRef}
-            className="mobile-menu"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="mobile-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="mobile-menu-content">
+            <motion.div
+              ref={mobileRef}
+              className="mobile-menu"
+              initial={{ opacity: 0, x: "100%" }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: "100%" }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <div className="mobile-menu-header">
+                <Leaf size={20} className="text-brand-400" />
+                <span className="text-forest-800 font-heading font-bold text-lg">
+                  Maanjoo Farms
+                </span>
+                <button
+                  className="mobile-close-btn"
+                  onClick={() => setIsMobileOpen(false)}
+                  aria-label="Close menu"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="mobile-menu-body">
+                <motion.div
+                  className="mobile-section"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  <Link
+                    to="/"
+                    className="mobile-link primary"
+                    onClick={closeMenu}
+                  >
+                    <Leaf size={16} />
+                    Home
+                  </Link>
+                </motion.div>
+
+                <motion.div
+                  className="mobile-section"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.15 }}
+                >
+                  <div className="mobile-section-label">Offerings</div>
+                  {offeringsData.map((item, i) => (
+                    <motion.div
+                      key={item.path}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 + i * 0.05 }}
+                    >
+                      <Link
+                        to={item.path}
+                        className="mobile-link"
+                        onClick={closeMenu}
+                      >
+                        <item.icon size={16} />
+                        <span>
+                          {item.label}
+                          <span className="mobile-link-desc">{item.desc}</span>
+                        </span>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </motion.div>
+
+                <motion.div
+                  className="mobile-divider"
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.35, duration: 0.4 }}
+                />
+
+                <motion.div
+                  className="mobile-section"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  {navItems.slice(1).map((item, i) => (
+                    <motion.div
+                      key={item.path}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.45 + i * 0.05 }}
+                    >
+                      <Link
+                        to={item.path}
+                        className="mobile-link"
+                        onClick={closeMenu}
+                      >
+                        {item.label}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </motion.div>
+
+                {user && (
+                  <>
+                    <motion.div
+                      className="mobile-divider"
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ delay: 0.55, duration: 0.4 }}
+                    />
+                    <motion.div
+                      className="mobile-section"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.6 }}
+                    >
+                      <div className="mobile-section-label">Account</div>
+                      {!isAdmin && (
+                        <Link
+                          to="/my-orders"
+                          className="mobile-link"
+                          onClick={closeMenu}
+                        >
+                          <User size={16} />
+                          My Orders
+                        </Link>
+                      )}
+                      {isAdmin && (
+                        <>
+                          <Link
+                            to="/admin/orders"
+                            className="mobile-link"
+                            onClick={closeMenu}
+                          >
+                            Orders
+                          </Link>
+                          <Link
+                            to="/admin/pincode-management"
+                            className="mobile-link"
+                            onClick={closeMenu}
+                          >
+                            Pincode Management
+                          </Link>
+                        </>
+                      )}
+                    </motion.div>
+                  </>
+                )}
+              </div>
+
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0 }}
+                className="mobile-menu-footer"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
               >
-                <Link to="/" className="mobile-link" onClick={closeMenu}>
-                  Home
-                </Link>
-              </motion.div>
-
-              <div className="mobile-section-label">Offerings</div>
-
-              {offeringsDropdown.map((item, i) => (
-                <motion.div
-                  key={item.path}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: (i + 1) * 0.05 }}
+                <Link
+                  to="/cart"
+                  className="mobile-footer-btn"
+                  onClick={closeMenu}
                 >
-                  <Link
-                    to={item.path}
-                    className="mobile-link mobile-link-sub"
-                    onClick={closeMenu}
-                  >
-                    {item.label}
-                  </Link>
-                </motion.div>
-              ))}
-
-              <div className="mobile-divider" />
-
-              {navItems.slice(1).map((item, i) => (
-                <motion.div
-                  key={item.path}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: (offeringsDropdown.length + 1 + i) * 0.05 }}
-                >
-                  <Link to={item.path} className="mobile-link" onClick={closeMenu}>
-                    {item.label}
-                  </Link>
-                </motion.div>
-              ))}
-
-              {user && !isAdmin && (
-                <Link to="/my-orders" className="mobile-link" onClick={closeMenu}>
-                  My Orders
-                </Link>
-              )}
-              {user && isAdmin && (
-                <>
-                  <Link to="/admin/orders" className="mobile-link" onClick={closeMenu}>
-                    Orders
-                  </Link>
-                  <Link
-                    to="/admin/pincode-management"
-                    className="mobile-link"
-                    onClick={closeMenu}
-                  >
-                    Pincode Management
-                  </Link>
-                </>
-              )}
-
-              <div className="mobile-divider" />
-
-              <div className="mobile-actions">
-                <Link to="/cart" className="mobile-action-btn" onClick={closeMenu}>
                   <ShoppingCart size={16} />
                   Cart {cartCount > 0 && `(${cartCount})`}
                 </Link>
 
                 {user ? (
                   <button
-                    className="mobile-action-btn"
+                    className="mobile-footer-btn logout"
                     onClick={() => {
                       logout();
                       closeMenu();
@@ -281,15 +464,15 @@ const Navbar = () => {
                 ) : (
                   <Link
                     to="/login"
-                    className="mobile-action-btn"
+                    className="mobile-footer-btn"
                     onClick={closeMenu}
                   >
                     <LogIn size={16} />
                     Login
                   </Link>
                 )}
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
