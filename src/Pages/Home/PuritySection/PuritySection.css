@@ -1,121 +1,160 @@
 .purity-section {
-  padding: 120px 0;
-  background: #fff;
+  padding: 100px 0;
+  background: #edf1d6;
+  overflow: hidden;
 }
 
-.container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-
-.purity-content {
+/* ===== Grid ===== */
+.purity-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  gap: 60px;
   align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
-.purity-text {
-  max-width: 500px;
+/* ===== Content ===== */
+.purity-content {
+  max-width: 520px;
 }
 
 .purity-label {
-  display: inline-block;
-  padding: 6px 16px;
-  background: rgba(96, 153, 102, 0.1);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(157, 192, 139, 0.12);
   border-radius: 100px;
   font-size: 0.78rem;
   font-weight: 600;
-  color: var(--primary-green);
+  color: #609966;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   margin-bottom: 20px;
 }
 
 .purity-title {
-  font-family: var(--heading-font);
-  font-size: 2.4rem;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
   font-weight: 700;
-  color: var(--dark-green);
-  margin-bottom: 24px;
-  line-height: 1.25;
+  color: #40513b;
+  line-height: 1.2;
+  margin-bottom: 20px;
 }
 
 .purity-description {
-  font-size: 1rem;
+  font-size: 0.95rem;
+  color: rgba(64, 81, 59, 0.7);
   line-height: 1.8;
-  color: var(--secondary-text);
+  margin-bottom: 32px;
 }
 
+/* ===== Value Items ===== */
+.purity-values {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.purity-value-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.purity-value-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(157, 192, 139, 0.12);
+  color: #609966;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.purity-value-item strong {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #40513b;
+  margin-bottom: 2px;
+}
+
+.purity-value-item p {
+  font-size: 0.82rem;
+  color: rgba(64, 81, 59, 0.6);
+  line-height: 1.4;
+}
+
+/* ===== Image ===== */
 .purity-image-wrapper {
   position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 .purity-image {
   position: relative;
-  border-radius: 20px;
+  width: 100%;
+  max-width: 440px;
+  aspect-ratio: 4/5;
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(64, 81, 59, 0.12);
-}
-
-.purity-image::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(96, 153, 102, 0.1), transparent);
-  z-index: 1;
-  pointer-events: none;
 }
 
 .purity-image img {
   width: 100%;
-  height: 500px;
+  height: 100%;
   object-fit: cover;
-  display: block;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.purity-image:hover img {
-  transform: scale(1.03);
+.purity-image-border {
+  position: absolute;
+  inset: -8px;
+  border: 2px solid rgba(157, 192, 139, 0.2);
+  border-radius: 28px;
+  z-index: -1;
 }
 
-@media (max-width: 1024px) {
-  .purity-content {
-    gap: 50px;
-  }
-
-  .purity-title {
-    font-size: 2rem;
-  }
+.purity-accent-circle {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(157, 192, 139, 0.08);
+  z-index: -1;
 }
 
-@media (max-width: 768px) {
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
   .purity-section {
     padding: 60px 0;
   }
 
-  .purity-content {
+  .purity-grid {
     grid-template-columns: 1fr;
     gap: 40px;
-    text-align: center;
   }
 
-  .purity-text {
+  .purity-content {
     max-width: 100%;
   }
 
-  .purity-image img {
-    height: 350px;
-  }
-}
-
-@media (max-width: 480px) {
-  .purity-title {
-    font-size: 1.6rem;
+  .purity-image {
+    max-width: 100%;
+    aspect-ratio: 4/3;
   }
 
-  .purity-image img {
-    height: 280px;
+  .purity-accent-circle {
+    width: 80px;
+    height: 80px;
+    bottom: -12px;
+    right: -12px;
   }
 }
