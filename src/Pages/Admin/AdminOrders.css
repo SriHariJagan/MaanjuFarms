@@ -1,0 +1,151 @@
+.admin-orders-page {
+  max-width: 1200px;
+}
+
+.admin-tab-group {
+  display: flex;
+  gap: 4px;
+  background: #f3f2ef;
+  border-radius: 10px;
+  padding: 3px;
+}
+
+.admin-tab {
+  padding: 7px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #6b6760;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.admin-tab--active {
+  background: #fff;
+  color: #1a1a1a;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.admin-order-id {
+  font-family: "SF Mono", "Fira Code", monospace;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #b0aca4;
+}
+
+.admin-order-customer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-order-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(96, 153, 102, 0.1);
+  color: #609966;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.admin-order-customer-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.admin-order-customer-email {
+  font-size: 0.78rem;
+  color: #b0aca4;
+  margin: 0;
+}
+
+.admin-order-date {
+  font-size: 0.82rem;
+  color: #b0aca4;
+}
+
+.admin-order-status-select {
+  padding: 4px 10px;
+  border-radius: 100px;
+  border: 1px solid #eae8e3;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+}
+
+.admin-order-status--pending {
+  color: #d97706;
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.admin-order-status--confirmed {
+  color: #609966;
+  background: rgba(96, 153, 102, 0.08);
+  border-color: rgba(96, 153, 102, 0.2);
+}
+
+.admin-order-status--shipped {
+  color: #40513b;
+  background: rgba(64, 81, 59, 0.08);
+  border-color: rgba(64, 81, 59, 0.2);
+}
+
+.admin-order-status--delivered {
+  color: #059669;
+  background: rgba(5, 150, 105, 0.08);
+  border-color: rgba(5, 150, 105, 0.2);
+}
+
+.admin-order-status--cancelled {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.admin-order-expanded {
+  background: #fff;
+  border: 1px solid #eae8e3;
+  border-top: none;
+  padding: 0 16px;
+  overflow: hidden;
+}
+
+.admin-order-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 16px 0;
+}
+
+.admin-order-detail-section h4 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #b0aca4;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin: 0 0 8px;
+}
+
+.admin-order-detail-section p {
+  font-size: 0.85rem;
+  color: #374151;
+  margin: 2px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}

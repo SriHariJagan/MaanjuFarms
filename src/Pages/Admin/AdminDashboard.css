@@ -1,0 +1,252 @@
+.admin-dashboard {
+  max-width: 1200px;
+}
+
+.admin-dash-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.admin-dash-header h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 4px;
+}
+
+.admin-dash-subtitle {
+  font-size: 0.88rem;
+  color: #b0aca4;
+  margin: 0;
+}
+
+/* Metrics */
+.admin-dash-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.admin-dash-metric-card {
+  background: #fff;
+  border: 1px solid #eae8e3;
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.admin-dash-metric-card:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+.admin-dash-metric-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.admin-dash-metric-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.admin-dash-metric-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1;
+}
+
+.admin-dash-metric-label {
+  font-size: 0.82rem;
+  color: #b0aca4;
+  font-weight: 500;
+}
+
+/* Charts */
+.admin-dash-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.admin-dash-chart-card {
+  background: #fff;
+  border: 1px solid #eae8e3;
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.admin-dash-chart-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 16px;
+}
+
+/* Legend */
+.admin-dash-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.admin-dash-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: #6b6760;
+}
+
+.admin-dash-legend-item span:first-child {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.admin-dash-legend-item span:last-child {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* Top products */
+.admin-dash-section {
+  background: #fff;
+  border: 1px solid #eae8e3;
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.admin-dash-top-products {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-dash-top-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.admin-dash-top-rank {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: #f3f2ef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6b6760;
+  flex-shrink: 0;
+}
+
+.admin-dash-top-bar {
+  position: absolute;
+  left: 36px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 28px;
+  background: rgba(96, 153, 102, 0.1);
+  border-radius: 0 6px 6px 0;
+  z-index: 0;
+}
+
+.admin-dash-top-name {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  z-index: 1;
+  flex: 1;
+}
+
+.admin-dash-top-sold {
+  font-size: 0.82rem;
+  color: #b0aca4;
+  font-weight: 500;
+  z-index: 1;
+}
+
+.admin-dash-no-data {
+  font-size: 0.88rem;
+  color: #b0aca4;
+  text-align: center;
+  padding: 24px;
+  margin: 0;
+}
+
+/* Skeleton */
+.admin-dash-skeleton-card {
+  background: #fff;
+  border: 1px solid #eae8e3;
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-dash-skeleton-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.admin-skeleton--dash-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+}
+
+.admin-skeleton--dash-label {
+  height: 12px;
+  width: 60%;
+}
+
+.admin-skeleton--dash-value {
+  height: 22px;
+  width: 40%;
+}
+
+.admin-skeleton--chart {
+  height: 280px;
+  width: 100%;
+  border-radius: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-dash-charts {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-dash-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-dash-metrics {
+    grid-template-columns: 1fr;
+  }
+}

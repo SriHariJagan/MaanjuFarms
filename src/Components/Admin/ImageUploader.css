@@ -1,0 +1,211 @@
+.iu-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.iu-dropzone {
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 32px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #9ca3af;
+  background: #f9fafb;
+}
+
+.iu-dropzone:hover,
+.iu-dropzone--active {
+  border-color: #609966;
+  background: rgba(96, 153, 102, 0.04);
+  color: #609966;
+}
+
+.iu-dropzone-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: inherit;
+}
+
+.iu-dropzone-hint {
+  font-size: 0.78rem;
+  color: #9ca3af;
+}
+
+.iu-hidden-input {
+  display: none;
+}
+
+.iu-preview {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.iu-preview-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.iu-progress-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iu-progress-ring {
+  width: 48px;
+  height: 48px;
+  position: relative;
+}
+
+.iu-progress-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.iu-progress-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.2);
+  stroke-width: 3;
+}
+
+.iu-progress-fill {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.3s;
+}
+
+.iu-progress-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.iu-remove-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.iu-remove-btn:hover {
+  background: rgba(239, 68, 68, 0.8);
+}
+
+.iu-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #fef2f2;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: #ef4444;
+}
+
+/* Multi-image uploader */
+.miu-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.miu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+}
+
+.miu-item {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.miu-item-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.miu-item-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.miu-item:hover .miu-item-remove {
+  opacity: 1;
+}
+
+.miu-add {
+  aspect-ratio: 1;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  color: #9ca3af;
+  font-size: 0.78rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  background: #f9fafb;
+}
+
+.miu-add:hover,
+.miu-add--active {
+  border-color: #609966;
+  color: #609966;
+  background: rgba(96, 153, 102, 0.04);
+}
+
+.miu-uploading {
+  font-size: 0.82rem;
+  color: #6b7280;
+}
