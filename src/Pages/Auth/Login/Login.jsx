@@ -50,7 +50,8 @@ const Login = () => {
     const res = await login(email, password);
     setIsLoading(false);
     if (res.success) {
-      navigate("/");
+      if (res.isAdmin) navigate("/admin");
+      else navigate("/");
     }
   };
 
