@@ -56,6 +56,7 @@ const Signup = lazy(() => import("./Pages/Auth/Signup/Signup.jsx"));
 /* Payment pages*/
 const PaymentFailure = lazy(() => import("./Pages/Payment/PaymentFailure.jsx"));
 const PaymentSuccess = lazy(() => import("./Pages/Payment/PaymentSuccess.jsx"));
+const AdminDashboard = lazy(() => import("./Pages/AdminDashboard/AdminDashboard.jsx"));
 
 function App() {
   const { isAdmin } = useAuth(); // Get isAdmin from AuthContext
@@ -131,6 +132,18 @@ function App() {
               }
             />
 
+            <Route
+              path="dashboard"
+              element={
+                <PrivateRoute>
+                  {isAdmin ? (
+                    <AdminDashboard />
+                  ) : (
+                    <Navigate to="/" replace />
+                  )}
+                </PrivateRoute>
+              }
+            />
             <Route path="/guest-details" element={<GuestDetails />} />
           </Route>
 

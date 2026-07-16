@@ -516,3 +516,80 @@
   color: #40513b;
   background: rgba(157, 192, 139, 0.08);
 }
+
+/* ===== PROFILE AVATAR ===== */
+.profile-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.profile-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(157, 192, 139, 0.2);
+  border: 2px solid rgba(246, 248, 234, 0.5);
+  color: rgba(246, 248, 234, 0.9);
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-avatar:hover {
+  background: rgba(157, 192, 139, 0.35);
+  border-color: rgba(246, 248, 234, 0.8);
+}
+
+.scrolled .profile-avatar {
+  background: rgba(157, 192, 139, 0.15);
+  border-color: rgba(64, 81, 59, 0.3);
+  color: #40513b;
+}
+
+.scrolled .profile-avatar:hover {
+  background: rgba(157, 192, 139, 0.25);
+  border-color: rgba(64, 81, 59, 0.5);
+}
+
+/* ===== PROFILE DROPDOWN ===== */
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 180px;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid rgba(157, 192, 139, 0.15);
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: 0 12px 40px rgba(64, 81, 59, 0.12), 0 4px 20px rgba(64, 81, 59, 0.06);
+  z-index: 1002;
+}
+
+.profile-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #40513b;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.profile-dropdown-item:hover {
+  background: rgba(157, 192, 139, 0.1);
+}

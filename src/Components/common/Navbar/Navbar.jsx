@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ShoppingCart,
-  Menu,
   X,
   ChevronDown,
   LogIn,
@@ -14,6 +13,7 @@ import {
   Tent,
   Warehouse,
   User,
+  LayoutDashboard,
 } from "lucide-react";
 import "./Navbar.css";
 
@@ -70,10 +70,12 @@ const Navbar = () => {
   const isAdmin = user?.role === "admin";
 
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isOfferingsOpen, setIsOfferingsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const dropdownRef = useRef(null);
+  const offeringsRef = useRef(null);
+  const profileRef = useRef(null);
   const mobileRef = useRef(null);
   const timerRef = useRef(null);
 
@@ -89,8 +91,11 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setIsDropdownOpen(false);
+      if (offeringsRef.current && !offeringsRef.current.contains(e.target)) {
+        setIsOfferingsOpen(false);
+      }
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setIsProfileOpen(false);
       }
       if (mobileRef.current && !mobileRef.current.contains(e.target)) {
         setIsMobileOpen(false);
@@ -102,23 +107,25 @@ const Navbar = () => {
 
   useEffect(() => {
     setIsMobileOpen(false);
-    setIsDropdownOpen(false);
+    setIsOfferingsOpen(false);
+    setIsProfileOpen(false);
   }, [location]);
 
   const handleMouseEnter = () => {
     clearTimeout(timerRef.current);
-    setIsDropdownOpen(true);
+    setIsOfferingsOpen(true);
   };
 
   const handleMouseLeave = () => {
     timerRef.current = setTimeout(() => {
-      setIsDropdownOpen(false);
+      setIsOfferingsOpen(false);
     }, 150);
   };
 
   const closeMenu = () => {
     setIsMobileOpen(false);
-    setIsDropdownOpen(false);
+    setIsOfferingsOpen(false);
+    setIsProfileOpen(false);
   };
 
   return (
@@ -151,8 +158,8 @@ const Navbar = () => {
             </Link>
 
             <div
-              className={`nav-link dropdown-trigger ${isDropdownOpen ? "dropdown-active" : ""}`}
-              ref={dropdownRef}
+              className={`nav-link dropdown-trigger ${isOfferingsOpen ? "dropdown-active" : ""}`}
+              ref={offeringsRef}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
@@ -160,12 +167,12 @@ const Navbar = () => {
                 Offerings
                 <ChevronDown
                   size={14}
-                  className={`chevron ${isDropdownOpen ? "chevron-open" : ""}`}
+                  className={`chevron ${isOfferingsOpen ? "chevron-open" : ""}`}
                 />
               </span>
 
               <AnimatePresence>
-                {isDropdownOpen && (
+                {isOfferingsOpen && (
                   <motion.div
                     className="mega-menu"
                     initial={{ opacity: 0, y: 12, scale: 0.96 }}
@@ -247,15 +254,47 @@ const Navbar = () => {
             </Link>
 
             {user ? (
-              <motion.button
-                className="icon-btn"
-                onClick={logout}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                title="Logout"
-              >
-                <LogOut size={18} />
-              </motion.button>
+              <div className="profile-wrapper" ref={profileRef}>
+                <motion.button
+                  className="profile-avatar"
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  title="Profile"
+                >
+                  {isAdmin ? "A" : "U"}
+                </motion.button>
+
+                <AnimatePresence>
+                  {isProfileOpen && (
+                    <motion.div
+                      className="profile-dropdown"
+                      initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      {isAdmin && (
+                        <Link
+                          to="/dashboard"
+                          className="profile-dropdown-item"
+                          onClick={closeMenu}
+                        >
+                          <LayoutDashboard size={16} />
+                          Dashboard
+                        </Link>
+                      )}
+                      <button
+                        className="profile-dropdown-item"
+                        onClick={() => { logout(); closeMenu(); }}
+                      >
+                        <LogOut size={16} />
+                        Logout
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             ) : (
               <Link to="/login" className="icon-btn">
                 <LogIn size={18} />
@@ -414,6 +453,14 @@ const Navbar = () => {
                       )}
                       {isAdmin && (
                         <>
+                          <Link
+                            to="/dashboard"
+                            className="mobile-link"
+                            onClick={closeMenu}
+                          >
+                            <LayoutDashboard size={16} />
+                            Dashboard
+                          </Link>
                           <Link
                             to="/admin/orders"
                             className="mobile-link"
