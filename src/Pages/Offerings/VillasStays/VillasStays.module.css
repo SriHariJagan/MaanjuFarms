@@ -1,10 +1,9 @@
-/* ===================== VILLAS STAYS ===================== */
-
 .villasSection {
   background: var(--primary-bg);
   color: var(--primary-text);
-  padding: 6rem 2rem;
+  padding: 120px 2rem 4rem;
   font-family: var(--body-font);
+  min-height: 100vh;
 }
 
 .container {
@@ -13,19 +12,16 @@
   text-align: center;
 }
 
-/* HERO */
 .hero {
   position: relative;
-  background: url("/Images/villaBanner.png");
-  background-size: cover;
-  background-position: bottom;
+  background: url("/Images/villaBanner.png") center bottom / cover no-repeat;
   padding: 6rem 2rem 4rem;
-  border-radius: 16px;
+  border-radius: 20px;
   margin-bottom: 4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: white;
+  color: #fff;
   text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
@@ -33,48 +29,39 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(64, 81, 59, 0.7), rgba(64, 81, 59, 0.4));
+  border-radius: 20px;
 }
 
-.hero h2,
-.hero p {
-  position: relative;
-  z-index: 1;
-}
+.hero h2, .hero p { position: relative; z-index: 1; }
 
-/* TEXT */
 .heading {
   font-family: var(--heading-font);
   font-size: 3rem;
+  font-weight: 700;
 }
 
 .subtext {
   font-size: 1.1rem;
   margin-bottom: 3rem;
+  color: rgba(255, 255, 255, 0.85);
 }
 
-/* GRID */
 .villasGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
 }
 
-.addVillaBtn:hover{
-  color: var(--accent-color);
-}
-
-/* ===================== VILLA CARD ===================== */
-
 .card {
-  background: var(--secondary-bg);
-  border-radius: 18px;
+  background: #fff;
+  border-radius: 20px;
   overflow: hidden;
   box-shadow: var(--shadow-light);
-  transition: 0.3s;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
+  text-align: left;
 }
 
 .card:hover {
@@ -91,7 +78,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: 0.4s;
+  transition: transform 0.4s ease;
 }
 
 .card:hover img {
@@ -102,106 +89,106 @@
   padding: 1.4rem;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.5rem;
 }
 
 .content h3 {
-  color: var(--accent-color);
+  font-family: var(--heading-font);
+  font-size: 1.3rem;
+  color: var(--dark-green);
 }
 
 .content p {
   color: var(--secondary-text);
-  font-size: 0.95rem;
+  font-size: 0.88rem;
 }
 
-/* STATUS */
-.available {
-  color: var(--accent-color);
-  font-weight: 600;
+.available { color: var(--primary-green); font-weight: 600; }
+.unavailable { color: #ef4444; font-weight: 600; }
+
+.actions {
+  margin-top: auto;
+  padding-top: 8px;
 }
 
-.unavailable {
-  color: red;
-  font-weight: 600;
+.bookBtn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--accent-color);
+  color: #fff;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-/* BUTTONS */
-/* Wrapper */
+.bookBtn:hover { background: var(--primary-green); }
+.bookBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
 .adminActions {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 10px;
   margin-top: 12px;
 }
 
-/* Edit Button */
 .editBtn {
   padding: 6px 14px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   border-radius: 8px;
   border: 1px solid var(--accent-color);
   background: transparent;
   color: var(--accent-color);
   cursor: pointer;
   transition: all 0.25s ease;
+  font-weight: 600;
 }
 
-/* Hover */
 .editBtn:hover {
   background: var(--accent-color);
   color: #fff;
-  transform: translateY(-1px);
 }
 
-/* Dropdown */
 .statusSelect {
   padding: 6px 10px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   border-radius: 8px;
   border: 1px solid var(--border-color);
   background: var(--secondary-bg);
   color: var(--primary-text);
   cursor: pointer;
-  transition: all 0.25s ease;
   min-width: 120px;
 }
 
-/* Focus glow */
 .statusSelect:focus {
   outline: none;
   border-color: var(--accent-color);
-  box-shadow: 0 0 0 2px var(--accent-color-light);
+  box-shadow: 0 0 0 3px rgba(157, 192, 139, 0.2);
 }
-
-/* Hover */
-.statusSelect:hover {
-  border-color: var(--accent-color);
-}
-/* ===================== BOOKING MODAL ===================== */
 
 .modalOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  padding: 1rem;
 }
 
-/* PREMIUM MODAL */
 .premiumModal {
   background: var(--secondary-bg);
-  border-radius: 18px;
+  border-radius: 20px;
   width: 95%;
   max-width: 1100px;
   overflow: hidden;
   box-shadow: var(--shadow-hover);
 }
 
-/* HEADER */
 .modalHeader {
   display: flex;
   align-items: center;
@@ -214,142 +201,171 @@
 .modalHeader img {
   width: 90px;
   height: 70px;
-  border-radius: 10px;
+  border-radius: 12px;
   object-fit: cover;
 }
 
-/* CLOSE */
+.headerInfo h2 {
+  font-family: var(--heading-font);
+  font-size: 1.4rem;
+  color: var(--dark-green);
+}
+
+.headerInfo p {
+  color: var(--secondary-text);
+  font-size: 0.9rem;
+}
+
 .closeBtn {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 8px;
+  right: 8px;
   border: none;
   background: transparent;
   cursor: pointer;
   font-size: 1.2rem;
-  color: var(--accent-color);
-  padding: .3rem .6rem;
-  padding-top: .2rem;
+  color: var(--muted-text);
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
-/* BODY */
+.closeBtn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--primary-text);
+}
+
 .modalBody {
   display: grid;
   grid-template-columns: 1.7fr 1fr;
   gap: 2rem;
   padding: 1.5rem;
-  align-items: center;
+  align-items: start;
 }
 
-/* CALENDAR */
 .calendarWrapper {
-  background: var(--primary-bg);
-  padding: 1rem;
-  border-radius: 12px;
-  height: max-content;
+  background: #fff;
+  padding: 1.2rem;
+  border-radius: 14px;
 }
 
-.calendarWrapper h3{
-  padding-bottom: .4rem;
+.calendarWrapper h3 {
+  font-family: var(--heading-font);
+  font-size: 1.1rem;
+  color: var(--dark-green);
+  margin-bottom: 12px;
 }
 
-/* BOOKING CARD */
 .bookingCard {
-  background: var(--card-bg);
+  background: #fff;
   padding: 1.5rem;
-  border-radius: 12px;
+  border-radius: 14px;
   box-shadow: var(--shadow-light);
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  height: max-content;
 }
 
-/* PRICE */
 .priceRow {
   display: flex;
+  align-items: baseline;
   gap: 6px;
 }
 
-/* DATE BOX */
+.priceRow h3 {
+  font-family: var(--heading-font);
+  font-size: 1.8rem;
+  color: var(--primary-green);
+}
+
+.priceRow span {
+  color: var(--muted-text);
+  font-size: 0.9rem;
+}
+
 .dateBox {
   display: flex;
   justify-content: space-between;
-  background: var(--hover-bg);
+  background: var(--secondary-bg);
   padding: 0.8rem;
   border-radius: 10px;
 }
 
-.dateBox div:first-child p {
-  padding-top: 0.5rem;
-  color: rgb(22, 135, 143); /* Check-in color */
+.dateBox label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--muted-text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
 }
 
-.dateBox div:last-child p {
-  padding: 0.5rem;
-  color: rgb(200, 80, 80); /* Check-out color */
+.dateBox p {
+  font-weight: 600;
+  color: var(--primary-text);
 }
-
-/* INPUT */
 
 .guestField {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--primary-text);
 }
 
 .guestField input {
-  width: 50px;
+  width: 60px;
   padding: 8px;
   border-radius: 8px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+  font-weight: 600;
 }
 
-/* PRICE */
 .priceBreakdown {
-  background: var(--hover-bg);
+  background: var(--secondary-bg);
   padding: 0.8rem;
   border-radius: 10px;
 }
 
-.priceBreakdown h4{
-  padding-top: .5rem;
+.priceBreakdown p {
+  color: var(--secondary-text);
+  font-size: 0.9rem;
 }
 
-/* CTA */
-.bookBtn {
-  width: 100%;
-  padding: 0.9rem;
-  border-radius: 10px;
-  background: var(--accent-color);
-  color: white;
-  border: none;
+.priceBreakdown h4 {
+  font-family: var(--heading-font);
+  font-size: 1.3rem;
+  color: var(--dark-green);
+  margin-top: 8px;
 }
 
-.bookBtn:hover {
-  background: var(--accent-hover);
-}
-
-/* DATEPICKER */
 .react-datepicker__day--in-range {
-  background: var(--accent-color-light);
+  background: rgba(157, 192, 139, 0.3);
 }
 
 .react-datepicker__day--range-start,
 .react-datepicker__day--range-end {
-  background: var(--accent-color);
+  background: var(--accent-color) !important;
   color: white;
 }
 
-/* ===================== FORM MODAL ===================== */
-
 .modal {
   background: var(--secondary-bg);
-  border-radius: 16px;
+  border-radius: 20px;
   max-width: 500px;
   width: 100%;
   padding: 2rem;
   position: relative;
+}
+
+.modal h3 {
+  font-family: var(--heading-font);
+  font-size: 1.5rem;
+  color: var(--dark-green);
+  margin-bottom: 1.5rem;
 }
 
 .modalContent {
@@ -361,100 +377,117 @@
 .modalContent input,
 .modalContent textarea,
 .modalContent select {
-  padding: 0.7rem;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 10px;
   border: 1px solid var(--border-color);
-}
-
-.modalContent input:focus {
-  border-color: var(--accent-color);
+  background: #fff;
+  font-size: 0.9rem;
+  color: var(--primary-text);
   outline: none;
+  transition: border-color 0.2s ease;
 }
 
-/* ===================== BOOKINGS TABLE ===================== */
+.modalContent input:focus,
+.modalContent textarea:focus,
+.modalContent select:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(157, 192, 139, 0.15);
+}
 
 .bookingsTableWrapper {
   margin-top: 4rem;
   overflow-x: auto;
 }
 
-.tableHeading{
+.tableHeading {
+  font-family: var(--heading-font);
+  font-size: 1.5rem;
+  color: var(--dark-green);
   margin-bottom: 1rem;
+  text-align: left;
 }
 
 .bookingsTable {
   width: 100%;
   border-collapse: collapse;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
   box-shadow: var(--shadow-light);
 }
 
 .bookingsTable th {
+  background: var(--primary-green);
+  color: #fff;
+  padding: 14px 16px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: left;
+}
+
+.bookingsTable td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--primary-text);
+  font-size: 0.9rem;
+}
+
+.bookingsTable tbody tr:hover {
+  background: var(--hover-bg);
+}
+
+.bookingsTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.addVillaBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 10px;
+  background: var(--primary-green);
+  color: #fff;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.addVillaBtn:hover {
   background: var(--accent-color);
-  color: white;
 }
 
-.bookingsTable td,
-.bookingsTable th {
-  padding: 1rem;
-  border: 1px solid var(--accent-color);
-  text-transform: capitalize;
-
+.empty {
+  grid-column: 1 / -1;
+  padding: 4rem;
+  color: var(--muted-text);
+  font-size: 1.1rem;
 }
 
-.bookingsTable tr:nth-child(even) td {
-  background: var(--primary-bg);
+.error {
+  text-align: center;
+  padding: 4rem;
+  color: #ef4444;
+  font-size: 1.1rem;
 }
-
-/* ===================== RESPONSIVE ===================== */
 
 @media (max-width: 1024px) {
-  .villasGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .villasGrid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
-  .modalBody {
-    grid-template-columns: 1fr;
-  }
+  .villasSection { padding: 100px 1rem 3rem; }
+  .heading { font-size: 2rem; }
+  .modalBody { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 500px) {
-  .villasSection {
-    padding: 4rem 0.8rem;
-  }
-
-  .modalOverlay {
-    align-items: center;
-    padding: 0.5rem 0rem;
-  }
-
-  .premiumModal {
-    max-height: 95dvh;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .modalBody {
-    overflow-y: auto;
-    padding: 1rem 0.4rem;
-  }
-
-  .villasGrid {
-    grid-template-columns: 1fr;
-  }
-  .guestField input {
-    width: 35px;
-  }
-
-  .tableHeading{
-    position: sticky;
-    top: 2px;
-    left: 1px;
-  }
-
-  .bookingsTable{
-    width: max-content;
-  }
+  .villasGrid { grid-template-columns: 1fr; }
+  .premiumModal { max-height: 95dvh; overflow-y: auto; }
 }
