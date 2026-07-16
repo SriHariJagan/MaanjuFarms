@@ -1,20 +1,48 @@
 import React from "react";
 import { motion } from "framer-motion";
 import styles from "./Footer.module.css";
-import { Facebook, Instagram, Youtube, Phone, Mail, MapPin, Leaf } from "lucide-react";
+import {
+  Facebook,
+  Instagram,
+  Youtube,
+  Phone,
+  Mail,
+  MapPin,
+  Leaf,
+  ArrowUpRight,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
-const Footer = () => {
-  const fadeUp = {
-    initial: { opacity: 0, y: 30 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-50px" },
-    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
-  };
+const fadeUp = {
+  initial: { opacity: 0, y: 30 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-50px" },
+  transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+};
 
+const socialLinks = [
+  { icon: Facebook, href: "#", label: "Facebook" },
+  { icon: Instagram, href: "#", label: "Instagram" },
+  { icon: Youtube, href: "#", label: "YouTube" },
+];
+
+const Footer = () => {
   return (
     <footer className={styles.footer}>
-      <div className={styles.topBorder} />
+      {/* SVG Organic Wave Divider */}
+      <div className={styles.waveDivider}>
+        <svg
+          viewBox="0 0 1440 60"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0 40C240 60 480 20 720 30C960 40 1200 10 1440 25V60H0V40Z"
+            fill="currentColor"
+          />
+        </svg>
+      </div>
 
       <div className={styles.container}>
         <motion.div className={styles.column} {...fadeUp}>
@@ -23,11 +51,15 @@ const Footer = () => {
             <h3>Maanjoo Farms</h3>
           </div>
           <p className={styles.description}>
-            A destination where <strong>nature</strong>, <strong>culture</strong>, and
-            <strong> adventure</strong> meet. From horse riding to camel safaris,
-            organic farming to agro-tourism, Maanjoo Farm is your gateway
-            to authentic Rajasthan.
+            A destination where <strong>nature</strong>, <strong>culture</strong>
+            , and <strong>adventure</strong> meet. From horse riding to camel
+            safaris, organic farming to agro-tourism, Maanjoo Farm is your
+            gateway to authentic Rajasthan.
           </p>
+          <Link to="/about" className={styles.learnMore}>
+            Learn more about us
+            <ArrowUpRight size={14} />
+          </Link>
         </motion.div>
 
         <motion.div
@@ -68,22 +100,53 @@ const Footer = () => {
         >
           <h4>Contact Us</h4>
           <div className={styles.contactDetails}>
-            <p><MapPin size={14} /> Pilani, Rajasthan, India</p>
-            <p><Phone size={14} /> +91 98765 43210</p>
-            <p><Mail size={14} /> info@maanjooFarms.com</p>
+            <p>
+              <MapPin size={14} />
+              Pilani, Rajasthan, India
+            </p>
+            <p>
+              <Phone size={14} />
+              +91 98765 43210
+            </p>
+            <p>
+              <Mail size={14} />
+              info@maanjooFarms.com
+            </p>
           </div>
 
           <div className={styles.social}>
-            <a href="#" className={styles.socialLink}><Facebook size={18} /></a>
-            <a href="#" className={styles.socialLink}><Instagram size={18} /></a>
-            <a href="#" className={styles.socialLink}><Youtube size={18} /></a>
+            {socialLinks.map((social) => (
+              <motion.a
+                key={social.label}
+                href={social.href}
+                className={styles.socialLink}
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                title={social.label}
+                aria-label={social.label}
+              >
+                <social.icon size={18} />
+              </motion.a>
+            ))}
           </div>
         </motion.div>
       </div>
 
-      <div className={styles.bottomBar}>
-        <p>© {new Date().getFullYear()} Maanjoo Farms · All Rights Reserved</p>
-      </div>
+      <motion.div
+        className={styles.bottomBar}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+      >
+        <div className={styles.bottomInner}>
+          <p>© {new Date().getFullYear()} Maanjoo Farms · All Rights Reserved</p>
+          <div className={styles.bottomLinks}>
+            <Link to="/contact">Contact</Link>
+            <Link to="/about">About</Link>
+          </div>
+        </div>
+      </motion.div>
     </footer>
   );
 };
