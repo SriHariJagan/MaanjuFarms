@@ -10,6 +10,7 @@ import {
   Leaf,
   Image as ImageIcon,
 } from "lucide-react";
+import { toast } from "react-toastify";
 
 const ProductImage = ({ src, alt }) => {
   const [imgError, setImgError] = useState(false);
@@ -68,6 +69,7 @@ const ProductsPage = () => {
     if (product.stock <= 0) return;
     const productWithPrice = { ...product, price: product.price || 100 };
     addToCart(productWithPrice);
+    toast.success(`${product.name} added to cart`, { icon: "🛒", autoClose: 1500 });
   };
 
   const handleViewDetails = (id) => navigate(`/product/${id}`);
@@ -254,7 +256,7 @@ const ProductsPage = () => {
                             <span
                               className={`product-stock ${
                                 product.stock > 0 ? "in-stock" : "out-of-stock"
-                              }`}
+                              } ${product.stock > 0 && product.stock <= 5 ? "low-stock" : ""}`}
                             >
                               <span className="stock-dot" />
                               {product.stock > 0

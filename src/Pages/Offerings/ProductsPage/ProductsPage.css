@@ -293,6 +293,15 @@
   left: 10px;
 }
 
+@keyframes stockPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.product-stock.low-stock .stock-dot {
+  animation: stockPulse 1.5s ease-in-out infinite;
+}
+
 .admin-badge {
   position: absolute;
   top: 10px;
@@ -385,6 +394,10 @@
 
 .product-btn-primary:hover {
   background: #2a3526;
+}
+
+.product-btn:active {
+  transform: scale(0.95);
 }
 
 .product-btn-secondary {

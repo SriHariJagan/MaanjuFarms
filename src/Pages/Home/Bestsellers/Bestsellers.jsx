@@ -7,6 +7,7 @@ import { useCart } from "../../../Store/useContext.jsx";
 import { PRODUCTS_API } from "../../../urls.js";
 import { getImageUrl } from "../../../utils/getImageUrl .js";
 import { ShoppingBag, Eye, Check, Image as ImageIcon } from "lucide-react";
+import { toast } from "react-toastify";
 
 const ProductImage = ({ src, alt }) => {
   const [imgError, setImgError] = useState(false);
@@ -68,6 +69,7 @@ const BestSellers = () => {
 
   const handleAddToCart = (product) => {
     addToCart(product);
+    toast.success(`${product.name} added to cart`, { icon: "🛒", autoClose: 1500 });
     setAddedIds((prev) => new Set(prev).add(product._id || product.id));
     setTimeout(() => {
       setAddedIds((prev) => {
