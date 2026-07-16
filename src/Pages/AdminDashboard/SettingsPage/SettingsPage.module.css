@@ -1,0 +1,434 @@
+/* =============================================
+   SettingsPage.module.css
+   ============================================= */
+
+/* ---- Page Wrapper ---- */
+.settingsPage {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 28px 48px;
+}
+
+/* ---- Header ---- */
+.pageHeader {
+  margin-bottom: 28px;
+}
+.pageTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 4px;
+  letter-spacing: -0.3px;
+}
+.pageSubtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* ---- Tabs ---- */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  background: #f3f4f6;
+  border-radius: 12px;
+  padding: 4px;
+}
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab:hover {
+  color: #374151;
+  background: rgba(255, 255, 255, 0.6);
+}
+.tabActive {
+  background: #fff;
+  color: #1a1a2e;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  font-weight: 600;
+}
+
+/* ---- Tab Panel ---- */
+.tabPanel {
+  min-height: 360px;
+}
+.tabContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ---- Cards ---- */
+.sectionCard {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 24px;
+  transition: box-shadow 0.2s;
+}
+.sectionCard:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+.sectionHeader {
+  margin-bottom: 20px;
+}
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 0 0 2px;
+}
+.sectionSub {
+  font-size: 13px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* ---- Profile Card ---- */
+.profileCard {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 24px;
+}
+.profileAvatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #40513b, #609966);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.profileName {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+}
+.profileMeta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.profileEmail,
+.profileRole,
+.profileDate {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: #6b7280;
+}
+.profileRole {
+  text-transform: capitalize;
+}
+
+/* ---- Info Grid ---- */
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.infoItem label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.infoItem p {
+  font-size: 14px;
+  color: #1f2937;
+  margin: 0;
+  font-weight: 500;
+}
+.capitalize {
+  text-transform: capitalize;
+}
+.mono {
+  font-family: "SF Mono", "Fira Code", monospace;
+  font-size: 12px !important;
+  word-break: break-all;
+}
+
+/* ---- Disabled Note ---- */
+.disabledNote {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #fef9c3;
+  border: 1px solid #fde68a;
+  border-radius: 10px;
+  margin-top: 20px;
+  font-size: 13px;
+  color: #92400e;
+}
+
+/* ---- Appearance - Preferences ---- */
+.prefGroup {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+.prefGroup:last-child {
+  border-bottom: none;
+}
+.prefLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+}
+.selectorRow {
+  display: flex;
+  gap: 4px;
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 3px;
+}
+.selectorBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s;
+  position: relative;
+}
+.selectorBtn:hover {
+  color: #374151;
+}
+.selectorBtnActive {
+  background: #fff;
+  color: #1f2937;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+}
+.selectorCheck {
+  margin-left: 1px;
+}
+
+/* ---- Toggle Card ---- */
+.toggleCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  cursor: pointer;
+  border-bottom: 1px solid #f3f4f6;
+}
+.toggleCard:last-child {
+  border-bottom: none;
+}
+.toggleCardLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.toggleIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+.toggleLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+}
+.toggleDesc {
+  display: block;
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 1px;
+}
+.toggle {
+  width: 42px;
+  height: 24px;
+  border-radius: 12px;
+  background: #d1d5db;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.toggleOn {
+  background: #40513b;
+}
+.toggleKnob {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s;
+}
+.toggleOn .toggleKnob {
+  transform: translateX(18px);
+}
+
+/* ---- Saved Badge ---- */
+.savedBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  background: #40513b;
+  color: #fff;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 4px 20px rgba(64, 81, 59, 0.3);
+  z-index: 100;
+}
+
+/* ---- Status Badge ---- */
+.statusActive {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #16a34a;
+  font-weight: 500;
+}
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #16a34a;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ---- Logout Button ---- */
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+.logoutBtn:hover {
+  box-shadow: 0 4px 16px rgba(220, 38, 38, 0.3);
+}
+
+/* ---- About Grid ---- */
+.aboutGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 24px;
+}
+.aboutItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f9fafb;
+}
+.aboutLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.aboutValue {
+  font-size: 14px;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+  .settingsPage {
+    padding: 20px 16px 40px;
+  }
+  .tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+  .aboutGrid {
+    grid-template-columns: 1fr;
+  }
+  .profileCard {
+    flex-direction: column;
+    text-align: center;
+  }
+  .profileMeta {
+    justify-content: center;
+  }
+  .selectorRow {
+    flex-wrap: wrap;
+  }
+  .prefGroup {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
