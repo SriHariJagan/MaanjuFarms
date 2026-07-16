@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, Send, Clock } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Clock, Leaf } from "lucide-react";
 import "./Contactus.css";
 import { CONTACT_API } from "../../../urls";
 
@@ -29,9 +29,11 @@ const ContactUs = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(data.email)) newErrors.email = "Enter a valid email";
     const phoneRegex = /^[6-9]\d{9}$/;
-    if (!phoneRegex.test(data.phone)) newErrors.phone = "Enter valid 10-digit Indian number";
+    if (!phoneRegex.test(data.phone))
+      newErrors.phone = "Enter valid 10-digit Indian number";
     if (!data.subject.trim()) newErrors.subject = "Subject is required";
-    if (data.message.trim().length < 10) newErrors.message = "Message must be at least 10 characters";
+    if (data.message.trim().length < 10)
+      newErrors.message = "Message must be at least 10 characters";
     return newErrors;
   };
 
@@ -82,7 +84,9 @@ const ContactUs = () => {
 
   return (
     <div className="contact-page">
+      {/* Hero */}
       <section className="contact-hero">
+        <div className="contact-hero-bg" />
         <div className="contact-hero-overlay" />
         <motion.div
           className="contact-hero-content"
@@ -90,56 +94,125 @@ const ContactUs = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h1>Get in Touch</h1>
-          <p>We'd love to hear from you</p>
+          <span className="contact-hero-badge">
+            <Leaf size={12} />
+            Get in Touch
+          </span>
+          <h1>Contact Us</h1>
+          <p>We'd love to hear from you. Reach out anytime.</p>
         </motion.div>
       </section>
 
       <div className="contact-container">
         <div className="contact-grid">
+          {/* Form */}
           <motion.div className="contact-form-section" {...fadeUp}>
             <h2>Send Us a Message</h2>
-            <p className="contact-form-subtitle">We usually respond within 24 hours</p>
+            <p className="contact-form-subtitle">
+              We usually respond within 24 hours
+            </p>
 
             <form onSubmit={handleSubmit} className="contact-form">
               <div className="form-row">
                 <div className="form-group">
-                  <input name="name" type="text" placeholder="Your Name" />
-                  {errors.name && <span className="error-text">{errors.name}</span>}
+                  <input
+                    name="name"
+                    type="text"
+                    placeholder="Your Name"
+                    className={errors.name ? "input-error" : ""}
+                  />
+                  {errors.name && (
+                    <span className="error-text">{errors.name}</span>
+                  )}
                 </div>
                 <div className="form-group">
-                  <input name="email" type="email" placeholder="Your Email" />
-                  {errors.email && <span className="error-text">{errors.email}</span>}
+                  <input
+                    name="email"
+                    type="email"
+                    placeholder="Your Email"
+                    className={errors.email ? "input-error" : ""}
+                  />
+                  {errors.email && (
+                    <span className="error-text">{errors.email}</span>
+                  )}
                 </div>
               </div>
 
               <div className="form-row">
                 <div className="form-group">
-                  <input name="phone" type="text" placeholder="Contact Number" />
-                  {errors.phone && <span className="error-text">{errors.phone}</span>}
+                  <input
+                    name="phone"
+                    type="text"
+                    placeholder="Contact Number"
+                    className={errors.phone ? "input-error" : ""}
+                  />
+                  {errors.phone && (
+                    <span className="error-text">{errors.phone}</span>
+                  )}
                 </div>
                 <div className="form-group">
-                  <input name="subject" type="text" placeholder="Subject" />
-                  {errors.subject && <span className="error-text">{errors.subject}</span>}
+                  <input
+                    name="subject"
+                    type="text"
+                    placeholder="Subject"
+                    className={errors.subject ? "input-error" : ""}
+                  />
+                  {errors.subject && (
+                    <span className="error-text">{errors.subject}</span>
+                  )}
                 </div>
               </div>
 
               <div className="form-group">
-                <textarea name="message" placeholder="Your Message" rows="5" />
-                {errors.message && <span className="error-text">{errors.message}</span>}
+                <textarea
+                  name="message"
+                  placeholder="Your Message"
+                  rows="5"
+                  className={errors.message ? "input-error" : ""}
+                />
+                {errors.message && (
+                  <span className="error-text">{errors.message}</span>
+                )}
               </div>
 
-              <button type="submit" className={`submit-btn ${loading ? "loading" : ""}`} disabled={loading}>
+              <motion.button
+                type="submit"
+                className={`submit-btn ${loading ? "loading" : ""}`}
+                disabled={loading}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.98 }}
+              >
                 <Send size={16} />
                 {loading ? "Sending..." : "Send Message"}
-              </button>
+              </motion.button>
 
-              {status === "success" && <p className="success-msg">Message sent successfully!</p>}
-              {status === "error" && <p className="error-msg">Failed to send message. Try again.</p>}
+              {status === "success" && (
+                <motion.p
+                  className="success-msg"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  Message sent successfully!
+                </motion.p>
+              )}
+              {status === "error" && (
+                <motion.p
+                  className="error-msg"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  Failed to send message. Try again.
+                </motion.p>
+              )}
             </form>
           </motion.div>
 
-          <motion.div className="contact-info-section" {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.15 }}>
+          {/* Info */}
+          <motion.div
+            className="contact-info-section"
+            {...fadeUp}
+            transition={{ ...fadeUp.transition, delay: 0.15 }}
+          >
             <div className="info-card">
               <div className="info-icon">
                 <MapPin size={20} />
