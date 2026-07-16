@@ -225,7 +225,7 @@ const Gallery = () => {
   const fetchGallery = async () => {
     try {
       const { data } = await axios.get(GALLERY_API);
-      setGalleryItems(data);
+      setGalleryItems(Array.isArray(data) ? data : (data?.images || data?.data || []));
     } catch (err) {
       console.error(err);
     }

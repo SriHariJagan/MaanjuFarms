@@ -16,7 +16,8 @@ const ProductsProvider = ({ children }) => {
     setLoading(true);
     try {
       const res = await axios.get(PRODUCTS_API);
-      setProducts(res.data || productsData);
+      const d = res.data;
+      setProducts(Array.isArray(d) ? d : (d?.products || productsData));
     } catch (err) {
       console.error("Error fetching products:", err.message);
     } finally {

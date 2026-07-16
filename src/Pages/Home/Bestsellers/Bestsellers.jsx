@@ -56,7 +56,8 @@ const BestSellers = () => {
       try {
         const res = await fetch(PRODUCTS_API);
         const data = await res.json();
-        const randomProducts = getRandomProducts(data, 4);
+        const items = Array.isArray(data) ? data : (data?.products || []);
+        const randomProducts = getRandomProducts(items, 4);
         setProducts(randomProducts);
       } catch (err) {
         console.error("Error fetching products:", err);
