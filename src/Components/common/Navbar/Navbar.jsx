@@ -14,6 +14,8 @@ import {
   Tent,
   Warehouse,
   User,
+  LayoutDashboard,
+  ArrowLeftFromLine,
 } from "lucide-react";
 import "./Navbar.css";
 
@@ -65,17 +67,17 @@ const staggerItem = {
 
 const Navbar = () => {
   const { cart } = useCart();
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const location = useLocation();
-  const isAdmin = user?.role === "admin";
-
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const dropdownRef = useRef(null);
   const mobileRef = useRef(null);
   const timerRef = useRef(null);
+  const profileRef = useRef(null);
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
@@ -94,6 +96,9 @@ const Navbar = () => {
       }
       if (mobileRef.current && !mobileRef.current.contains(e.target)) {
         setIsMobileOpen(false);
+      }
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setProfileOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -224,6 +229,82 @@ const Navbar = () => {
           </div>
 
           <div className="navbar-actions">
+            {isAdmin && user && (
+              <div className="admin-profile-wrapper" ref={profileRef}>
+                <motion.button
+                  className="admin-profile-btn"
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  aria-label="Admin dashboard"
+                >
+                  <div className="admin-profile-avatar">
+                    {user?.profileImage ? (
+                      <img src={user.profileImage} alt={user.name} />
+                    ) : (
+                      <span>{user?.name?.charAt(0)?.toUpperCase() || "A"}</span>
+                    )}
+                  </div>
+                </motion.button>
+
+                <AnimatePresence>
+                  {profileOpen && (
+                    <motion.div
+                      className="admin-profile-dropdown"
+                      initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <div className="admin-profile-dropdown-header">
+                        <div className="admin-profile-avatar-lg">
+                          {user?.profileImage ? (
+                            <img src={user.profileImage} alt={user.name} />
+                          ) : (
+                            <span>{user?.name?.charAt(0)?.toUpperCase() || "A"}</span>
+                          )}
+                        </div>
+                        <div>
+                          <p className="admin-profile-name">{user?.name || "Admin"}</p>
+                          <p className="admin-profile-role">Administrator</p>
+                        </div>
+                      </div>
+                      <div className="admin-profile-dropdown-menu">
+                        <Link
+                          to="/admin"
+                          className="admin-profile-dropdown-item"
+                          onClick={() => setProfileOpen(false)}
+                        >
+                          <LayoutDashboard size={15} />
+                          <span>Dashboard</span>
+                        </Link>
+                        <button
+                          className="admin-profile-dropdown-item"
+                          onClick={() => {
+                            setProfileOpen(false);
+                            window.history.back();
+                          }}
+                        >
+                          <ArrowLeftFromLine size={15} />
+                          <span>Back to Website</span>
+                        </button>
+                        <div className="admin-profile-dropdown-divider" />
+                        <button
+                          className="admin-profile-dropdown-item admin-profile-dropdown-item--danger"
+                          onClick={() => {
+                            setProfileOpen(false);
+                            logout();
+                          }}
+                        >
+                          <LogOut size={15} />
+                          <span>Logout</span>
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
             <Link to="/cart" className="cart-btn">
               <ShoppingCart size={18} />
               <AnimatePresence mode="wait">
