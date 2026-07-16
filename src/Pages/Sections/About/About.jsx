@@ -1,5 +1,5 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useState, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import styles from "./about.module.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay, EffectFade } from "swiper/modules";
@@ -8,6 +8,32 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 import { Leaf, Award, Users, Sprout, ArrowRight } from "lucide-react";
+
+const CountUp = ({ value, suffix = "" }) => {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, amount: 0.5 });
+  const [count, setCount] = useState(0);
+  const num = parseInt(value, 10);
+
+  useEffect(() => {
+    if (!inView) return;
+    let start = 0;
+    const duration = 1200;
+    const step = Math.max(1, Math.floor(num / 30));
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= num) {
+        setCount(num);
+        clearInterval(timer);
+      } else {
+        setCount(start);
+      }
+    }, duration / (num / step));
+    return () => clearInterval(timer);
+  }, [inView, num]);
+
+  return <span ref={ref}>{count}{suffix}</span>;
+};
 
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
@@ -74,10 +100,10 @@ const livestock = [
 ];
 
 const stats = [
-  { icon: Sprout, value: "20+", label: "Acres of Farm" },
-  { icon: Leaf, value: "2016", label: "Established" },
-  { icon: Award, value: "100%", label: "Organic" },
-  { icon: Users, value: "50+", label: "Bee Hives" },
+  { icon: Sprout, value: "20+", num: "20", suffix: "+", label: "Acres of Farm" },
+  { icon: Leaf, value: "2016", num: "2016", suffix: "", label: "Established" },
+  { icon: Award, value: "100%", num: "100", suffix: "%", label: "Organic" },
+  { icon: Users, value: "50+", num: "50", suffix: "+", label: "Bee Hives" },
 ];
 
 const AboutUs = () => {
@@ -93,14 +119,36 @@ const AboutUs = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
-          <span className={styles.heroBadge}>
+          <motion.span
+            className={styles.heroBadge}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
             <Leaf size={12} />
             Since 2016
-          </span>
-          <h1 className={styles.heroTitle}>Maanjoo Farms</h1>
-          <p className={styles.heroTagline}>
+          </motion.span>
+          <h1 className={styles.heroTitle}>
+            {"Maanjoo Farms".split(" ").map((word, i) => (
+              <motion.span
+                key={i}
+                className="inline-block"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {word}
+              </motion.span>
+            ))}
+          </h1>
+          <motion.p
+            className={styles.heroTagline}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
             Where Tradition, Nature & Innovation Come Together
-          </p>
+          </motion.p>
         </motion.div>
       </section>
 
@@ -150,7 +198,9 @@ const AboutUs = () => {
               <div className={styles.statIcon}>
                 <stat.icon size={24} />
               </div>
-              <span className={styles.statValue}>{stat.value}</span>
+              <span className={styles.statValue}>
+                <CountUp value={stat.num} suffix={stat.suffix} />
+              </span>
               <span className={styles.statLabel}>{stat.label}</span>
             </motion.div>
           ))}
