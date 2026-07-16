@@ -68,6 +68,7 @@ const CamelRiding = () => {
       <section className={styles.hero}>
         <div className={styles.heroBg} />
         <div className={styles.heroOverlay} />
+        <div className={styles.heroGrain} />
         <div className={styles.heroContent}>
           <motion.span
             className={styles.badge}
