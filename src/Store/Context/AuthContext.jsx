@@ -22,6 +22,15 @@ const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  const ADMIN_EMAIL = "admin@maanjufarms.com";
+
+  const checkIsAdmin = (userData) => {
+    if (userData.role === "admin") return true;
+    if (userData.isAdmin) return true;
+    if (userData.email === ADMIN_EMAIL) return true;
+    return false;
+  };
+
   // Fetch user details from backend
   const fetchUser = async (jwtToken) => {
     try {
@@ -29,10 +38,11 @@ const AuthProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${jwtToken}` },
       });
       const userData = res.data.user;
+      const admin = checkIsAdmin(userData);
 
       setUser(userData);
-      setIsAdmin(userData.role === "admin" || userData.isAdmin); 
-      // ✅ adjust based on your backend: role === "admin" or isAdmin boolean
+      setIsAdmin(admin);
+      return { user: userData, isAdmin: admin };
     } catch (err) {
       console.error(err.response);
       setError("Failed to fetch user info");
@@ -52,8 +62,8 @@ const AuthProvider = ({ children }) => {
       setToken(jwtToken);
       localStorage.setItem("token", jwtToken);
 
-      await fetchUser(jwtToken); // fetch user info and isAdmin
-      return { success: true };
+      const result = await fetchUser(jwtToken);
+      return { success: true, ...result };
     } catch (err) {
       setError(err.response?.data?.msg || "Login failed");
       return { success: false };
