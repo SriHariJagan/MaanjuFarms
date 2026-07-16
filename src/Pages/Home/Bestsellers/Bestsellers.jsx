@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import styles from "./BestSellers.module.css";
@@ -6,7 +6,21 @@ import { SectionTitle, ProductCardSkeleton } from "../../../Components/ui";
 import { useCart } from "../../../Store/useContext.jsx";
 import { PRODUCTS_API } from "../../../urls.js";
 import { getImageUrl } from "../../../utils/getImageUrl .js";
-import { ShoppingBag, Eye, Check } from "lucide-react";
+import { ShoppingBag, Eye, Check, Image as ImageIcon } from "lucide-react";
+
+const ProductImage = ({ src, alt }) => {
+  const [imgError, setImgError] = useState(false);
+  const handleError = useCallback(() => setImgError(true), []);
+  if (imgError || !src || src === "/Images/image.png") {
+    return (
+      <div className={styles.imgFallback}>
+        <ImageIcon size={28} />
+        <span>Image coming soon</span>
+      </div>
+    );
+  }
+  return <img src={src} alt={alt} loading="lazy" onError={handleError} />;
+};
 
 const stagger = {
   hidden: { opacity: 0 },
@@ -100,10 +114,9 @@ const BestSellers = () => {
                       className={styles.imageWrapper}
                       onClick={() => handleViewDetails(product)}
                     >
-                      <img
-                        src={getImageUrl(product.image) || "/Images/image.png"}
+                      <ProductImage
+                        src={getImageUrl(product.image)}
                         alt={product.name}
-                        loading="lazy"
                       />
                       <div className={styles.imageOverlay}>
                         <motion.button
