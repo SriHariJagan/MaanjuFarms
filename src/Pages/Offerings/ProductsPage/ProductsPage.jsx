@@ -2,9 +2,18 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useCart, useProducts } from "../../../Store/useContext";
-import { ShoppingBag, Eye, X, Plus, Leaf } from "lucide-react";
+import {
+  ShoppingBag,
+  Eye,
+  X,
+  Plus,
+  Leaf,
+  Search,
+  SlidersHorizontal,
+} from "lucide-react";
 import "./ProductsPage.css";
 import { getImageUrl } from "../../../utils/getImageUrl ";
+import { Badge } from "../../../Components/ui";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -30,6 +39,7 @@ const ProductsPage = () => {
   const { isAdmin } = useAuth();
 
   const [showAddModal, setShowAddModal] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("All");
   const [formData, setFormData] = useState({
     name: "",
     category: "",
@@ -67,11 +77,17 @@ const ProductsPage = () => {
     handleCloseModal();
   };
 
-  const categories = [...new Set(products.map((p) => p.category))];
+  const categories = ["All", ...new Set(products.map((p) => p.category))];
+  const filteredProducts =
+    activeCategory === "All"
+      ? products
+      : products.filter((p) => p.category === activeCategory);
 
   return (
     <div className="products-page">
+      {/* Hero Banner */}
       <section className="products-hero">
+        <div className="products-hero-bg" />
         <div className="products-hero-overlay" />
         <div className="products-hero-content">
           <motion.span
@@ -80,6 +96,7 @@ const ProductsPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
+            <Leaf size={12} />
             Pure • Organic • Trusted Quality
           </motion.span>
           <motion.h1
@@ -89,10 +106,18 @@ const ProductsPage = () => {
           >
             Our Premium Products
           </motion.h1>
-          <motion.div
+          <motion.p
+            className="products-hero-desc"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.35 }}
+          >
+            Fresh from our farm to your table — 100% organic, ethically sourced
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
           >
             {isAdmin ? (
               <button className="products-hero-cta" onClick={handleOpenModal}>
@@ -100,7 +125,10 @@ const ProductsPage = () => {
                 Add Product
               </button>
             ) : (
-              <button className="products-hero-cta" onClick={() => navigate("/cart")}>
+              <button
+                className="products-hero-cta"
+                onClick={() => navigate("/cart")}
+              >
                 <ShoppingBag size={18} />
                 Shop Now
               </button>
@@ -109,96 +137,165 @@ const ProductsPage = () => {
         </div>
       </section>
 
+      {/* Category Filter */}
       <div className="products-container">
-        {categories.map((category) => (
-          <section key={category} className="category-section">
-            <h2 className="category-title">
-              <Leaf size={20} className="category-icon" />
-              {category}
-            </h2>
-
-            <motion.div
-              className="product-grid"
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-30px" }}
-            >
-              {products
-                .filter((p) => p.category === category)
-                .map((product) => (
+        <div className="products-filter-bar">
+          <div className="filter-tabs">
+            {categories.map((cat) => (
+              <motion.button
+                key={cat}
+                className={`filter-tab ${activeCategory === cat ? "active" : ""}`}
+                onClick={() => setActiveCategory(cat)}
+                whileTap={{ scale: 0.95 }}
+              >
+                {cat}
+                {activeCategory === cat && (
                   <motion.div
-                    key={product._id}
-                    className="product-card"
-                    variants={cardVariants}
+                    className="filter-tab-indicator"
+                    layoutId="filterIndicator"
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
+                )}
+              </motion.button>
+            ))}
+          </div>
+        </div>
+
+        {categories.length > 1 &&
+          categories.slice(1).map(
+            (category) =>
+              filteredProducts.filter((p) => p.category === category).length >
+                0 && (
+                <section key={category} className="category-section">
+                  <motion.h2
+                    className="category-title"
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4 }}
                   >
-                    <div className="product-card-image">
-                      <img
-                        src={getImageUrl(product.image) || "/Images/image.png"}
-                        alt={product.name}
-                        loading="lazy"
-                      />
-                      {isAdmin && <span className="admin-badge">Admin</span>}
-                      <div className="product-card-overlay">
-                        <button
-                          className="product-quick-view"
-                          onClick={() => handleViewDetails(product._id)}
+                    <Leaf size={18} className="category-icon" />
+                    {category}
+                    <span className="category-line" />
+                  </motion.h2>
+
+                  <motion.div
+                    className="product-grid"
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-30px" }}
+                  >
+                    {products
+                      .filter((p) => p.category === category)
+                      .map((product) => (
+                        <motion.div
+                          key={product._id}
+                          className="product-card"
+                          variants={cardVariants}
                         >
-                          <Eye size={16} />
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="product-card-info">
-                      <h3>{product.name}</h3>
-
-                      <span
-                        className={`product-stock ${
-                          product.stock > 0 ? "in-stock" : "out-of-stock"
-                        }`}
-                      >
-                        {product.stock > 0
-                          ? `In Stock (${product.stock})`
-                          : "Out of Stock"}
-                      </span>
-
-                      <div className="product-card-actions">
-                        {isAdmin ? (
-                          <button
-                            className="product-btn product-btn-primary"
+                          <div
+                            className="product-card-image"
                             onClick={() => handleViewDetails(product._id)}
                           >
-                            <Eye size={15} />
-                            View Product
-                          </button>
-                        ) : (
-                          <>
-                            <button
-                              className="product-btn product-btn-secondary"
-                              onClick={() => handleViewDetails(product._id)}
-                            >
-                              Details
-                            </button>
-                            {product.stock > 0 && (
-                              <button
-                                className="product-btn product-btn-primary"
-                                onClick={() => handleAddToCart(product)}
-                              >
-                                <ShoppingBag size={15} />
-                                Add to Cart
-                              </button>
+                            <img
+                              src={
+                                getImageUrl(product.image) ||
+                                "/Images/image.png"
+                              }
+                              alt={product.name}
+                              loading="lazy"
+                            />
+                            {product.stock <= 0 && (
+                              <div className="product-out-badge">
+                                Out of Stock
+                              </div>
                             )}
-                          </>
-                        )}
-                      </div>
-                    </div>
+                            {product.stock > 0 && product.stock <= 5 && (
+                              <Badge
+                                status="low-stock"
+                                className="product-stock-badge"
+                              />
+                            )}
+                            {isAdmin && (
+                              <span className="admin-badge">Admin</span>
+                            )}
+                            <div className="product-card-overlay">
+                              <motion.button
+                                className="product-quick-view"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleViewDetails(product._id);
+                                }}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                              >
+                                <Eye size={16} />
+                              </motion.button>
+                            </div>
+                          </div>
+
+                          <div className="product-card-info">
+                            <div className="product-info-header">
+                              <h3>{product.name}</h3>
+                            </div>
+
+                            <span
+                              className={`product-stock ${
+                                product.stock > 0 ? "in-stock" : "out-of-stock"
+                              }`}
+                            >
+                              <span className="stock-dot" />
+                              {product.stock > 0
+                                ? `In Stock (${product.stock})`
+                                : "Out of Stock"}
+                            </span>
+
+                            <div className="product-card-actions">
+                              {isAdmin ? (
+                                <button
+                                  className="product-btn product-btn-primary"
+                                  onClick={() =>
+                                    handleViewDetails(product._id)
+                                  }
+                                >
+                                  <Eye size={15} />
+                                  View Product
+                                </button>
+                              ) : (
+                                <>
+                                  <button
+                                    className="product-btn product-btn-secondary"
+                                    onClick={() =>
+                                      handleViewDetails(product._id)
+                                    }
+                                  >
+                                    Details
+                                  </button>
+                                  {product.stock > 0 && (
+                                    <button
+                                      className="product-btn product-btn-primary"
+                                      onClick={() =>
+                                        handleAddToCart(product)
+                                      }
+                                    >
+                                      <ShoppingBag size={15} />
+                                      Add to Cart
+                                    </button>
+                                  )}
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
                   </motion.div>
-                ))}
-            </motion.div>
-          </section>
-        ))}
+                </section>
+              )
+          )}
       </div>
 
+      {/* Add Product Modal */}
       <AnimatePresence>
         {showAddModal && (
           <motion.div
@@ -241,9 +338,11 @@ const ProductsPage = () => {
                   required
                 />
                 <datalist id="categoriesList">
-                  {categories.map((cat) => (
-                    <option key={cat} value={cat} />
-                  ))}
+                  {categories
+                    .filter((c) => c !== "All")
+                    .map((cat) => (
+                      <option key={cat} value={cat} />
+                    ))}
                 </datalist>
                 <div className="modal-row">
                   <input
@@ -277,7 +376,11 @@ const ProductsPage = () => {
                   onChange={handleChange}
                 />
                 <div className="modal-actions">
-                  <button type="button" className="modal-btn-cancel" onClick={handleCloseModal}>
+                  <button
+                    type="button"
+                    className="modal-btn-cancel"
+                    onClick={handleCloseModal}
+                  >
                     Cancel
                   </button>
                   <button type="submit" className="modal-btn-submit">
