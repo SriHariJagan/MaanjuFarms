@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth, useCart, useProducts } from "../../Store/useContext";
 import styles from "./ProductDetails.module.css";
-import { ArrowLeft, ShoppingBag, Package, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ShoppingBag, Package, ShieldCheck, Minus, Plus } from "lucide-react";
 import { getImageUrl, formatPriceWithUnit } from "../../utils/getImageUrl ";
 
 const ProductDetails = () => {
@@ -21,6 +21,7 @@ const ProductDetails = () => {
   const [editData, setEditData] = useState({});
   const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState("");
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     if (!loading) {
@@ -41,6 +42,7 @@ const ProductDetails = () => {
           (p) => p.category === found.category && p._id !== id,
         );
         setSimilarProducts(related);
+        setQuantity(1);
       }
     }
   }, [id, products, loading]);
@@ -176,13 +178,41 @@ const ProductDetails = () => {
                   </span>
                 </div>
 
-                <p className={styles.price}>{formatPriceWithUnit(product.price, product.unit)}</p>
+                <p className={styles.price}>
+                  {formatPriceWithUnit(product.price, product.unit)}
+                  {quantity > 1 && (
+                    <span className={styles.totalPrice}>
+                      {" "}× {quantity} = ₹{(product.price * quantity).toLocaleString()}
+                    </span>
+                  )}
+                </p>
 
                 <p className={styles.description}>{product.description}</p>
 
                 <div className={styles.trustBadges}>
                   <span><ShieldCheck size={16} /> 100% Organic</span>
                   <span><ShieldCheck size={16} /> Free Shipping</span>
+                </div>
+
+                <div className={styles.quantitySelector}>
+                  <button
+                    className={styles.qtyBtn}
+                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                    disabled={quantity <= 1}
+                  >
+                    <Minus size={16} />
+                  </button>
+                  <span className={styles.qtyValue}>{quantity}</span>
+                  <button
+                    className={styles.qtyBtn}
+                    onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
+                    disabled={quantity >= product.stock}
+                  >
+                    <Plus size={16} />
+                  </button>
+                  <span className={styles.qtyLabel}>
+                    {product.unit ? `(${product.unit})` : "units"}
+                  </span>
                 </div>
               </>
             )}
@@ -204,7 +234,7 @@ const ProductDetails = () => {
                 <button
                   className={`${styles.addToCartBtn} ${isOutOfStock ? styles.disabled : ""}`}
                   disabled={isOutOfStock}
-                  onClick={() => !isOutOfStock && addToCart(product)}
+                  onClick={() => !isOutOfStock && (addToCart(product, quantity), setQuantity(1))}
                 >
                   <ShoppingBag size={18} />
                   {isOutOfStock ? "Out of Stock" : "Add to Cart"}
