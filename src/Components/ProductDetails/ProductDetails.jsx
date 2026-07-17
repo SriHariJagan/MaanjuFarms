@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth, useCart, useProducts } from "../../Store/useContext";
 import styles from "./ProductDetails.module.css";
 import { ArrowLeft, ShoppingBag, Package, ShieldCheck } from "lucide-react";
-import { getImageUrl } from "../../utils/getImageUrl ";
+import { getImageUrl, formatPriceWithUnit } from "../../utils/getImageUrl ";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -35,6 +35,7 @@ const ProductDetails = () => {
           stock: found.stock,
           description: found.description,
           image: found.image,
+          unit: found.unit || "",
         });
         const related = products.filter(
           (p) => p.category === found.category && p._id !== id,
@@ -63,6 +64,7 @@ const ProductDetails = () => {
       formData.append("category", editData.category);
       formData.append("price", editData.price);
       formData.append("stock", editData.stock);
+      formData.append("unit", editData.unit);
       formData.append("description", editData.description);
       if (imageFile) {
         formData.append("image", imageFile);
@@ -152,6 +154,12 @@ const ProductDetails = () => {
                 <input value={editData.category} onChange={(e) => setEditData({ ...editData, category: e.target.value })} />
                 <div className={styles.editRow}>
                   <input type="number" value={editData.price} onChange={(e) => setEditData({ ...editData, price: e.target.value })} />
+                  <select value={editData.unit} onChange={(e) => setEditData({ ...editData, unit: e.target.value })}>
+                    <option value="">Unit</option>
+                    <option value="kg">Kilogram</option>
+                    <option value="liter">Liter</option>
+                    <option value="piece">Piece</option>
+                  </select>
                   <input type="number" value={editData.stock} onChange={(e) => setEditData({ ...editData, stock: e.target.value })} />
                 </div>
                 <textarea value={editData.description} onChange={(e) => setEditData({ ...editData, description: e.target.value })} />
@@ -168,7 +176,7 @@ const ProductDetails = () => {
                   </span>
                 </div>
 
-                <p className={styles.price}>₹{product.price}</p>
+                <p className={styles.price}>{formatPriceWithUnit(product.price, product.unit)}</p>
 
                 <p className={styles.description}>{product.description}</p>
 
@@ -227,7 +235,7 @@ const ProductDetails = () => {
                     </div>
                     <div className={styles.similarInfo}>
                       <p className={styles.similarName}>{item.name}</p>
-                      <p className={styles.similarPrice}>₹{item.price}</p>
+                       <p className={styles.similarPrice}>{formatPriceWithUnit(item.price, item.unit)}</p>
                       <button
                         className={`${styles.similarBtn} ${isOut ? styles.disabled : ""}`}
                         disabled={isOut}

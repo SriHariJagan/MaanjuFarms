@@ -5,7 +5,7 @@ import styles from "./BestSellers.module.css";
 import { SectionTitle, ProductCardSkeleton } from "../../../Components/ui";
 import { useCart } from "../../../Store/useContext.jsx";
 import { PRODUCTS_API } from "../../../urls.js";
-import { getImageUrl } from "../../../utils/getImageUrl .js";
+import { getImageUrl, formatPriceWithUnit } from "../../../utils/getImageUrl .js";
 import { ShoppingBag, Eye, Check, Image as ImageIcon } from "lucide-react";
 import { toast } from "react-toastify";
 
@@ -142,7 +142,7 @@ const BestSellers = () => {
                       >
                         {product.name}
                       </h3>
-                      <p className={styles.price}>₹ {product.price}</p>
+                      <p className={styles.price}>{formatPriceWithUnit(product.price, product.unit)}</p>
 
                       <motion.button
                         className={`${styles.addBtn} ${isAdded ? styles.added : ""}`}

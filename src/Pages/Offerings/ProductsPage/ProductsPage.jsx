@@ -63,6 +63,7 @@ const ProductsPage = () => {
     stock: "",
     description: "",
     image: "",
+    unit: "",
   });
 
   const handleAddToCart = (product) => {
@@ -90,6 +91,7 @@ const ProductsPage = () => {
       stock: "",
       description: "",
       image: "",
+      unit: "",
     });
     handleCloseModal();
   };
@@ -366,6 +368,17 @@ const ProductsPage = () => {
                     onChange={handleChange}
                     required
                   />
+                  <select
+                    name="unit"
+                    value={formData.unit}
+                    onChange={handleChange}
+                    className="modal-select"
+                  >
+                    <option value="">Unit</option>
+                    <option value="kg">Kilogram</option>
+                    <option value="liter">Liter</option>
+                    <option value="piece">Piece</option>
+                  </select>
                   <input
                     type="number"
                     name="stock"
