@@ -364,7 +364,7 @@ const ProductsGrid = ({
                 <div className={styles.cardMeta}>
                   <span className={styles.cardPrice}>
                     <IndianRupee size={12} />
-                    {(product.price || 0).toLocaleString()}
+                    {(product.price || 0).toLocaleString()}{product.unit ? `/${product.unit}` : ""}
                   </span>
                   <span className={styles.cardStock}>
                     <Package size={12} />
@@ -544,7 +544,7 @@ const ProductDrawer = ({ product, onClose }) => {
                 <IndianRupee size={15} />
                 <div>
                   <label>Price</label>
-                  <p>₹{(product.price || 0).toLocaleString()}</p>
+                  <p>₹{(product.price || 0).toLocaleString()}{product.unit ? `/${product.unit}` : ""}</p>
                 </div>
               </div>
               <div className={styles.drawerInfoItem}>
@@ -596,7 +596,7 @@ const ProductDrawer = ({ product, onClose }) => {
 };
 
 // ─── ProductModal (Add / Edit) ───────────────────────────────
-const INITIAL_FORM = { name: "", description: "", category: "", price: "", stock: "" };
+const INITIAL_FORM = { name: "", description: "", category: "", price: "", stock: "", unit: "" };
 
 const ProductModal = ({ product, onClose, onSubmit, submitting }) => {
   const isEdit = !!product;
@@ -612,6 +612,7 @@ const ProductModal = ({ product, onClose, onSubmit, submitting }) => {
         category: product.category || "",
         price: product.price?.toString() || "",
         stock: product.stock?.toString() || "",
+        unit: product.unit || "",
       });
       if (product.image) {
         setImagePreview(getImageUrl(product.image));
@@ -643,6 +644,7 @@ const ProductModal = ({ product, onClose, onSubmit, submitting }) => {
     formData.append("category", form.category);
     formData.append("price", form.price);
     formData.append("stock", form.stock);
+    formData.append("unit", form.unit);
     if (imageFile) {
       formData.append("image", imageFile);
     }
@@ -654,6 +656,7 @@ const ProductModal = ({ product, onClose, onSubmit, submitting }) => {
     || form.category !== (product?.category || "")
     || form.price !== (product?.price?.toString() || "")
     || form.stock !== (product?.stock?.toString() || "")
+    || form.unit !== (product?.unit || "")
     || !!imageFile;
 
   return (
@@ -720,6 +723,20 @@ const ProductModal = ({ product, onClose, onSubmit, submitting }) => {
                   step="0.01"
                   required
                 />
+              </div>
+              <div className={styles.formGroup}>
+                <label>Unit</label>
+                <select
+                  name="unit"
+                  value={form.unit}
+                  onChange={handleChange}
+                  className={styles.formSelect}
+                >
+                  <option value="">None</option>
+                  <option value="kg">Kilogram</option>
+                  <option value="liter">Liter</option>
+                  <option value="piece">Piece</option>
+                </select>
               </div>
               <div className={styles.formGroup}>
                 <label>Stock *</label>
