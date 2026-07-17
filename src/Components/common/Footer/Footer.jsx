@@ -84,12 +84,11 @@ const Footer = () => {
           transition={{ ...fadeUp.transition, delay: 0.2 }}
         >
           <h4>Our Experiences</h4>
-          <ul className={styles.experiences}>
-            <li>Horse Riding Trails</li>
-            <li>Camel Safari</li>
-            <li>Organic Farming</li>
-            <li>Agro-Tourism</li>
-            <li>Cultural Evenings</li>
+          <ul>
+            <li><Link to="/horse-riding">Horse Riding Trails</Link></li>
+            <li><Link to="/camel-riding">Camel Safari</Link></li>
+            <li><Link to="/organic-products">Organic Farming</Link></li>
+            <li><Link to="/villas">Agro-Tourism</Link></li>
           </ul>
         </motion.div>
 
