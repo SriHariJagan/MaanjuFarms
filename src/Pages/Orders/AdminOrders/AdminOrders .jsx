@@ -3,7 +3,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Package, CalendarDays, User, MapPin, Truck, ChevronDown, ChevronUp, BadgeCheck, Phone, Mail, Hotel, Filter } from "lucide-react";
 import styles from "./AdminOrders.module.css";
-import { getImageUrl } from "../../../utils/getImageUrl ";
+import { getImageUrl, formatPriceWithUnit } from "../../../utils/getImageUrl ";
 import { API_BASE } from "../../../urls";
 
 const stagger = {
@@ -199,7 +199,7 @@ const AdminOrders = () => {
                               <img src={getImageUrl(item.product?.image)} alt="" />
                               <h4>{item.product?.name}</h4>
                               <p>Qty: {item.quantity}</p>
-                              <b>₹{item.product?.price}</b>
+                              <b>{formatPriceWithUnit(item.product?.price, item.product?.unit)}</b>
                             </div>
                           ))}
                         </div>

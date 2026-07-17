@@ -3,7 +3,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp, Package, Truck, BadgeCheck, Building2, CalendarDays, Users, CreditCard, MapPin } from "lucide-react";
 import styles from "./UserOrders.module.css";
-import { getImageUrl } from "../../../utils/getImageUrl ";
+import { getImageUrl, formatPriceWithUnit } from "../../../utils/getImageUrl ";
 import { API_BASE } from "../../../urls";
 
 const stagger = {
@@ -119,6 +119,7 @@ const UserOrders = () => {
                               <div className={styles.productContent}>
                                 <h4>{item.product?.name}</h4>
                                 <p>Quantity :<span>{item.quantity}</span></p>
+                                <p className={styles.productPrice}>{formatPriceWithUnit(item.product?.price, item.product?.unit)}</p>
                               </div>
                             </div>
                           ))}

@@ -298,6 +298,13 @@
   margin-left: 6px;
 }
 
+.productPrice {
+  color: var(--primary-green);
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+
 .paymentSection {
   margin-top: 34px;
   padding: 26px;

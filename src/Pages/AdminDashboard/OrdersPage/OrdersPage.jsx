@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../../Store/useContext";
 import { API_BASE, ORDERS_API } from "../../../urls";
-import { getImageUrl } from "../../../utils/getImageUrl ";
+import { getImageUrl, formatPriceWithUnit } from "../../../utils/getImageUrl ";
 import styles from "./OrdersPage.module.css";
 
 // ─── Status Config ───────────────────────────────────────────
@@ -657,8 +657,7 @@ const OrderDrawer = ({ order, onClose, onStatusChange, updating }) => {
                     <span className={styles.dpMeta}>Qty: {item.quantity}</span>
                   </div>
                   <div className={styles.dpPrice}>
-                    <IndianRupee size={11} />
-                    {item.product?.price || 0}
+                    {formatPriceWithUnit(item.product?.price, item.product?.unit)}
                   </div>
                 </div>
               ))}
