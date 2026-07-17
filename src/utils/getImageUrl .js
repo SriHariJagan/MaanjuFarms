@@ -1,5 +1,11 @@
 import { IMAGE_BASE } from "../urls";
 
+export const formatPriceWithUnit = (price, unit) => {
+  const formatted = `₹${(price || 0).toLocaleString()}`;
+  if (!unit) return formatted;
+  return `${formatted}/${unit}`;
+};
+
 export const getImageUrl = (urlOrFile) => {
   if (!urlOrFile) return "";
 

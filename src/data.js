@@ -49,6 +49,7 @@ export const productsData = [
     id: 1,
     name: "Organic Black Pepper",
     price: 250,
+    unit: "",
     image: "/images/Blackpepper.jpeg",
     category: "Spices"
   },
@@ -56,6 +57,7 @@ export const productsData = [
     id: 2,
     name: "Organic Turmeric Powder",
     price: 180,
+    unit: "",
     image: "/images/Turmeric.jpeg",
     category: "Spices"
   },
@@ -63,6 +65,7 @@ export const productsData = [
     id: 3,
     name: "Organic Moong Dal",
     price: 120,
+    unit: "",
     image: "/images/Moongdal.jpeg",
     category: "Pulses"
   },
@@ -70,6 +73,7 @@ export const productsData = [
     id: 4,
     name: "Organic Quinoa",
     price: 350,
+    unit: "",
     image: "/images/Quinoa.jpeg",
     category: "Grains"
   },
@@ -77,6 +81,7 @@ export const productsData = [
     id: 5,
     name: "Organic Mustard Oil",
     price: 200,
+    unit: "",
     image: "/images/Nustard.jpeg",
     category: "Oils"
   },
@@ -85,6 +90,7 @@ export const productsData = [
     id: 6,
     name: "Organic Wheat",
     price: 80,
+    unit: "",
     image: "/images/Wheat.jpeg",
     category: "Grains"
   }
