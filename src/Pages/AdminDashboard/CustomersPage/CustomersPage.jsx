@@ -1,34 +1,34 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  RefreshCw,
-  Search,
-  X,
-  SlidersHorizontal,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Eye,
-  Edit3,
-  Users,
-  UserCheck,
-  Shield,
-  UserPlus,
-  CalendarDays,
-  ArrowLeft,
-  AlertCircle,
-  Mail,
-  Phone,
-  ShoppingBag,
-  Building2,
-  IndianRupee,
-  Tag,
-  Clock,
-} from "lucide-react";
-import { useAuth } from "../../../Store/useContext";
-import { USERS_API } from "../../../urls";
-import styles from "./CustomersPage.module.css";
+// import React, { useState, useEffect, useMemo, useCallback } from "react";
+// import axios from "axios";
+// import { motion, AnimatePresence } from "framer-motion";
+// import {
+//   RefreshCw,
+//   Search,
+//   X,
+//   SlidersHorizontal,
+//   ChevronDown,
+//   ChevronLeft,
+//   ChevronRight,
+//   Eye,
+//   Edit3,
+//   Users,
+//   UserCheck,
+//   Shield,
+//   UserPlus,
+//   CalendarDays,
+//   ArrowLeft,
+//   AlertCircle,
+//   Mail,
+//   Phone,
+//   ShoppingBag,
+//   Building2,
+//   IndianRupee,
+//   Tag,
+//   Clock,
+// } from "lucide-react";
+// import { useAuth } from "../../../Store/useContext";
+// import { USERS_API } from "../../../urls";
+// import styles from "./CustomersPage.module.css";
 
 // ─── Role Config ────────────────────────────────────────────
 const ROLE_BADGES = {

@@ -1,30 +1,30 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  RefreshCw,
-  Plus,
-  Search,
-  X,
-  SlidersHorizontal,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Trash2,
-  MapPin,
-  CheckCircle,
-  XCircle,
-  Clock,
-  ArrowLeft,
-  AlertCircle,
-  Hash,
-  Globe,
-  MapPinned,
-  CalendarDays,
-} from "lucide-react";
-import { useAuth } from "../../../Store/useContext";
-import { PINCODE_ENDPOINTS } from "../../../urls";
-import styles from "./PincodePage.module.css";
+// import React, { useState, useEffect, useMemo, useCallback } from "react";
+// import axios from "axios";
+// import { motion, AnimatePresence } from "framer-motion";
+// import {
+//   RefreshCw,
+//   Plus,
+//   Search,
+//   X,
+//   SlidersHorizontal,
+//   ChevronDown,
+//   ChevronLeft,
+//   ChevronRight,
+//   Trash2,
+//   MapPin,
+//   CheckCircle,
+//   XCircle,
+//   Clock,
+//   ArrowLeft,
+//   AlertCircle,
+//   Hash,
+//   Globe,
+//   MapPinned,
+//   CalendarDays,
+// } from "lucide-react";
+// import { useAuth } from "../../../Store/useContext";
+// import { PINCODE_ENDPOINTS } from "../../../urls";
+// import styles from "./PincodePage.module.css";
 
 const PincodeKPICards = ({ pincodes }) => {
   const counts = useMemo(() => {

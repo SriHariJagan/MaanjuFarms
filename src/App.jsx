@@ -61,13 +61,13 @@ const AdminDashboard = lazy(() => import("./Pages/AdminDashboard/AdminDashboard.
 const DashboardSection = lazy(() => import("./Pages/AdminDashboard/DashboardSection.jsx"));
 const OrdersPage = lazy(() => import("./Pages/AdminDashboard/OrdersPage/OrdersPage.jsx"));
 const AdminProductsPage = lazy(() => import("./Pages/AdminDashboard/ProductsPage/ProductsPage.jsx"));
-const CustomersPage = lazy(() => import("./Pages/AdminDashboard/CustomersPage/CustomersPage.jsx"));
+// const CustomersPage = lazy(() => import("./Pages/AdminDashboard/CustomersPage/CustomersPage.jsx"));
 const AdminGalleryPage = lazy(() => import("./Pages/AdminDashboard/GalleryPage/GalleryPage.jsx"));
 const AdminBookingsPage = lazy(() => import("./Pages/AdminDashboard/BookingsPage/BookingsPage.jsx"));
 const AdminRoomsPage = lazy(() => import("./Pages/AdminDashboard/RoomsPage/RoomsPage.jsx"));
-const AdminPincodePage = lazy(() => import("./Pages/AdminDashboard/PincodePage/PincodePage.jsx"));
-const AdminAnalyticsPage = lazy(() => import("./Pages/AdminDashboard/AnalyticsPage/AnalyticsPage.jsx"));
-const AdminSettingsPage = lazy(() => import("./Pages/AdminDashboard/SettingsPage/SettingsPage.jsx"));
+// const AdminPincodePage = lazy(() => import("./Pages/AdminDashboard/PincodePage/PincodePage.jsx"));
+// const AdminAnalyticsPage = lazy(() => import("./Pages/AdminDashboard/AnalyticsPage/AnalyticsPage.jsx"));
+// const AdminSettingsPage = lazy(() => import("./Pages/AdminDashboard/SettingsPage/SettingsPage.jsx"));
 
 function App() {
   const { isAdmin } = useAuth(); // Get isAdmin from AuthContext
@@ -169,11 +169,11 @@ function App() {
             <Route path="products" element={<AdminProductsPage />} />
             <Route path="bookings" element={<AdminBookingsPage />} />
             <Route path="rooms" element={<AdminRoomsPage />} />
-            <Route path="customers" element={<CustomersPage />} />
+            {/* <Route path="customers" element={<CustomersPage />} /> */}
             <Route path="gallery" element={<AdminGalleryPage />} />
-            <Route path="pincode" element={<AdminPincodePage />} />
-            <Route path="analytics" element={<AdminAnalyticsPage />} />
-            <Route path="settings" element={<AdminSettingsPage />} />
+            {/* <Route path="pincode" element={<AdminPincodePage />} /> */}
+            {/* <Route path="analytics" element={<AdminAnalyticsPage />} /> */}
+            {/* <Route path="settings" element={<AdminSettingsPage />} */}
           </Route>
 
           {/* Routes WITHOUT layout (no navbar/footer) */}

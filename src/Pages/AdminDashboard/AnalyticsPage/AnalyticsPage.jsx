@@ -1,34 +1,34 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  RefreshCw,
-  Download,
-  IndianRupee,
-  ShoppingCart,
-  CalendarCheck,
-  Building2,
-  Users,
-  Package,
-  TrendingUp,
-  TrendingDown,
-  AlertCircle,
-  Clock,
-  CheckCircle,
-  XCircle,
-  Sprout,
-  BedDouble,
-  BarChart3,
-  PieChart,
-  Activity,
-} from "lucide-react";
-import {
-  LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  PieChart as RPieChart, Pie, Cell, AreaChart, Area, Legend,
-} from "recharts";
-import { useAuth } from "../../../Store/useContext";
-import { ORDERS_API, BOOKINGS_API, PRODUCTS_API, ROOMS_API, USERS_API } from "../../../urls";
-import styles from "./AnalyticsPage.module.css";
+// import React, { useState, useEffect, useMemo, useCallback } from "react";
+// import axios from "axios";
+// import { motion, AnimatePresence } from "framer-motion";
+// import {
+//   RefreshCw,
+//   Download,
+//   IndianRupee,
+//   ShoppingCart,
+//   CalendarCheck,
+//   Building2,
+//   Users,
+//   Package,
+//   TrendingUp,
+//   TrendingDown,
+//   AlertCircle,
+//   Clock,
+//   CheckCircle,
+//   XCircle,
+//   Sprout,
+//   BedDouble,
+//   BarChart3,
+//   PieChart,
+//   Activity,
+// } from "lucide-react";
+// import {
+//   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+//   PieChart as RPieChart, Pie, Cell, AreaChart, Area, Legend,
+// } from "recharts";
+// import { useAuth } from "../../../Store/useContext";
+// import { ORDERS_API, BOOKINGS_API, PRODUCTS_API, ROOMS_API, USERS_API } from "../../../urls";
+// import styles from "./AnalyticsPage.module.css";
 
 const PERIODS = [
   { key: "daily", label: "Daily" },

@@ -36,11 +36,11 @@ const sidebarSections = [
 ];
 
 const sidebarItems = [
-  { label: "Customers", path: "/dashboard/customers", icon: Users },
+  // { label: "Customers", path: "/dashboard/customers", icon: Users },
   { label: "Gallery", path: "/dashboard/gallery", icon: Image },
-  { label: "PinCode Services", path: "/dashboard/pincode", icon: MapPin },
-  { label: "Analytics", path: "/dashboard/analytics", icon: BarChart3 },
-  { label: "Settings", path: "/dashboard/settings", icon: Settings },
+  // { label: "PinCode Services", path: "/dashboard/pincode", icon: MapPin },
+  // { label: "Analytics", path: "/dashboard/analytics", icon: BarChart3 },
+  // { label: "Settings", path: "/dashboard/settings", icon: Settings },
 ];
 
 const GroupItem = ({ item, isActive }) => {

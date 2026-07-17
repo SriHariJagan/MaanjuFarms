@@ -1,27 +1,27 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  User,
-  Palette,
-  Shield,
-  Info,
-  Sun,
-  Moon,
-  Monitor,
-  LogOut,
-  Check,
-  AlertCircle,
-  Mail,
-  BadgeCheck,
-  CalendarDays,
-  Lock,
-  Fingerprint,
-  PanelLeft,
-  Table2,
-  Activity,
-} from "lucide-react";
-import { useAuth } from "../../../Store/useContext";
-import styles from "./SettingsPage.module.css";
+// import React, { useState, useEffect, useCallback } from "react";
+// import { motion, AnimatePresence } from "framer-motion";
+// import {
+//   User,
+//   Palette,
+//   Shield,
+//   Info,
+//   Sun,
+//   Moon,
+//   Monitor,
+//   LogOut,
+//   Check,
+//   AlertCircle,
+//   Mail,
+//   BadgeCheck,
+//   CalendarDays,
+//   Lock,
+//   Fingerprint,
+//   PanelLeft,
+//   Table2,
+//   Activity,
+// } from "lucide-react";
+// import { useAuth } from "../../../Store/useContext";
+// import styles from "./SettingsPage.module.css";
 
 const TABS = [
   { key: "general", label: "General", icon: User },
