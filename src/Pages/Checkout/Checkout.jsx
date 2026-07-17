@@ -5,6 +5,7 @@ import { useCart } from "../../Store/useContext";
 import axios from "axios";
 import { PINCODE_ENDPOINTS } from "../../urls";
 import { ArrowRight, ShieldCheck } from "lucide-react";
+import { formatPriceWithUnit } from "../../utils/getImageUrl ";
 
 const Checkout = () => {
   const { cart, total, handleCheckout } = useCart();
@@ -298,6 +299,7 @@ const Checkout = () => {
             <div key={item.product._id} className={styles.summaryItem}>
               <span className={styles.summaryName}>{item.product.name}</span>
               <span className={styles.summaryQty}>x{item.quantity}</span>
+              <span className={styles.summaryPrice}>{formatPriceWithUnit(item.product.price, item.product.unit)}</span>
             </div>
           ))}
 

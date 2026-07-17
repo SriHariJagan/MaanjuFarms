@@ -246,6 +246,13 @@
   flex-shrink: 0;
 }
 
+.summaryPrice {
+  color: var(--secondary-text);
+  margin-left: 8px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
 .summaryDivider {
   height: 1px;
   background: rgba(96, 153, 102, 0.1);

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { XCircle, Minus, Plus, ShoppingBag, ArrowRight } from "lucide-react";
 import styles from "./Cart.module.css";
 import { useCart } from "../../../Store/useContext";
-import { getImageUrl } from "../../../utils/getImageUrl ";
+import { getImageUrl, formatPriceWithUnit } from "../../../utils/getImageUrl ";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
@@ -88,7 +88,7 @@ const Cart = () => {
                   <div className={styles.itemInfo}>
                     <h4 className={styles.itemName}>{item.product.name}</h4>
                     <p className={styles.itemPrice}>
-                      ₹{(item.product.price || 0).toFixed(2)}
+                      {formatPriceWithUnit(item.product.price, item.product.unit)}
                     </p>
                   </div>
 
