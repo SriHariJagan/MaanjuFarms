@@ -829,7 +829,7 @@ const AnalyticsPage = () => {
   const productAnalytics = useMemo(() => {
     return {
       topProducts: products.sort((a, b) => (b.stock || 0) - (a.stock || 0)).slice(0, 8).map((p) => ({
-        name: p.name,
+        name: p.unit ? `${p.name} (${p.unit})` : p.name,
         sold: p.stock || 0,
       })),
       categoryDistribution: Object.entries(
