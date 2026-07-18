@@ -95,15 +95,6 @@ function App() {
             <Route path="gallery" element={<Gallery />} />
             <Route path="product/:id" element={<ProductDetails />} />
 
-            {/* Legal / Policy Routes */}
-            <Route path="terms-and-conditions" element={<PolicyPage />} />
-            <Route path="privacy-policy" element={<PolicyPage />} />
-            <Route path="return-refund-policy" element={<PolicyPage />} />
-            <Route path="shipping-delivery-policy" element={<PolicyPage />} />
-            <Route path="payment-policy" element={<PolicyPage />} />
-            <Route path="villa-booking-cancellation-policy" element={<PolicyPage />} />
-            <Route path="grievance-redressal" element={<PolicyPage />} />
-
             {/* Protected */}
             <Route
               path="cart"
@@ -146,6 +137,9 @@ function App() {
             />
 
             <Route path="/guest-details" element={<GuestDetails />} />
+
+            {/* Legal / Policy Routes — dynamic slug catches all policy pages */}
+            <Route path=":slug" element={<PolicyPage />} />
           </Route>
 
           {/* Dashboard */}

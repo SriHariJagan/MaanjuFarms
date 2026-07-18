@@ -32,6 +32,9 @@ const POLICY_SLUGS = [
   { slug: "grievance-redressal", label: "Grievance Redressal" },
 ];
 
+const isKnownPolicy = (slug) => POLICY_SLUGS.some((p) => p.slug === slug);
+const knownLabel = (slug) => POLICY_SLUGS.find((p) => p.slug === slug)?.label;
+
 const socialLinks = [
   { icon: Facebook, href: "#", label: "Facebook" },
   { icon: Instagram, href: "#", label: "Instagram" },
@@ -39,23 +42,30 @@ const socialLinks = [
 ];
 
 const Footer = () => {
-  const [publishedSlugs, setPublishedSlugs] = useState([]);
+  const [publishedPolicies, setPublishedPolicies] = useState([]);
 
   useEffect(() => {
     axios
       .get(POLICY_API.ALL)
       .then((res) => {
         if (res.data?.success && Array.isArray(res.data.data)) {
-          const slugs = res.data.data.map((p) => p.slug);
-          setPublishedSlugs(slugs);
+          const apiPolicies = res.data.data.map((p) => ({
+            slug: p.slug,
+            label: isKnownPolicy(p.slug) ? knownLabel(p.slug) : p.title,
+          }));
+          const merged = POLICY_SLUGS
+            .filter((p) => apiPolicies.some((a) => a.slug === p.slug))
+            .concat(apiPolicies.filter((p) => !isKnownPolicy(p.slug)));
+          const seen = new Set();
+          setPublishedPolicies(merged.filter((p) => {
+            if (seen.has(p.slug)) return false;
+            seen.add(p.slug);
+            return true;
+          }));
         }
       })
       .catch(() => {});
   }, []);
-
-  const publishedPolicies = POLICY_SLUGS.filter((p) =>
-    publishedSlugs.includes(p.slug)
-  );
 
   return (
     <footer className={styles.footer}>
