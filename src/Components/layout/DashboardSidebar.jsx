@@ -11,6 +11,7 @@ import {
   Users,
   Image,
   MapPin,
+  FileText,
   BarChart3,
   Settings,
   ChevronDown,
@@ -38,7 +39,8 @@ const sidebarSections = [
 const sidebarItems = [
   // { label: "Customers", path: "/dashboard/customers", icon: Users },
   { label: "Gallery", path: "/dashboard/gallery", icon: Image },
-  // { label: "PinCode Services", path: "/dashboard/pincode", icon: MapPin },
+  { label: "PinCode Services", path: "/dashboard/pincode", icon: MapPin },
+  { label: "Policies", path: "/dashboard/policies", icon: FileText },
   // { label: "Analytics", path: "/dashboard/analytics", icon: BarChart3 },
   // { label: "Settings", path: "/dashboard/settings", icon: Settings },
 ];

@@ -32,6 +32,8 @@ const CamelRiding = lazy(
 const VillasStays = lazy(
   () => import("./Pages/Offerings/VillasStays/VillasStays.jsx"),
 );
+/*Policies*/
+const PolicyPage = lazy(() => import("./Pages/Legal/PolicyPage.jsx"));
 /*Sections*/
 const AboutUs = lazy(() => import("./Pages/Sections/About/About.jsx"));
 const ContactUs = lazy(
@@ -44,9 +46,6 @@ const ProductDetails = lazy(
 );
 
 const Cart = lazy(() => import("./Pages/Sections/Cart/Cart.jsx"));
-const AdminOrder = lazy(
-  () => import("./Pages/Orders/AdminOrders/AdminOrders .jsx"),
-);
 const UserOrders = lazy(
   () => import("./Pages/Orders/UserOrders/UserOrders.jsx"),
 );
@@ -54,6 +53,8 @@ const UserOrders = lazy(
 /*Auth pages*/
 const Login = lazy(() => import("./Pages/Auth/Login/Login.jsx"));
 const Signup = lazy(() => import("./Pages/Auth/Signup/Signup.jsx"));
+const ForgotPassword = lazy(() => import("./Pages/Auth/ForgotPassword/ForgotPassword.jsx"));
+const ResetPassword = lazy(() => import("./Pages/Auth/ResetPassword/ResetPassword.jsx"));
 /* Payment pages*/
 const PaymentFailure = lazy(() => import("./Pages/Payment/PaymentFailure.jsx"));
 const PaymentSuccess = lazy(() => import("./Pages/Payment/PaymentSuccess.jsx"));
@@ -65,7 +66,8 @@ const AdminProductsPage = lazy(() => import("./Pages/AdminDashboard/ProductsPage
 const AdminGalleryPage = lazy(() => import("./Pages/AdminDashboard/GalleryPage/GalleryPage.jsx"));
 const AdminBookingsPage = lazy(() => import("./Pages/AdminDashboard/BookingsPage/BookingsPage.jsx"));
 const AdminRoomsPage = lazy(() => import("./Pages/AdminDashboard/RoomsPage/RoomsPage.jsx"));
-// const AdminPincodePage = lazy(() => import("./Pages/AdminDashboard/PincodePage/PincodePage.jsx"));
+const AdminPincodePage = lazy(() => import("./Pages/AdminDashboard/PincodePage/PincodePage.jsx"));
+const AdminPolicyPage = lazy(() => import("./Pages/AdminDashboard/PolicyPage/PolicyPage.jsx"));
 // const AdminAnalyticsPage = lazy(() => import("./Pages/AdminDashboard/AnalyticsPage/AnalyticsPage.jsx"));
 // const AdminSettingsPage = lazy(() => import("./Pages/AdminDashboard/SettingsPage/SettingsPage.jsx"));
 
@@ -93,21 +95,21 @@ function App() {
             <Route path="gallery" element={<Gallery />} />
             <Route path="product/:id" element={<ProductDetails />} />
 
+            {/* Legal / Policy Routes */}
+            <Route path="terms-and-conditions" element={<PolicyPage />} />
+            <Route path="privacy-policy" element={<PolicyPage />} />
+            <Route path="return-refund-policy" element={<PolicyPage />} />
+            <Route path="shipping-delivery-policy" element={<PolicyPage />} />
+            <Route path="payment-policy" element={<PolicyPage />} />
+            <Route path="villa-booking-cancellation-policy" element={<PolicyPage />} />
+            <Route path="grievance-redressal" element={<PolicyPage />} />
+
             {/* Protected */}
             <Route
               path="cart"
               element={
                 <PrivateRoute>
                   <Cart />
-                </PrivateRoute>
-              }
-            />
-
-            <Route
-              path="/admin/orders"
-              element={
-                <PrivateRoute>
-                  <AdminOrder />
                 </PrivateRoute>
               }
             />
@@ -171,7 +173,8 @@ function App() {
             <Route path="rooms" element={<AdminRoomsPage />} />
             {/* <Route path="customers" element={<CustomersPage />} /> */}
             <Route path="gallery" element={<AdminGalleryPage />} />
-            {/* <Route path="pincode" element={<AdminPincodePage />} /> */}
+            <Route path="pincode" element={<AdminPincodePage />} />
+            <Route path="policies" element={<AdminPolicyPage />} />
             {/* <Route path="analytics" element={<AdminAnalyticsPage />} /> */}
             {/* <Route path="settings" element={<AdminSettingsPage />} */}
           </Route>
@@ -179,6 +182,8 @@ function App() {
           {/* Routes WITHOUT layout (no navbar/footer) */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-failed" element={<PaymentFailure />} />
 

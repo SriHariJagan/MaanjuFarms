@@ -274,14 +274,33 @@ const Navbar = () => {
                       exit={{ opacity: 0, y: 8, scale: 0.96 }}
                       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
                     >
-                      {isAdmin && (
+                      {isAdmin ? (
+                        <>
+                          <Link
+                            to="/dashboard"
+                            className="profile-dropdown-item"
+                            onClick={closeMenu}
+                          >
+                            <LayoutDashboard size={16} />
+                            Dashboard
+                          </Link>
+                          <Link
+                            to="/dashboard/orders"
+                            className="profile-dropdown-item"
+                            onClick={closeMenu}
+                          >
+                            <ShoppingCart size={16} />
+                            Orders
+                          </Link>
+                        </>
+                      ) : (
                         <Link
-                          to="/dashboard"
+                          to="/my-orders"
                           className="profile-dropdown-item"
                           onClick={closeMenu}
                         >
-                          <LayoutDashboard size={16} />
-                          Dashboard
+                          <ShoppingCart size={16} />
+                          My Orders
                         </Link>
                       )}
                       <button
@@ -462,7 +481,7 @@ const Navbar = () => {
                             Dashboard
                           </Link>
                           <Link
-                            to="/admin/orders"
+                            to="/dashboard/orders"
                             className="mobile-link"
                             onClick={closeMenu}
                           >

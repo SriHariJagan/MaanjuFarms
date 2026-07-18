@@ -298,3 +298,33 @@
     align-items: flex-start;
   }
 }
+
+/* ─── Legal Notice ──────────────────────────── */
+.legalNotice {
+  margin: 16px 0 12px;
+  padding: 12px 16px;
+  background: rgba(157, 192, 139, 0.08);
+  border: 1px solid rgba(157, 192, 139, 0.2);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: #6b7280;
+}
+
+.legalNotice p {
+  margin: 0;
+}
+
+.legalNotice a {
+  color: #609966;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.legalNotice a:hover {
+  color: #40513b;
+  text-decoration: underline;
+}

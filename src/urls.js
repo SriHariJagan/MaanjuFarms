@@ -64,8 +64,14 @@ const ORDERS_BASE = `${API_BASE}/orders`;
 
 export const ORDERS_API = {
   ALL: `${ORDERS_BASE}/all`,
-  UPDATE: (id) => `${ORDERS_BASE}/update/${id}`,
   MY_ORDERS: `${ORDERS_BASE}/my-orders`,
+  DETAILS: (id) => `${ORDERS_BASE}/${id}`,
+  UPDATE_STATUS: (id) => `${ORDERS_BASE}/${id}/status`,
+  UPDATE_DELIVERY: (id) => `${ORDERS_BASE}/${id}/delivery`,
+  CANCEL: (id) => `${ORDERS_BASE}/${id}/cancel`,
+  RESEND_EMAIL: (id) => `${ORDERS_BASE}/${id}/resend-email`,
+  STATS: `${ORDERS_BASE}/stats/dashboard`,
+  INVOICE: (id) => `${ORDERS_BASE}/${id}/invoice`,
 };
 
 
@@ -91,3 +97,14 @@ export const PINCODE_ENDPOINTS = {
   DELETE: (id) =>
     `${PINCODE_API}/blocked/${id}`,
 };
+
+// ================= POLICIES =================
+
+const POLICIES_BASE = `${API_BASE}/policies`;
+
+export const POLICY_API = {
+  ALL: POLICIES_BASE,
+  BY_SLUG: (slug) => `${POLICIES_BASE}/${slug}`,
+};
+
+export const ADMIN_POLICY_API = `${API_BASE}/admin/policies`;

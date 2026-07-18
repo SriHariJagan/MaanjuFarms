@@ -26,7 +26,7 @@ const quickActions = [
   { label: "Add Product", path: "/dashboard/products", icon: Sprout },
   { label: "View Orders", path: "/dashboard/orders", icon: ShoppingCart },
   { label: "Manage Gallery", path: "/dashboard/gallery", icon: Image },
-  // { label: "Pincode Services", path: "/dashboard/pincode", icon: MapPin },
+  { label: "Pincode Services", path: "/dashboard/pincode", icon: MapPin },
 ];
 
 const container = {

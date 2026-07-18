@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
 import styles from "./Footer.module.css";
 import {
   Facebook,
@@ -12,6 +13,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { POLICY_API } from "../../../urls";
 
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
@@ -20,6 +22,16 @@ const fadeUp = {
   transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
 };
 
+const POLICY_SLUGS = [
+  { slug: "terms-and-conditions", label: "Terms & Conditions" },
+  { slug: "privacy-policy", label: "Privacy Policy" },
+  { slug: "return-refund-policy", label: "Return & Refund Policy" },
+  { slug: "shipping-delivery-policy", label: "Shipping & Delivery" },
+  { slug: "payment-policy", label: "Payment Policy" },
+  { slug: "villa-booking-cancellation-policy", label: "Booking Cancellation" },
+  { slug: "grievance-redressal", label: "Grievance Redressal" },
+];
+
 const socialLinks = [
   { icon: Facebook, href: "#", label: "Facebook" },
   { icon: Instagram, href: "#", label: "Instagram" },
@@ -27,9 +39,26 @@ const socialLinks = [
 ];
 
 const Footer = () => {
+  const [publishedSlugs, setPublishedSlugs] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(POLICY_API.ALL)
+      .then((res) => {
+        if (res.data?.success && Array.isArray(res.data.data)) {
+          const slugs = res.data.data.map((p) => p.slug);
+          setPublishedSlugs(slugs);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const publishedPolicies = POLICY_SLUGS.filter((p) =>
+    publishedSlugs.includes(p.slug)
+  );
+
   return (
     <footer className={styles.footer}>
-      {/* SVG Organic Wave Divider */}
       <div className={styles.waveDivider}>
         <svg
           viewBox="0 0 1440 60"
@@ -78,19 +107,22 @@ const Footer = () => {
           </ul>
         </motion.div>
 
-        <motion.div
-          className={styles.column}
-          {...fadeUp}
-          transition={{ ...fadeUp.transition, delay: 0.2 }}
-        >
-          <h4>Our Experiences</h4>
-          <ul>
-            <li><Link to="/horse-riding">Horse Riding Trails</Link></li>
-            <li><Link to="/camel-riding">Camel Safari</Link></li>
-            <li><Link to="/organic-products">Organic Farming</Link></li>
-            <li><Link to="/villas">Agro-Tourism</Link></li>
-          </ul>
-        </motion.div>
+        {publishedPolicies.length > 0 && (
+          <motion.div
+            className={styles.column}
+            {...fadeUp}
+            transition={{ ...fadeUp.transition, delay: 0.2 }}
+          >
+            <h4>Legal &amp; Policies</h4>
+            <ul>
+              {publishedPolicies.map((p) => (
+                <li key={p.slug}>
+                  <Link to={`/${p.slug}`}>{p.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
 
         <motion.div
           className={styles.column}

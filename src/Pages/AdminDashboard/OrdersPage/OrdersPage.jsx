@@ -1,939 +1,631 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import axios from "axios";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import axios from "axios";
 import {
-  RefreshCw,
-  Download,
-  Search,
-  X,
-  SlidersHorizontal,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Eye,
-  Edit3,
-  Package,
-  ClipboardList,
-  Clock,
-  CheckCircle,
-  XCircle,
-  Truck,
-  User,
-  Mail,
-  Phone,
-  MapPin,
-  CreditCard,
-  Hash,
-  CalendarDays,
-  Camera,
-  IndianRupee,
-  ArrowLeft,
-  AlertCircle,
+  Search, Package, CalendarDays, User, MapPin, Truck, ChevronDown, ChevronUp,
+  Phone, Mail, Filter, ArrowUpDown, RefreshCw, Send, X, Loader2, Download,
+  AlertTriangle, Clock, Eye
 } from "lucide-react";
-import { useAuth } from "../../../Store/useContext";
-import { API_BASE, ORDERS_API } from "../../../urls";
-import { getImageUrl, formatPriceWithUnit } from "../../../utils/getImageUrl ";
 import styles from "./OrdersPage.module.css";
+import { ORDERS_API } from "../../../urls";
+import { useAuth } from "../../../Store/useContext";
+import StatusBadge from "../../../Components/orders/StatusBadge";
+import OrderStats from "../../../Components/orders/OrderStats";
+import OrderTimeline from "../../../Components/orders/OrderTimeline";
+import DeliveryForm from "../../../Components/orders/DeliveryForm";
 
-// ─── Status Config ───────────────────────────────────────────
-const STATUS_COLORS = {
-  Pending: { bg: "rgba(245,158,11,0.1)", text: "#d97706" },
-  Confirmed: { bg: "rgba(96,153,102,0.1)", text: "#609966" },
-  Processing: { bg: "rgba(59,130,246,0.1)", text: "#2563eb" },
-  Shipped: { bg: "rgba(59,130,246,0.1)", text: "#2563eb" },
-  Delivered: { bg: "rgba(96,153,102,0.15)", text: "#40513B" },
-  Cancelled: { bg: "rgba(239,68,68,0.1)", text: "#ef4444" },
+const fadeUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.4 } },
 };
 
-const PAYMENT_COLORS = {
-  paid: { bg: "rgba(96,153,102,0.12)", text: "#609966" },
-  pending: { bg: "rgba(245,158,11,0.1)", text: "#d97706" },
-  failed: { bg: "rgba(239,68,68,0.1)", text: "#ef4444" },
-  refunded: { bg: "rgba(96,153,102,0.12)", text: "#609966" },
+const VALID_TRANSITIONS = {
+  pending: ["confirmed", "cancelled"],
+  confirmed: ["processing", "packed", "shipped", "out_for_delivery", "cancelled"],
+  processing: ["packed", "shipped", "out_for_delivery", "cancelled"],
+  packed: ["shipped", "out_for_delivery", "cancelled"],
+  shipped: ["out_for_delivery", "delivered", "cancelled"],
+  out_for_delivery: ["delivered", "cancelled"],
+  delivered: [],
+  cancelled: [],
 };
 
-// ─── OrderStatusBadge ────────────────────────────────────────
-const OrderStatusBadge = ({ status, className = "" }) => {
-  const config = STATUS_COLORS[status] || STATUS_COLORS.Pending;
-  return (
-    <span
-      className={`${styles.statusBadge} ${className}`}
-      style={{ background: config.bg, color: config.text }}
-    >
-      {status}
-    </span>
-  );
-};
+const OrdersPage = () => {
+  const { token } = useAuth();
+  const headers = { Authorization: `Bearer ${token}` };
 
-// ─── OrderKPICards ───────────────────────────────────────────
-const KPI_CARDS = [
-  { key: "total", label: "Total Orders", icon: ClipboardList, color: "#609966" },
-  { key: "pending", label: "Pending", icon: Clock, color: "#d97706" },
-  { key: "processing", label: "Processing", icon: Package, color: "#2563eb" },
-  { key: "delivered", label: "Delivered", icon: CheckCircle, color: "#40513B" },
-  { key: "cancelled", label: "Cancelled", icon: XCircle, color: "#ef4444" },
-];
-
-const OrderKPICards = ({ orders }) => {
-  const counts = useMemo(() => {
-    const raw = orders || [];
-    return {
-      total: raw.length,
-      pending: raw.filter((o) => o.status === "Pending").length,
-      processing: raw.filter((o) => o.status === "Processing" || o.status === "Confirmed" || o.status === "Shipped").length,
-      delivered: raw.filter((o) => o.status === "Delivered").length,
-      cancelled: raw.filter((o) => o.status === "Cancelled").length,
-    };
-  }, [orders]);
-
-  return (
-    <div className={styles.kpiGrid}>
-      {KPI_CARDS.map((card, i) => (
-        <motion.div
-          key={card.key}
-          className={styles.kpiCard}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: i * 0.06, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          whileHover={{ y: -3, boxShadow: "0 12px 40px rgba(64,81,59,0.1)" }}
-        >
-          <div className={styles.kpiTop}>
-            <span className={styles.kpiIcon} style={{ background: `${card.color}14`, color: card.color }}>
-              <card.icon size={18} />
-            </span>
-          </div>
-          <div className={styles.kpiValue}>{counts[card.key]}</div>
-          <div className={styles.kpiLabel}>{card.label}</div>
-        </motion.div>
-      ))}
-    </div>
-  );
-};
-
-// ─── OrdersHeader ────────────────────────────────────────────
-const OrdersHeader = ({ onRefresh, refreshing }) => (
-  <motion.div
-    className={styles.pageHeader}
-    initial={{ opacity: 0, y: 16 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-  >
-    <div>
-      <h1 className={styles.pageTitle}>Orders</h1>
-      <p className={styles.pageSubtitle}>Manage and monitor all customer product orders.</p>
-    </div>
-    <div className={styles.headerActions}>
-      <motion.button
-        className={styles.headerBtn}
-        onClick={onRefresh}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.97 }}
-        disabled={refreshing}
-      >
-        <RefreshCw size={16} className={refreshing ? styles.spin : ""} />
-        <span>Refresh</span>
-      </motion.button>
-      <motion.button
-        className={`${styles.headerBtn} ${styles.exportBtn}`}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.97 }}
-        title="Export (UI only)"
-      >
-        <Download size={16} />
-        <span>Export</span>
-      </motion.button>
-    </div>
-  </motion.div>
-);
-
-// ─── OrdersFilters ───────────────────────────────────────────
-const OrdersFilters = ({
-  search,
-  onSearchChange,
-  statusFilter,
-  onStatusFilterChange,
-  paymentFilter,
-  onPaymentFilterChange,
-  sortBy,
-  onSortChange,
-  onReset,
-  resultCount,
-}) => {
-  const [showFilters, setShowFilters] = useState(false);
-
-  return (
-    <motion.div
-      className={styles.filtersWrapper}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.1, duration: 0.3 }}
-    >
-      <div className={styles.filtersTop}>
-        <div className={styles.searchBox}>
-          <Search size={16} />
-          <input
-            type="text"
-            placeholder="Search by Order ID or Customer Name..."
-            value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
-          />
-          {search && (
-            <button className={styles.clearSearch} onClick={() => onSearchChange("")}>
-              <X size={14} />
-            </button>
-          )}
-        </div>
-
-        <motion.button
-          className={`${styles.filterToggle} ${showFilters ? styles.filterToggleActive : ""}`}
-          onClick={() => setShowFilters(!showFilters)}
-          whileTap={{ scale: 0.95 }}
-        >
-          <SlidersHorizontal size={16} />
-          <span>Filters</span>
-          <ChevronDown size={14} className={showFilters ? styles.chevronUp : ""} />
-        </motion.button>
-
-        <div className={styles.resultCount}>{resultCount} orders</div>
-      </div>
-
-      <AnimatePresence>
-        {showFilters && (
-          <motion.div
-            className={styles.filtersBody}
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className={styles.filterRow}>
-              <div className={styles.filterGroup}>
-                <label>Status</label>
-                <select value={statusFilter} onChange={(e) => onStatusFilterChange(e.target.value)}>
-                  <option value="all">All Statuses</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Confirmed">Confirmed</option>
-                  <option value="Processing">Processing</option>
-                  <option value="Shipped">Shipped</option>
-                  <option value="Delivered">Delivered</option>
-                  <option value="Cancelled">Cancelled</option>
-                </select>
-              </div>
-
-              <div className={styles.filterGroup}>
-                <label>Payment</label>
-                <select value={paymentFilter} onChange={(e) => onPaymentFilterChange(e.target.value)}>
-                  <option value="all">All Payments</option>
-                  <option value="paid">Paid</option>
-                  <option value="pending">Pending</option>
-                  <option value="failed">Failed</option>
-                  <option value="refunded">Refunded</option>
-                </select>
-              </div>
-
-              <div className={styles.filterGroup}>
-                <label>Sort By</label>
-                <select value={sortBy} onChange={(e) => onSortChange(e.target.value)}>
-                  <option value="newest">Newest First</option>
-                  <option value="oldest">Oldest First</option>
-                  <option value="amount-high">Amount: High to Low</option>
-                  <option value="amount-low">Amount: Low to High</option>
-                </select>
-              </div>
-
-              <motion.button
-                className={styles.resetBtn}
-                onClick={onReset}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                <X size={14} />
-                Reset Filters
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-};
-
-// ─── Order Status Dot ────────────────────────────────────────
-const StatusDot = ({ status }) => {
-  const colors = {
-    Pending: "#d97706",
-    Confirmed: "#609966",
-    Processing: "#2563eb",
-    Shipped: "#2563eb",
-    Delivered: "#40513B",
-    Cancelled: "#ef4444",
-  };
-  return (
-    <span
-      className={styles.statusDot}
-      style={{ background: colors[status] || "#d97706" }}
-    />
-  );
-};
-
-// ─── Customer Avatar ─────────────────────────────────────────
-const CustomerAvatar = ({ name }) => {
-  const initials = name
-    ? name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2)
-    : "??";
-  return <span className={styles.customerAvatar}>{initials}</span>;
-};
-
-// ─── OrdersTable ─────────────────────────────────────────────
-const ROWS_PER_PAGE = 10;
-
-const OrdersTable = ({
-  orders,
-  onViewDetails,
-  onUpdateStatus,
-  loading,
-  updatingId,
-}) => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [stats, setStats] = useState(null);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("newest");
   const [page, setPage] = useState(1);
-  const totalPages = Math.max(1, Math.ceil(orders.length / ROWS_PER_PAGE));
-  const paginated = orders.slice((page - 1) * ROWS_PER_PAGE, page * ROWS_PER_PAGE);
+  const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 });
+  const [expandedOrders, setExpandedOrders] = useState({});
+  const [updatingId, setUpdatingId] = useState(null);
+  const [showDeliveryForm, setShowDeliveryForm] = useState(null);
+  const [showStatusModal, setShowStatusModal] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [statusNotes, setStatusNotes] = useState("");
+  const [statusError, setStatusError] = useState("");
+  const [error, setError] = useState("");
+  const [actionLoading, setActionLoading] = useState(null);
+
+  const fetchStats = useCallback(async () => {
+    try {
+      setStatsLoading(true);
+      const { data } = await axios.get(ORDERS_API.STATS, { headers });
+      if (data.success) setStats(data.stats);
+    } catch (err) {
+      console.error("Stats fetch error:", err);
+    } finally {
+      setStatsLoading(false);
+    }
+  }, []);
+
+  const fetchOrders = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError("");
+      const params = new URLSearchParams({ page, limit: 12, sortBy });
+      if (statusFilter !== "all") params.set("status", statusFilter);
+      if (search) params.set("search", search);
+      if (dateFilter === "today") {
+        const today = new Date().toISOString().split("T")[0];
+        params.set("startDate", today);
+        params.set("endDate", today);
+      }
+
+      const { data } = await axios.get(`${ORDERS_API.ALL}?${params}`, { headers });
+      if (data.success) {
+        setOrders(data.orders);
+        setPagination(data.pagination);
+      }
+    } catch (err) {
+      setError(err.response?.data?.msg || "Failed to load orders");
+    } finally {
+      setLoading(false);
+    }
+  }, [page, statusFilter, sortBy, search, dateFilter]);
 
   useEffect(() => {
-    if (page > totalPages) setPage(totalPages);
-  }, [orders.length, page, totalPages]);
+    fetchStats();
+  }, []);
 
-  if (loading) {
-    return (
-      <div className={styles.tableWrapper}>
-        <div className={styles.tableSkeleton}>
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className={styles.skeletonRow}>
-              <div className={styles.skelBox} style={{ width: "8%" }} />
-              <div className={styles.skelBox} style={{ width: "16%" }} />
-              <div className={styles.skelBox} style={{ width: "8%" }} />
-              <div className={styles.skelBox} style={{ width: "10%" }} />
-              <div className={styles.skelBox} style={{ width: "10%" }} />
-              <div className={styles.skelBox} style={{ width: "12%" }} />
-              <div className={styles.skelBox} style={{ width: "10%" }} />
-              <div className={styles.skelBox} style={{ width: "6%" }} />
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
+
+  const toggleOrder = (id) => {
+    setExpandedOrders((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const handleUpdateStatus = async () => {
+    if (!showStatusModal || !selectedStatus) return;
+    try {
+      setActionLoading("status");
+      setUpdatingId(showStatusModal);
+      setStatusError("");
+
+      const { data } = await axios.put(
+        ORDERS_API.UPDATE_STATUS(showStatusModal),
+        { status: selectedStatus, notes: statusNotes },
+        { headers }
+      );
+
+      if (data.success) {
+        setOrders((prev) => prev.map((o) => (o._id === showStatusModal ? data.order : o)));
+        setShowStatusModal(null);
+        setSelectedStatus("");
+        setStatusNotes("");
+        fetchStats();
+      }
+    } catch (err) {
+      setStatusError(err.response?.data?.msg || "Failed to update status");
+    } finally {
+      setActionLoading(null);
+      setUpdatingId(null);
+    }
+  };
+
+  const handleDeliverySave = async (deliveryData) => {
+    if (!showDeliveryForm) return;
+    try {
+      setActionLoading("delivery");
+      const { data } = await axios.put(
+        ORDERS_API.UPDATE_DELIVERY(showDeliveryForm),
+        deliveryData,
+        { headers }
+      );
+      if (data.success) {
+        setOrders((prev) => prev.map((o) => (o._id === showDeliveryForm ? data.order : o)));
+        setShowDeliveryForm(null);
+        fetchStats();
+      }
+    } catch (err) {
+      alert(err.response?.data?.msg || "Failed to update delivery");
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleCancelOrder = async (orderId) => {
+    if (!window.confirm("Are you sure you want to cancel this order?")) return;
+    try {
+      setActionLoading("cancel");
+      setUpdatingId(orderId);
+      const { data } = await axios.post(
+        ORDERS_API.CANCEL(orderId),
+        { reason: "Cancelled by admin" },
+        { headers }
+      );
+      if (data.success) {
+        setOrders((prev) => prev.map((o) => (o._id === orderId ? data.order : o)));
+        fetchStats();
+      }
+    } catch (err) {
+      alert(err.response?.data?.msg || "Failed to cancel order");
+    } finally {
+      setActionLoading(null);
+      setUpdatingId(null);
+    }
+  };
+
+  const handleResendEmail = async (orderId) => {
+    try {
+      setActionLoading("email");
+      await axios.post(ORDERS_API.RESEND_EMAIL(orderId), {}, { headers });
+      alert("Email resent successfully");
+    } catch (err) {
+      alert(err.response?.data?.msg || "Failed to resend email");
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleDownloadInvoice = async (order) => {
+    try {
+      const { data } = await axios.get(ORDERS_API.INVOICE(order._id), {
+        headers, responseType: "blob",
+      });
+      const url = window.URL.createObjectURL(new Blob([data]));
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `invoice-${order._id.slice(-8)}.pdf`;
+      a.click();
+    } catch (err) {
+      console.error("Invoice download error:", err);
+    }
+  };
+
+  const openStatusModal = (order) => {
+    setShowStatusModal(order._id);
+    setSelectedStatus("");
+    setStatusNotes("");
+    setStatusError("");
+  };
+
+  const getTransitions = (currentStatus) => VALID_TRANSITIONS[currentStatus] || [];
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+      <motion.div
+        className={styles.pageHeader}
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <div>
+          <h1 className={styles.pageTitle}>Order Management</h1>
+          <p className={styles.pageSubtitle}>Manage and monitor all customer product orders.</p>
+        </div>
+        <div className={styles.headerActions}>
+          <div className={styles.searchBox}>
+            <Search size={18} />
+            <input
+              type="text"
+              placeholder="Search by name, email, or ID..."
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            />
+          </div>
+          <motion.button
+            className={styles.headerBtn}
+            onClick={() => { fetchStats(); fetchOrders(); }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            <RefreshCw size={16} />
+            <span>Refresh</span>
+          </motion.button>
+        </div>
+      </motion.div>
+
+      <OrderStats stats={stats} loading={statsLoading} />
+
+      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px", padding: "8px 12px", background: "#fff", border: "1px solid #e5e7eb", borderRadius: "8px" }}>
+          <Filter size={16} color="#6b7280" />
+          <select
+            value={statusFilter}
+            onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
+            style={{ border: "none", outline: "none", fontSize: "13px", fontFamily: "inherit", color: "#374151", background: "transparent", cursor: "pointer" }}
+          >
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="processing">Processing</option>
+            <option value="packed">Packed</option>
+            <option value="shipped">Shipped</option>
+            <option value="out_for_delivery">Out for Delivery</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "6px", padding: "8px 12px", background: "#fff", border: "1px solid #e5e7eb", borderRadius: "8px" }}>
+          <CalendarDays size={16} color="#6b7280" />
+          <select
+            value={dateFilter}
+            onChange={(e) => { setDateFilter(e.target.value); setPage(1); }}
+            style={{ border: "none", outline: "none", fontSize: "13px", fontFamily: "inherit", color: "#374151", background: "transparent", cursor: "pointer" }}
+          >
+            <option value="all">All Time</option>
+            <option value="today">Today</option>
+          </select>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "6px", padding: "8px 12px", background: "#fff", border: "1px solid #e5e7eb", borderRadius: "8px" }}>
+          <ArrowUpDown size={16} color="#6b7280" />
+          <select
+            value={sortBy}
+            onChange={(e) => { setSortBy(e.target.value); setPage(1); }}
+            style={{ border: "none", outline: "none", fontSize: "13px", fontFamily: "inherit", color: "#374151", background: "transparent", cursor: "pointer" }}
+          >
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="amount-high">Highest Amount</option>
+            <option value="amount-low">Lowest Amount</option>
+          </select>
+        </div>
+
+        <div style={{ padding: "8px 14px", background: "rgba(96,153,102,0.08)", borderRadius: "8px", fontSize: "13px", fontWeight: 600, color: "#609966" }}>
+          {pagination.total} Orders
+        </div>
+      </div>
+
+      {error && (
+        <div style={{ padding: "12px 16px", background: "#fee2e2", color: "#991b1b", borderRadius: "8px", fontSize: "13px", display: "flex", alignItems: "center", gap: "8px" }}>
+          <AlertTriangle size={16} /> {error}
+        </div>
+      )}
+
+      {loading ? (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(400px, 1fr))", gap: "20px" }}>
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} style={{ padding: "24px", background: "#fff", borderRadius: "16px", border: "1px solid #e5e7eb" }}>
+              <div style={{ display: "flex", gap: "12px", marginBottom: "16px" }}>
+                <div style={{ width: "50px", height: "50px", borderRadius: "10px", background: "#f3f4f6" }} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ height: "16px", width: "60%", borderRadius: "4px", background: "#f3f4f6", marginBottom: "8px" }} />
+                  <div style={{ height: "12px", width: "40%", borderRadius: "4px", background: "#f3f4f6" }} />
+                </div>
+              </div>
+              <div style={{ height: "12px", width: "100%", borderRadius: "4px", background: "#f3f4f6", marginBottom: "8px" }} />
+              <div style={{ height: "12px", width: "80%", borderRadius: "4px", background: "#f3f4f6" }} />
             </div>
           ))}
         </div>
-      </div>
-    );
-  }
-
-  if (orders.length === 0) {
-    return (
-      <motion.div
-        className={styles.emptyState}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4 }}
-      >
-        <div className={styles.emptyIcon}>
-          <ClipboardList size={48} />
+      ) : orders.length === 0 ? (
+        <div className={styles.emptyState}>
+          <div className={styles.emptyIcon}>
+            <Package size={48} />
+          </div>
+          <h3 className={styles.emptyTitle}>No orders found</h3>
+          <p className={styles.emptyText}>No orders match your current filters.</p>
         </div>
-        <h3 className={styles.emptyTitle}>No Orders Found</h3>
-        <p className={styles.emptyText}>No orders match your current filters. Try adjusting your search or filter criteria.</p>
-      </motion.div>
-    );
-  }
-
-  return (
-    <div className={styles.tableWrapper}>
-      <div className={styles.tableInfo}>
-        <span className={styles.tableInfoText}>
-          Showing <strong>{(page - 1) * ROWS_PER_PAGE + 1}</strong>–<strong>{Math.min(page * ROWS_PER_PAGE, orders.length)}</strong> of <strong>{orders.length}</strong> orders
-        </span>
-      </div>
-
-      <div className={styles.tableContainer}>
-        <table className={styles.ordersTable}>
-          <thead>
-            <tr>
-              <th>Order ID</th>
-              <th>Customer</th>
-              <th className={styles.colCenter}>Items</th>
-              <th className={styles.colRight}>Total</th>
-              <th className={styles.colCenter}>Payment</th>
-              <th className={styles.colCenter}>Status</th>
-              <th>Date</th>
-              <th className={styles.colCenter}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <AnimatePresence mode="popLayout">
-              {paginated.map((order) => (
-                <motion.tr
+      ) : (
+        <>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(400px, 1fr))", gap: "20px" }}>
+            {orders.map((order) => {
+              const isExpanded = expandedOrders[order._id];
+              const transitions = getTransitions(order.status);
+              return (
+                <motion.div
                   key={order._id}
-                  className={styles.tableRow}
+                  variants={fadeUp}
                   layout
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                  style={{ background: "#fff", borderRadius: "16px", border: "1px solid #e5e7eb", overflow: "hidden", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}
                 >
-                  <td>
-                    <span className={styles.cellId}>#{order._id.slice(-8)}</span>
-                  </td>
-                  <td>
-                    <div className={styles.cellCustomer}>
-                      <CustomerAvatar name={order.user?.name} />
-                      <div className={styles.customerInfo}>
-                        <span className={styles.customerName}>{order.user?.name || "N/A"}</span>
-                        <span className={styles.customerEmail}>{order.user?.email || ""}</span>
+                  <div style={{ padding: "20px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
+                      <div style={{ display: "flex", gap: "12px" }}>
+                        <div style={{ width: "44px", height: "44px", borderRadius: "10px", background: "rgba(59,130,246,0.08)", display: "flex", alignItems: "center", justifyContent: "center", color: "#3b82f6", flexShrink: 0 }}>
+                          <Package size={22} />
+                        </div>
+                        <div>
+                          <p style={{ fontSize: "11px", fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.04em", margin: 0 }}>
+                            ORDER #{order._id?.slice(-8)}
+                          </p>
+                          <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "4px", fontSize: "13px", color: "#6b7280" }}>
+                            <CalendarDays size={14} />
+                            <span>{new Date(order.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <StatusBadge status={order.status} />
+                    </div>
+
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "12px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", background: "#f9fafb", borderRadius: "8px" }}>
+                        <User size={18} color="#6b7280" />
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontSize: "11px", fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.04em" }}>Name</div>
+                          <div style={{ fontSize: "13px", fontWeight: 600, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{order.user?.name || "N/A"}</div>
+                        </div>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", background: "#f9fafb", borderRadius: "8px" }}>
+                        <Mail size={18} color="#6b7280" />
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontSize: "11px", fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.04em" }}>Email</div>
+                          <div style={{ fontSize: "13px", fontWeight: 600, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{order.user?.email || "N/A"}</div>
+                        </div>
+                      </div>
+                      {order.deliveryAddress?.phone && (
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", background: "#f9fafb", borderRadius: "8px" }}>
+                          <Phone size={18} color="#6b7280" />
+                          <div>
+                            <div style={{ fontSize: "11px", fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.04em" }}>Phone</div>
+                            <div style={{ fontSize: "13px", fontWeight: 600, color: "#111827" }}>{order.deliveryAddress.phone}</div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {(order.deliveryAddress?.street || order.deliveryAddress?.city) && (
+                      <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", padding: "12px", background: "#f9fafb", borderRadius: "10px", marginBottom: "12px" }}>
+                        <MapPin size={18} color="#6b7280" style={{ flexShrink: 0, marginTop: "2px" }} />
+                        <div style={{ fontSize: "13px", color: "#6b7280", lineHeight: 1.6 }}>
+                          {order.deliveryAddress?.name && <strong>{order.deliveryAddress.name}</strong>}
+                          {order.deliveryAddress?.street && <>, {order.deliveryAddress.street}</>}
+                          {order.deliveryAddress?.city && <>, {order.deliveryAddress.city}</>}
+                          {order.deliveryAddress?.district && <>, {order.deliveryAddress.district}</>}
+                          {order.deliveryAddress?.state && <>, {order.deliveryAddress.state}</>}
+                          {order.deliveryAddress?.pincode && <> - {order.deliveryAddress.pincode}</>}
+                        </div>
+                      </div>
+                    )}
+
+                    <div style={{ marginBottom: "12px" }}>
+                      <button
+                        onClick={() => toggleOrder(order._id)}
+                        style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 12px", border: "1px solid #e5e7eb", borderRadius: "8px", background: "#fff", cursor: "pointer", fontSize: "13px", fontWeight: 600, color: "#374151", fontFamily: "inherit" }}
+                      >
+                        <span>Products ({order.products?.length}) & Details</span>
+                        {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                      </button>
+                      <AnimatePresence>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.3 }}
+                            style={{ overflow: "hidden" }}
+                          >
+                            <div style={{ padding: "12px 0", display: "flex", flexDirection: "column", gap: "8px" }}>
+                              {order.products?.map((item) => (
+                                <div key={item._id} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 12px", background: "#f9fafb", borderRadius: "8px" }}>
+                                  <div style={{ width: "40px", height: "40px", borderRadius: "8px", overflow: "hidden", background: "#e5e7eb", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                    {item.product?.image ? (
+                                      <img src={item.product.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                    ) : (
+                                      <Package size={16} color="#9ca3af" />
+                                    )}
+                                  </div>
+                                  <div style={{ flex: 1, minWidth: 0 }}>
+                                    <div style={{ fontSize: "13px", fontWeight: 600, color: "#111827" }}>{item.product?.name || item.nameAtOrder || "Product"}</div>
+                                    <div style={{ fontSize: "12px", color: "#6b7280" }}>Qty: {item.quantity}</div>
+                                  </div>
+                                  <div style={{ fontSize: "14px", fontWeight: 700, color: "#111827", whiteSpace: "nowrap" }}>
+                                    ₹{((item.product?.price || item.priceAtOrder || 0)).toLocaleString("en-IN")}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+
+                            {order.delivery?.partner && (
+                              <div style={{ padding: "12px", background: "#eff6ff", borderRadius: "8px", border: "1px solid #dbeafe", marginBottom: "12px" }}>
+                                <div style={{ fontSize: "11px", fontWeight: 600, color: "#1e40af", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: "8px", display: "flex", alignItems: "center", gap: "4px" }}>
+                                  <Truck size={14} /> Delivery Info
+                                </div>
+                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", fontSize: "13px" }}>
+                                  <div><span style={{ color: "#6b7280" }}>Partner:</span> <strong>{order.delivery.partner}</strong></div>
+                                  {order.delivery.trackingNumber && (
+                                    <div>
+                                      <span style={{ color: "#6b7280" }}>Tracking:</span>{" "}
+                                      {order.delivery.trackingUrl ? (
+                                        <a href={order.delivery.trackingUrl} target="_blank" rel="noreferrer" style={{ color: "#3b82f6" }}>{order.delivery.trackingNumber}</a>
+                                      ) : (
+                                        <strong>{order.delivery.trackingNumber}</strong>
+                                      )}
+                                    </div>
+                                  )}
+                                  {order.delivery.estimatedDelivery && (
+                                    <div><span style={{ color: "#6b7280" }}>Est. Delivery:</span> <strong>{new Date(order.delivery.estimatedDelivery).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</strong></div>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+
+                            {order.timeline?.length > 0 && (
+                              <div style={{ marginBottom: "12px" }}>
+                                <OrderTimeline timeline={order.timeline} currentStatus={order.status} />
+                              </div>
+                            )}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderTop: "1px solid #e5e7eb", borderBottom: "1px solid #e5e7eb", marginBottom: "12px" }}>
+                      <div>
+                        <div style={{ fontSize: "11px", fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.04em" }}>Total Amount</div>
+                        <div style={{ fontSize: "18px", fontWeight: 700, color: "#111827" }}>₹{(order.totalAmount || 0).toLocaleString("en-IN")}</div>
+                      </div>
+                      <div style={{ textAlign: "right" }}>
+                        <div style={{ fontSize: "11px", fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.04em" }}>Payment</div>
+                        <span style={{ display: "inline-block", padding: "3px 10px", borderRadius: "100px", fontSize: "11px", fontWeight: 700, background: order.paymentStatus === "paid" ? "rgba(16,185,129,0.1)" : "rgba(245,158,11,0.1)", color: order.paymentStatus === "paid" ? "#059669" : "#d97706" }}>
+                          {order.paymentStatus}
+                        </span>
                       </div>
                     </div>
-                  </td>
-                  <td className={styles.colCenter}>
-                    <span className={styles.cellItems}>
-                      <Package size={14} />
-                      {order.products?.length || 0}
-                    </span>
-                  </td>
-                  <td className={styles.colRight}>
-                    <span className={styles.cellAmount}>
-                      <IndianRupee size={12} />
-                      {(order.totalAmount || 0).toLocaleString()}
-                    </span>
-                  </td>
-                  <td className={styles.colCenter}>
-                    <span
-                      className={styles.paymentChip}
-                      style={(PAYMENT_COLORS[order.paymentStatus] || PAYMENT_COLORS.pending)}
-                    >
-                      {order.paymentStatus || "N/A"}
-                    </span>
-                  </td>
-                  <td className={styles.colCenter}>
-                    <span className={styles.statusBadge} style={(STATUS_COLORS[order.status] || STATUS_COLORS.Pending)}>
-                      <StatusDot status={order.status} />
-                      {order.status}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={styles.cellDate}>
-                      <CalendarDays size={13} />
-                      {new Date(order.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                    </span>
-                  </td>
-                  <td>
-                    <div className={styles.cellActions}>
-                      <motion.button
-                        className={styles.actionBtn}
-                        onClick={() => onViewDetails(order)}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        title="View Details"
-                      >
-                        <Eye size={15} />
-                      </motion.button>
-                      <motion.button
-                        className={styles.actionBtn}
-                        onClick={() => onUpdateStatus(order)}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        title="Update Status"
-                        disabled={updatingId === order._id}
-                      >
-                        <Edit3 size={15} />
-                      </motion.button>
-                    </div>
-                  </td>
-                </motion.tr>
-              ))}
-            </AnimatePresence>
-          </tbody>
-        </table>
-      </div>
 
-      {totalPages > 1 && (
-        <div className={styles.pagination}>
-          <div className={styles.paginationInfo}>
-            Page {page} of {totalPages}
+                    <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                      <button
+                        onClick={() => openStatusModal(order)}
+                        disabled={transitions.length === 0}
+                        style={{ flex: 1, padding: "8px 12px", border: "1px solid #d1d5db", borderRadius: "8px", background: transitions.length === 0 ? "#f3f4f6" : "#fff", color: transitions.length === 0 ? "#9ca3af" : "#374151", cursor: transitions.length === 0 ? "not-allowed" : "pointer", fontSize: "12px", fontWeight: 600, fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px", minWidth: "100px" }}
+                      >
+                        <Clock size={14} /> Status
+                      </button>
+                      <button
+                        onClick={() => setShowDeliveryForm(order._id)}
+                        disabled={["delivered", "cancelled"].includes(order.status)}
+                        style={{ flex: 1, padding: "8px 12px", border: "1px solid #d1d5db", borderRadius: "8px", background: ["delivered", "cancelled"].includes(order.status) ? "#f3f4f6" : "#fff", color: ["delivered", "cancelled"].includes(order.status) ? "#9ca3af" : "#374151", cursor: ["delivered", "cancelled"].includes(order.status) ? "not-allowed" : "pointer", fontSize: "12px", fontWeight: 600, fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px", minWidth: "100px" }}
+                      >
+                        <Truck size={14} /> Delivery
+                      </button>
+                      <button
+                        onClick={() => handleResendEmail(order._id)}
+                        disabled={actionLoading === "email"}
+                        style={{ padding: "8px 10px", border: "1px solid #d1d5db", borderRadius: "8px", background: "#fff", cursor: "pointer", fontSize: "12px", fontWeight: 600, fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center" }}
+                        title="Resend Email"
+                      >
+                        <Send size={14} />
+                      </button>
+                      <button
+                        onClick={() => handleCancelOrder(order._id)}
+                        disabled={!transitions.includes("cancelled") || actionLoading === "cancel"}
+                        style={{ padding: "8px 10px", border: "1px solid #fecaca", borderRadius: "8px", background: !transitions.includes("cancelled") ? "#f3f4f6" : "#fef2f2", color: !transitions.includes("cancelled") ? "#9ca3af" : "#dc2626", cursor: !transitions.includes("cancelled") ? "not-allowed" : "pointer", fontSize: "12px", fontWeight: 600, fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center" }}
+                        title="Cancel Order"
+                      >
+                        <X size={14} />
+                      </button>
+                      <button
+                        onClick={() => handleDownloadInvoice(order)}
+                        style={{ padding: "8px 10px", border: "1px solid #d1d5db", borderRadius: "8px", background: "#fff", cursor: "pointer", fontSize: "12px", fontWeight: 600, fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center" }}
+                        title="Download Invoice"
+                      >
+                        <Download size={14} />
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
-          <div className={styles.paginationControls}>
-            <motion.button
-              className={styles.pageBtn}
-              onClick={() => setPage(1)}
-              disabled={page === 1}
-              whileTap={{ scale: 0.95 }}
-              title="First page"
-            >
-              <span className={styles.pageBtnIcon}>{`\u00ab`}</span>
-            </motion.button>
-            <motion.button
-              className={styles.pageBtn}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-              whileTap={{ scale: 0.95 }}
-              title="Previous page"
-            >
-              <ChevronLeft size={15} />
-            </motion.button>
-            <div className={styles.pageNumbers}>
-              {Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter((p) => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
-                .map((p, idx, arr) => (
-                  <React.Fragment key={p}>
-                    {idx > 0 && arr[idx - 1] !== p - 1 && <span className={styles.pageEllipsis}>...</span>}
-                    <motion.button
-                      className={`${styles.pageBtn} ${styles.pageNum} ${p === page ? styles.pageBtnActive : ""}`}
-                      onClick={() => setPage(p)}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      {p}
-                    </motion.button>
-                  </React.Fragment>
-                ))}
+
+          {pagination.totalPages > 1 && (
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "8px", marginTop: "16px", padding: "16px 0" }}>
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page <= 1}
+                style={{ padding: "8px 16px", border: "1px solid #d1d5db", borderRadius: "8px", background: page <= 1 ? "#f3f4f6" : "#fff", color: page <= 1 ? "#9ca3af" : "#374151", cursor: page <= 1 ? "not-allowed" : "pointer", fontSize: "13px", fontFamily: "inherit" }}
+              >
+                Previous
+              </button>
+              {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                const start = Math.max(1, page - 2);
+                const p = start + i;
+                if (p > pagination.totalPages) return null;
+                return (
+                  <button
+                    key={p}
+                    onClick={() => setPage(p)}
+                    style={{ padding: "8px 14px", border: page === p ? "none" : "1px solid #d1d5db", borderRadius: "8px", background: page === p ? "#3b82f6" : "#fff", color: page === p ? "#fff" : "#374151", cursor: "pointer", fontSize: "13px", fontWeight: 600, fontFamily: "inherit" }}
+                  >
+                    {p}
+                  </button>
+                );
+              })}
+              <button
+                onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))}
+                disabled={page >= pagination.totalPages}
+                style={{ padding: "8px 16px", border: "1px solid #d1d5db", borderRadius: "8px", background: page >= pagination.totalPages ? "#f3f4f6" : "#fff", color: page >= pagination.totalPages ? "#9ca3af" : "#374151", cursor: page >= pagination.totalPages ? "not-allowed" : "pointer", fontSize: "13px", fontFamily: "inherit" }}
+              >
+                Next
+              </button>
             </div>
-            <motion.button
-              className={styles.pageBtn}
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-              whileTap={{ scale: 0.95 }}
-              title="Next page"
-            >
-              <ChevronRight size={15} />
-            </motion.button>
-            <motion.button
-              className={styles.pageBtn}
-              onClick={() => setPage(totalPages)}
-              disabled={page === totalPages}
-              whileTap={{ scale: 0.95 }}
-              title="Last page"
-            >
-              <span className={styles.pageBtnIcon}>{`\u00bb`}</span>
-            </motion.button>
+          )}
+        </>
+      )}
+
+      {showStatusModal && (
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "20px" }}>
+          <div style={{ background: "#fff", borderRadius: "16px", width: "100%", maxWidth: "440px", boxShadow: "0 20px 60px rgba(0,0,0,0.15)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 24px", borderBottom: "1px solid #e5e7eb" }}>
+              <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 600, color: "#111827" }}>Update Order Status</h3>
+              <button onClick={() => setShowStatusModal(null)} style={{ border: "none", background: "#f3f4f6", borderRadius: "8px", padding: "6px", cursor: "pointer", display: "flex" }}>
+                <X size={18} color="#6b7280" />
+              </button>
+            </div>
+            <div style={{ padding: "24px" }}>
+              <div style={{ marginBottom: "16px" }}>
+                <label style={{ display: "block", fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "6px" }}>New Status</label>
+                <select
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  style={{ width: "100%", padding: "10px 12px", border: "1px solid #d1d5db", borderRadius: "8px", fontSize: "13px", outline: "none", fontFamily: "inherit" }}
+                >
+                  <option value="">Select status...</option>
+                  {getTransitions(orders.find((o) => o._id === showStatusModal)?.status || "").map((s) => (
+                    <option key={s} value={s}>{s.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}</option>
+                  ))}
+                </select>
+              </div>
+              <div style={{ marginBottom: "16px" }}>
+                <label style={{ display: "block", fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "6px" }}>Notes (optional)</label>
+                <textarea
+                  value={statusNotes}
+                  onChange={(e) => setStatusNotes(e.target.value)}
+                  placeholder="Additional notes about this status update..."
+                  rows={3}
+                  style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "8px", fontSize: "13px", outline: "none", resize: "vertical", fontFamily: "inherit", boxSizing: "border-box" }}
+                />
+              </div>
+              {statusError && (
+                <div style={{ padding: "10px", background: "#fef2f2", color: "#dc2626", borderRadius: "8px", fontSize: "13px", marginBottom: "12px", display: "flex", alignItems: "center", gap: "6px" }}>
+                  <AlertTriangle size={14} /> {statusError}
+                </div>
+              )}
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+                <button onClick={() => setShowStatusModal(null)} style={{ padding: "10px 20px", border: "1px solid #d1d5db", borderRadius: "8px", background: "#fff", color: "#374151", fontSize: "13px", fontWeight: 500, cursor: "pointer", fontFamily: "inherit" }}>
+                  Cancel
+                </button>
+                <button
+                  onClick={handleUpdateStatus}
+                  disabled={!selectedStatus || actionLoading === "status"}
+                  style={{ padding: "10px 24px", border: "none", borderRadius: "8px", background: !selectedStatus ? "#93c5fd" : "#3b82f6", color: "#fff", fontSize: "13px", fontWeight: 600, cursor: !selectedStatus ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: "6px", fontFamily: "inherit" }}
+                >
+                  {actionLoading === "status" ? <Loader2 size={16} /> : <Clock size={16} />}
+                  Update Status
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
-    </div>
-  );
-};
 
-// ─── OrderTimeline ───────────────────────────────────────────
-const timelineSteps = [
-  { key: "created", label: "Created", icon: ClipboardList },
-  { key: "paid", label: "Paid", icon: CreditCard },
-  { key: "processing", label: "Processing", icon: Package },
-  { key: "delivered", label: "Delivered", icon: Truck },
-];
-
-const OrderTimeline = ({ order }) => {
-  const statusMap = {
-    Pending: ["created"],
-    Confirmed: ["created", "paid"],
-    Processing: ["created", "paid", "processing"],
-    Shipped: ["created", "paid", "processing"],
-    Delivered: ["created", "paid", "processing", "delivered"],
-    Cancelled: ["created"],
-  };
-
-  const steps = statusMap[order.status] || ["created"];
-
-  return (
-    <div className={styles.timeline}>
-      {timelineSteps.map((step, i) => {
-        const isActive = steps.includes(step.key);
-        return (
-          <div key={step.key} className={`${styles.timelineStep} ${isActive ? styles.timelineActive : ""}`}>
-            <div className={styles.timelineDot}>
-              <step.icon size={14} />
-            </div>
-            <div className={styles.timelineContent}>
-              <span className={styles.timelineLabel}>{step.label}</span>
-            </div>
-            {i < timelineSteps.length - 1 && <div className={`${styles.timelineLine} ${isActive ? styles.timelineLineActive : ""}`} />}
-          </div>
-        );
-      })}
-    </div>
-  );
-};
-
-// ─── OrderDrawer ─────────────────────────────────────────────
-const OrderDrawer = ({ order, onClose, onStatusChange, updating }) => {
-  const [selectedStatus, setSelectedStatus] = useState(order?.status || "Pending");
-
-  if (!order) return null;
-
-  const handleUpdate = () => {
-    if (selectedStatus !== order.status) {
-      onStatusChange(order._id, selectedStatus);
-    }
-  };
-
-  return (
-    <motion.div
-      className={styles.drawerOverlay}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
-      onClick={onClose}
-    >
-      <motion.div
-        className={styles.drawer}
-        initial={{ x: "100%" }}
-        animate={{ x: 0 }}
-        exit={{ x: "100%" }}
-        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className={styles.drawerHeader}>
-          <button className={styles.drawerClose} onClick={onClose}>
-            <ArrowLeft size={18} />
-          </button>
-          <div>
-            <h2 className={styles.drawerTitle}>Order Details</h2>
-            <span className={styles.drawerSub}>#{order._id.slice(-8)}</span>
-          </div>
-          <OrderStatusBadge status={order.status} />
-        </div>
-
-        <div className={styles.drawerBody}>
-          {/* Timeline */}
-          <section className={styles.drawerSection}>
-            <h3 className={styles.drawerSectionTitle}>Timeline</h3>
-            <OrderTimeline order={order} />
-          </section>
-
-          {/* Customer Information */}
-          <section className={styles.drawerSection}>
-            <h3 className={styles.drawerSectionTitle}>Customer Information</h3>
-            <div className={styles.drawerInfoGrid}>
-              <div className={styles.drawerInfoItem}>
-                <User size={15} />
-                <div>
-                  <label>Name</label>
-                  <p>{order.user?.name || "N/A"}</p>
-                </div>
-              </div>
-              <div className={styles.drawerInfoItem}>
-                <Mail size={15} />
-                <div>
-                  <label>Email</label>
-                  <p>{order.user?.email || "N/A"}</p>
-                </div>
-              </div>
-              {order.deliveryAddress?.phone && (
-                <div className={styles.drawerInfoItem}>
-                  <Phone size={15} />
-                  <div>
-                    <label>Phone</label>
-                    <p>{order.deliveryAddress.phone}</p>
-                  </div>
-                </div>
-              )}
-            </div>
-            {order.formattedAddress && (
-              <div className={styles.drawerInfoItem} style={{ marginTop: 8 }}>
-                <MapPin size={15} />
-                <div>
-                  <label>Delivery Address</label>
-                  <p>{order.formattedAddress}</p>
-                </div>
-              </div>
-            )}
-          </section>
-
-          {/* Products */}
-          <section className={styles.drawerSection}>
-            <h3 className={styles.drawerSectionTitle}>Products ({order.products?.length || 0})</h3>
-            <div className={styles.drawerProducts}>
-              {order.products?.map((item, i) => (
-                <div key={item._id || i} className={styles.drawerProduct}>
-                  <div className={styles.dpImageWrap}>
-                    {item.product?.image ? (
-                      <img src={getImageUrl(item.product.image)} alt={item.product?.name} />
-                    ) : (
-                      <Camera size={18} />
-                    )}
-                  </div>
-                  <div className={styles.dpInfo}>
-                    <p className={styles.dpName}>{item.product?.name || "Unknown Product"}</p>
-                    <span className={styles.dpMeta}>Qty: {item.quantity}</span>
-                  </div>
-                  <div className={styles.dpPrice}>
-                    {formatPriceWithUnit(item.product?.price, item.product?.unit)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Payment */}
-          <section className={styles.drawerSection}>
-            <h3 className={styles.drawerSectionTitle}>Payment</h3>
-            <div className={styles.drawerInfoGrid}>
-              <div className={styles.drawerInfoItem}>
-                <CreditCard size={15} />
-                <div>
-                  <label>Payment Status</label>
-                  <p style={{ color: (PAYMENT_COLORS[order.paymentStatus] || {}).text }}>{order.paymentStatus || "N/A"}</p>
-                </div>
-              </div>
-              {order.paymentId && (
-                <div className={styles.drawerInfoItem}>
-                  <Hash size={15} />
-                  <div>
-                    <label>Payment ID</label>
-                    <p className={styles.mono}>{order.paymentId}</p>
-                  </div>
-                </div>
-              )}
-              {order.paidAt && (
-                <div className={styles.drawerInfoItem}>
-                  <CalendarDays size={15} />
-                  <div>
-                    <label>Paid At</label>
-                    <p>{new Date(order.paidAt).toLocaleString()}</p>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className={styles.drawerTotal}>
-              <span>Total Amount</span>
-              <strong><IndianRupee size={14} />{order.totalAmount?.toLocaleString?.() || order.totalAmount}</strong>
-            </div>
-          </section>
-
-          {/* Shipping */}
-          {(order.trackingId || order.courierName) && (
-            <section className={styles.drawerSection}>
-              <h3 className={styles.drawerSectionTitle}>Shipping</h3>
-              <div className={styles.drawerInfoGrid}>
-                {order.trackingId && (
-                  <div className={styles.drawerInfoItem}>
-                    <Hash size={15} />
-                    <div>
-                      <label>Tracking ID</label>
-                      <p className={styles.mono}>{order.trackingId}</p>
-                    </div>
-                  </div>
-                )}
-                {order.courierName && (
-                  <div className={styles.drawerInfoItem}>
-                    <Truck size={15} />
-                    <div>
-                      <label>Courier</label>
-                      <p>{order.courierName}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </section>
-          )}
-
-          {/* Update Status */}
-          <section className={styles.drawerSection}>
-            <h3 className={styles.drawerSectionTitle}>Update Status</h3>
-            <div className={styles.updateRow}>
-              <select
-                className={styles.statusSelect}
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-              >
-                <option value="Pending">Pending</option>
-                <option value="Confirmed">Confirmed</option>
-                <option value="Shipped">Shipped</option>
-                <option value="Delivered">Delivered</option>
-                <option value="Cancelled">Cancelled</option>
-              </select>
-              <motion.button
-                className={styles.updateBtn}
-                onClick={handleUpdate}
-                disabled={selectedStatus === order.status || updating}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                {updating ? "Updating..." : "Update"}
-              </motion.button>
-            </div>
-          </section>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-};
-
-// ─── Error State ──────────────────────────────────────────────
-const ErrorState = ({ message, onRetry }) => (
-  <motion.div
-    className={styles.errorState}
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-  >
-    <AlertCircle size={48} />
-    <h3>Failed to load orders</h3>
-    <p>{message || "Something went wrong. Please try again."}</p>
-    <motion.button
-      className={styles.retryBtn}
-      onClick={onRetry}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.97 }}
-    >
-      <RefreshCw size={16} />
-      Try Again
-    </motion.button>
-  </motion.div>
-);
-
-// ─── OrdersPage (Main) ──────────────────────────────────────
-const OrdersPage = () => {
-  const { token } = useAuth();
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [refreshing, setRefreshing] = useState(false);
-  const [updatingId, setUpdatingId] = useState(null);
-
-  // Filters
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [paymentFilter, setPaymentFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("newest");
-
-  // Drawer
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [drawerUpdating, setDrawerUpdating] = useState(false);
-
-  // ─── Fetch Orders ──────────────────────────────────────────
-  const fetchOrders = useCallback(async (isRefresh = false) => {
-    try {
-      if (isRefresh) setRefreshing(true);
-      else setLoading(true);
-      setError(null);
-
-      const res = await axios.get(ORDERS_API.ALL, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = Array.isArray(res.data) ? res.data : res.data.orders || res.data.data || [];
-      setOrders(data);
-    } catch (err) {
-      setError(err.response?.data?.msg || err.message || "Failed to fetch orders");
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, [token]);
-
-  useEffect(() => {
-    if (token) fetchOrders();
-  }, [token]);
-
-  // ─── Update Status ─────────────────────────────────────────
-  const handleUpdateStatus = async (id, newStatus) => {
-    try {
-      setUpdatingId(id);
-      setDrawerUpdating(true);
-      await axios.put(
-        ORDERS_API.UPDATE(id),
-        { status: newStatus },
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-      setOrders((prev) =>
-        prev.map((o) => (o._id === id ? { ...o, status: newStatus } : o)),
-      );
-      if (selectedOrder?._id === id) {
-        setSelectedOrder((prev) => ({ ...prev, status: newStatus }));
-      }
-    } catch (err) {
-      console.error("Update failed:", err);
-    } finally {
-      setUpdatingId(null);
-      setDrawerUpdating(false);
-    }
-  };
-
-  // ─── Filtered & Sorted ─────────────────────────────────────
-  const filteredOrders = useMemo(() => {
-    let result = [...orders];
-
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (o) =>
-          o._id?.toLowerCase().includes(q) ||
-          o.user?.name?.toLowerCase().includes(q) ||
-          o.user?.email?.toLowerCase().includes(q),
-      );
-    }
-
-    if (statusFilter !== "all") {
-      result = result.filter((o) => o.status === statusFilter);
-    }
-
-    if (paymentFilter !== "all") {
-      result = result.filter((o) => o.paymentStatus === paymentFilter);
-    }
-
-    result.sort((a, b) => {
-      switch (sortBy) {
-        case "oldest":
-          return new Date(a.createdAt) - new Date(b.createdAt);
-        case "amount-high":
-          return (b.totalAmount || 0) - (a.totalAmount || 0);
-        case "amount-low":
-          return (a.totalAmount || 0) - (b.totalAmount || 0);
-        default:
-          return new Date(b.createdAt) - new Date(a.createdAt);
-      }
-    });
-
-    return result;
-  }, [orders, search, statusFilter, paymentFilter, sortBy]);
-
-  const resetFilters = () => {
-    setSearch("");
-    setStatusFilter("all");
-    setPaymentFilter("all");
-    setSortBy("newest");
-  };
-
-  return (
-    <div className={styles.ordersPage}>
-      <OrdersHeader onRefresh={() => fetchOrders(true)} refreshing={refreshing} />
-
-      <OrderKPICards orders={filteredOrders} />
-
-      <OrdersFilters
-        search={search}
-        onSearchChange={setSearch}
-        statusFilter={statusFilter}
-        onStatusFilterChange={setStatusFilter}
-        paymentFilter={paymentFilter}
-        onPaymentFilterChange={setPaymentFilter}
-        sortBy={sortBy}
-        onSortChange={setSortBy}
-        onReset={resetFilters}
-        resultCount={filteredOrders.length}
-      />
-
-      {error ? (
-        <ErrorState message={error} onRetry={() => fetchOrders()} />
-      ) : (
-        <OrdersTable
-          orders={filteredOrders}
-          onViewDetails={(order) => setSelectedOrder(order)}
-          onUpdateStatus={(order) => setSelectedOrder(order)}
-          loading={loading}
-          updatingId={updatingId}
+      {showDeliveryForm && (
+        <DeliveryForm
+          order={orders.find((o) => o._id === showDeliveryForm)}
+          onSave={handleDeliverySave}
+          onClose={() => setShowDeliveryForm(null)}
         />
       )}
-
-      <AnimatePresence>
-        {selectedOrder && (
-          <OrderDrawer
-            order={selectedOrder}
-            onClose={() => setSelectedOrder(null)}
-            onStatusChange={handleUpdateStatus}
-            updating={drawerUpdating}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 };

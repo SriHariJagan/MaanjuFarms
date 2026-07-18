@@ -130,6 +130,8 @@ const bookVilla = async (
       { villaId, checkIn, checkOut, guests, guestDetails }
     );
 
+    const razorpayOrderId = data.orderId;
+
     await startPayment({
       orderData: data,
       verifyUrl: PAYMENT_ENDPOINTS.VERIFY,
@@ -148,7 +150,7 @@ const bookVilla = async (
 
       onFailure: (error) => {
         window.location.replace(
-          `/payment-failed?error=${encodeURIComponent(error)}`
+          `/payment-failed?error=${encodeURIComponent(error)}&order_id=${razorpayOrderId}`
         );
       },
     });

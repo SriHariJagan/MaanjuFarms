@@ -70,7 +70,6 @@ const ProductsPage = () => {
     if (product.stock <= 0) return;
     const productWithPrice = { ...product, price: product.price || 100 };
     addToCart(productWithPrice);
-    toast.success(`${product.name} added to cart`, { icon: "🛒", autoClose: 1500 });
   };
 
   const handleViewDetails = (id) => navigate(`/product/${id}`);
@@ -254,6 +253,10 @@ const ProductsPage = () => {
                             <div className="product-info-header">
                               <h3>{product.name}</h3>
                             </div>
+
+                            <p style={{ fontSize: "1.1rem", fontWeight: 700, color: "#2e7d32", margin: "4px 0" }}>
+                              ₹{product.price?.toLocaleString("en-IN")}{product.unit ? `/${product.unit}` : ""}
+                            </p>
 
                             <span
                               className={`product-stock ${

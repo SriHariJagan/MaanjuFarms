@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import styles from "./Checkout.module.css";
 import { useCart } from "../../Store/useContext";
 import axios from "axios";
 import { PINCODE_ENDPOINTS } from "../../urls";
-import { ArrowRight, ShieldCheck } from "lucide-react";
+import { ArrowRight, ShieldCheck, ExternalLink } from "lucide-react";
 import { formatPriceWithUnit } from "../../utils/getImageUrl ";
 
 const Checkout = () => {
@@ -272,6 +273,24 @@ const Checkout = () => {
                 <p>{address.district}, {address.state}</p>
               </div>
             )}
+
+            <div className={styles.legalNotice}>
+              <p>
+                By proceeding, you agree to our{" "}
+                <Link to="/terms-and-conditions" target="_blank" rel="noopener noreferrer">
+                  Terms &amp; Conditions <ExternalLink size={12} />
+                </Link>
+                ,{" "}
+                <Link to="/privacy-policy" target="_blank" rel="noopener noreferrer">
+                  Privacy Policy <ExternalLink size={12} />
+                </Link>
+                , and{" "}
+                <Link to="/return-refund-policy" target="_blank" rel="noopener noreferrer">
+                  Return &amp; Refund Policy <ExternalLink size={12} />
+                </Link>
+                .
+              </p>
+            </div>
 
             <button
               onClick={handleSubmit}

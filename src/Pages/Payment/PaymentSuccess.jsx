@@ -9,7 +9,7 @@ const PaymentSuccess = () => {
 
   const type = new URLSearchParams(location.search).get("type") || "product";
 
-  const redirectPath = type === "booking" ? "/my-bookings" : "/orders";
+  const redirectPath = type === "booking" ? "/my-bookings" : "/my-orders";
 
   useEffect(() => {
     if (!type) return;

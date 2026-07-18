@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import styles from "./GuestDetails.module.css";
 import { useVillas } from "../../Store/useContext";
-import { ArrowLeft, Plus, User, Users } from "lucide-react";
+import { ArrowLeft, Plus, User, Users, ExternalLink } from "lucide-react";
 
 const GuestDetails = () => {
   const { state } = useLocation();
@@ -164,6 +164,24 @@ const GuestDetails = () => {
         </div>
 
         {error && <div className={styles.errorBox}>{error}</div>}
+
+        <div className={styles.legalNotice}>
+          <p>
+            By proceeding to payment, you agree to our{" "}
+            <Link to="/terms-and-conditions" target="_blank" rel="noopener noreferrer">
+              Terms &amp; Conditions <ExternalLink size={12} />
+            </Link>
+            ,{" "}
+            <Link to="/privacy-policy" target="_blank" rel="noopener noreferrer">
+              Privacy Policy <ExternalLink size={12} />
+            </Link>
+            , and{" "}
+            <Link to="/villa-booking-cancellation-policy" target="_blank" rel="noopener noreferrer">
+              Booking Cancellation Policy <ExternalLink size={12} />
+            </Link>
+            .
+          </p>
+        </div>
 
         <div className={styles.actions}>
           <button

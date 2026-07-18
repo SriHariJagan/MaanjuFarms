@@ -161,6 +161,8 @@ const handleCheckout = async (address) => {
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
+    const razorpayOrderId = data.orderId;
+
     await startPayment({
       orderData: data,
       verifyUrl: PAYMENT_ENDPOINTS.VERIFY,
@@ -180,12 +182,12 @@ const handleCheckout = async (address) => {
 
         toast.success("Order placed successfully 🎉");
 
-        window.location.replace("/payment-success?type=product");
+        window.location.replace("/my-orders");
       },
 
       onFailure: (error) => {
         window.location.replace(
-          `/payment-failed?error=${encodeURIComponent(error)}`
+          `/payment-failed?error=${encodeURIComponent(error)}&order_id=${razorpayOrderId}`
         );
       },
     });
